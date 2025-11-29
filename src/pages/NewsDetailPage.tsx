@@ -1,0 +1,281 @@
+import { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { getNewsById, getNews } from '../services/dataService';
+import type { News } from '../types';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import LoadingSpinner from '../components/LoadingSpinner';
+import LazyImage from '../components/LazyImage';
+import { useSEO } from '../hooks/useSEO';
+
+const NewsDetailPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [newsItem, setNewsItem] = useState<News | null>(null);
+  const [relatedNews, setRelatedNews] = useState<News[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadNews = async () => {
+      if (!id) {
+        navigate('/');
+        return;
+      }
+
+      try {
+        const [newsData, allNews] = await Promise.all([
+          getNewsById(id),
+          getNews()
+        ]);
+
+        if (!newsData) {
+          navigate('/');
+          return;
+        }
+
+        setNewsItem(newsData);
+
+        // 找相关新闻（同类型）
+        const related = allNews
+          .filter(n => n.id !== id && n.type === newsData.type)
+          .slice(0, 3);
+        setRelatedNews(related);
+      } catch (error) {
+        console.error('Failed to load news:', error);
+        navigate('/');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadNews();
+  }, [id, navigate]);
+
+  // SEO优化
+  useSEO({
+    title: newsItem?.title || '新闻动态',
+    description: newsItem?.excerpt || newsItem?.content?.substring(0, 160) || '新闻动态详情',
+    keywords: newsItem ? `${newsItem.type}, 新闻, 动态` : '新闻, 动态',
+    ogTitle: newsItem?.title || '新闻动态',
+    ogDescription: newsItem?.excerpt || newsItem?.content?.substring(0, 160) || '新闻动态详情',
+    ogImage: newsItem?.image,
+    ogUrl: window.location.href,
+  });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner size="lg" text="加载中..." />
+      </div>
+    );
+  }
+
+  if (!newsItem) {
+    return null;
+  }
+
+  const getTypeLabel = (type: string) => {
+    const labels: Record<string, string> = {
+      achievement: '成就',
+      announcement: '公告',
+      event: '活动',
+      project: '项目',
+      other: '其他'
+    };
+    return labels[type] || type;
+  };
+
+  const getTypeColor = (type: string) => {
+    const colors: Record<string, string> = {
+      achievement: 'bg-green-100 text-green-700',
+      announcement: 'bg-blue-100 text-blue-700',
+      event: 'bg-purple-100 text-purple-700',
+      project: 'bg-orange-100 text-orange-700',
+      other: 'bg-gray-100 text-gray-700'
+    };
+    return colors[type] || 'bg-gray-100 text-gray-700';
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+
+      {/* Breadcrumb */}
+      <div className="bg-white border-b">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <nav className="flex items-center space-x-2 text-sm">
+            <Link to="/" className="text-gray-500 hover:text-primary-600">首页</Link>
+            <span className="text-gray-400">/</span>
+            <Link to="/#news" className="text-gray-500 hover:text-primary-600">新闻动态</Link>
+            <span className="text-gray-400">/</span>
+            <span className="text-gray-900">{newsItem.title}</span>
+          </nav>
+        </div>
+      </div>
+
+      {/* Content */}
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
+        <header className="mb-8">
+          {newsItem.image && (
+            <LazyImage
+              src={newsItem.image}
+              alt={newsItem.title}
+              className="w-full h-96 object-cover rounded-lg shadow-lg mb-8"
+              effect="blur"
+            />
+          )}
+
+          <div className="flex items-center space-x-2 mb-4">
+            <span className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(newsItem.type)}`}>
+              {getTypeLabel(newsItem.type)}
+            </span>
+            {newsItem.important && (
+              <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+                🔥 重要
+              </span>
+            )}
+          </div>
+
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{newsItem.title}</h1>
+
+          {newsItem.excerpt && (
+            <p className="text-xl text-gray-600 mb-6">{newsItem.excerpt}</p>
+          )}
+
+          <div className="flex items-center gap-4 text-gray-600">
+            <span className="flex items-center">
+              <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              {new Date(newsItem.date).toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </span>
+          </div>
+        </header>
+
+        {/* News Content */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+          <div className="prose max-w-none">
+            <div className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+              {newsItem.content}
+            </div>
+          </div>
+
+          {newsItem.link && (
+            <div className="mt-6 pt-6 border-t">
+              <a
+                href={newsItem.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                查看更多详情
+              </a>
+            </div>
+          )}
+        </div>
+
+        {/* Share & Actions */}
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">分享新闻</h3>
+              <div className="flex space-x-3">
+                <button className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition" title="分享到微博">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9.68 15.92c-2.27 0-4.12-1.5-4.12-3.35 0-1.85 1.85-3.35 4.12-3.35 2.28 0 4.13 1.5 4.13 3.35 0 1.85-1.85 3.35-4.13 3.35zM22 7.5c0-1.38-1.12-2.5-2.5-2.5S17 6.12 17 7.5s1.12 2.5 2.5 2.5S22 8.88 22 7.5z"/>
+                  </svg>
+                </button>
+                <button className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition" title="分享到微信">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.478c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348z"/>
+                  </svg>
+                </button>
+                <button className="p-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition" title="复制链接">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Related News */}
+        {relatedNews.length > 0 && (
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <h2 className="text-2xl font-bold mb-6">相关新闻</h2>
+            <div className="space-y-4">
+              {relatedNews.map((related) => (
+                <Link
+                  key={related.id}
+                  to={`/news/${related.id}`}
+                  className="flex items-start space-x-4 p-4 rounded-lg hover:bg-gray-50 transition group"
+                >
+                  {related.image && (
+                    <LazyImage
+                      src={related.image}
+                      alt={related.title}
+                      className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
+                      effect="blur"
+                    />
+                  )}
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition line-clamp-2">
+                      {related.title}
+                    </h3>
+                    {related.excerpt && (
+                      <p className="text-sm text-gray-600 mt-1 line-clamp-2">{related.excerpt}</p>
+                    )}
+                    <div className="flex items-center space-x-2 mt-2">
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${getTypeColor(related.type)}`}>
+                        {getTypeLabel(related.type)}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {new Date(related.date).toLocaleDateString('zh-CN')}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Navigation */}
+        <div className="flex justify-between items-center mt-8">
+          <Link
+            to="/#news"
+            className="inline-flex items-center px-6 py-3 bg-white text-primary-600 border-2 border-primary-600 rounded-lg hover:bg-primary-50 transition font-medium"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            返回新闻列表
+          </Link>
+
+          <Link
+            to="/#contact"
+            className="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition font-medium"
+          >
+            联系我
+            <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </Link>
+        </div>
+      </article>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default NewsDetailPage;
