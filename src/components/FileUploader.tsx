@@ -1,5 +1,8 @@
 import { useState, useRef } from 'react';
 
+// API 基础 URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL.replace('/api', '')}/api`;
+
 interface FileUploaderProps {
   onUploadSuccess: (file: { name: string; url: string; size: number; type: string }) => void;
   label?: string;
@@ -47,7 +50,7 @@ const FileUploader = ({
 
       const token = localStorage.getItem('adminToken');
 
-      const response = await fetch('http://localhost:3001/api/upload/file', {
+      const response = await fetch(`${API_BASE_URL}/upload/file`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

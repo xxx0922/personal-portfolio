@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 
+// API 基础 URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL.replace('/api', '')}/api`;
+
 const FooterSettingsManager = () => {
   const [settings, setSettings] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -18,7 +21,7 @@ const FooterSettingsManager = () => {
 
   const loadSettings = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/footer-settings');
+      const response = await fetch(`${API_BASE_URL}/footer-settings`);
       const data = await response.json();
       setSettings(data);
       setFormData(data);
@@ -31,7 +34,7 @@ const FooterSettingsManager = () => {
     setIsSaving(true);
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/footer-settings', {
+      const response = await fetch(`${API_BASE_URL}/footer-settings`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 
+// API 基础 URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL.replace('/api', '')}/api`;
+
 interface TagItem {
   tag: string;
   count: number;
@@ -20,9 +23,9 @@ export default function TagsManager() {
     try {
       // 从各个模块加载数据并统计标签
       const [articles, media, documents] = await Promise.all([
-        fetch('http://localhost:3001/api/articles').then(r => r.json()),
-        fetch('http://localhost:3001/api/media').then(r => r.json()),
-        fetch('http://localhost:3001/api/documents').then(r => r.json())
+        fetch(`${API_BASE_URL}/articles`).then(r => r.json()),
+        fetch(`${API_BASE_URL}/media`).then(r => r.json()),
+        fetch(`${API_BASE_URL}/documents`).then(r => r.json())
       ]);
 
       const tagMap = new Map<string, TagItem>();

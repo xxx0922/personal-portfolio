@@ -18,8 +18,8 @@ import {
 // 标记：是否使用后端API
 const USE_BACKEND_API = true; // 使用后端API
 
-// API基础URL
-const API_BASE_URL = 'http://localhost:3001/api';
+// API基础URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 // ============ 个人信息相关 ============
 export const getPersonalInfo = async () => {

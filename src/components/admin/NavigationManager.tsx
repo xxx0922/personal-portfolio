@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 
+// API 基础 URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL.replace('/api', '')}/api`;
+
 interface NavigationItem {
   id: string;
   label: string;
@@ -22,7 +25,7 @@ const NavigationManager = () => {
   const loadNavigation = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/navigation/all', {
+      const response = await fetch(`${API_BASE_URL}/navigation/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -36,7 +39,7 @@ const NavigationManager = () => {
     setIsSaving(true);
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/navigation', {
+      const response = await fetch(`${API_BASE_URL}/navigation`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

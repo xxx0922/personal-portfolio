@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import ImageUploader from '../ImageUploader';
 
+// API 基础 URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL.replace('/api', '')}/api`;
+
 interface FriendLink {
   id: string;
   name: string;
@@ -24,7 +27,7 @@ const FriendLinksManager = () => {
   const loadFriendLinks = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/friend-links/all', {
+      const response = await fetch(`${API_BASE_URL}/friend-links/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -38,7 +41,7 @@ const FriendLinksManager = () => {
     setIsSaving(true);
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/friend-links', {
+      const response = await fetch(`${API_BASE_URL}/friend-links`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

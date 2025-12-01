@@ -15,6 +15,9 @@ import AnalyticsManager from '../components/admin/AnalyticsManager';
 import TagsManager from '../components/admin/TagsManager';
 import SocialMediaManager from '../components/admin/SocialMediaManager';
 
+// API 基础 URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL.replace('/api', '')}/api`;
+
 interface AdminStats {
   projectCount: number;
   skillCount: number;
@@ -60,15 +63,15 @@ export default function AdminPage() {
       const headers = { Authorization: `Bearer ${token}` };
 
       const [projects, skills, media, photos, articles, news, experiences, documents, messages] = await Promise.all([
-        fetch('http://localhost:3001/api/projects').then(r => r.json()),
-        fetch('http://localhost:3001/api/skills').then(r => r.json()),
-        fetch('http://localhost:3001/api/media').then(r => r.json()),
-        fetch('http://localhost:3001/api/photos').then(r => r.json()),
-        fetch('http://localhost:3001/api/articles').then(r => r.json()),
-        fetch('http://localhost:3001/api/news').then(r => r.json()),
-        fetch('http://localhost:3001/api/experiences').then(r => r.json()),
-        fetch('http://localhost:3001/api/documents').then(r => r.json()),
-        fetch('http://localhost:3001/api/messages').then(r => r.json())
+        fetch(`${API_BASE_URL}/projects`).then(r => r.json()),
+        fetch(`${API_BASE_URL}/skills`).then(r => r.json()),
+        fetch(`${API_BASE_URL}/media`).then(r => r.json()),
+        fetch(`${API_BASE_URL}/photos`).then(r => r.json()),
+        fetch(`${API_BASE_URL}/articles`).then(r => r.json()),
+        fetch(`${API_BASE_URL}/news`).then(r => r.json()),
+        fetch(`${API_BASE_URL}/experiences`).then(r => r.json()),
+        fetch(`${API_BASE_URL}/documents`).then(r => r.json()),
+        fetch(`${API_BASE_URL}/messages`).then(r => r.json())
       ]);
 
       setStats({
@@ -244,7 +247,7 @@ function ProjectsManager() {
 
   const loadProjects = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/projects');
+      const response = await fetch(`${API_BASE_URL}/projects`);
       const data = await response.json();
       setProjects(data);
     } catch (error) {
@@ -257,7 +260,7 @@ function ProjectsManager() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      await fetch(`http://localhost:3001/api/projects/${id}`, {
+      await fetch(`${API_BASE_URL}/projects/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -348,8 +351,8 @@ function ProjectForm({ project, onClose, onSave }: any) {
     try {
       const token = localStorage.getItem('adminToken');
       const url = project
-        ? `http://localhost:3001/api/projects/${project.id}`
-        : 'http://localhost:3001/api/projects';
+        ? `${API_BASE_URL}/projects/${project.id}`
+        : `${API_BASE_URL}/projects`;
       const method = project ? 'PUT' : 'POST';
 
       await fetch(url, {
@@ -525,7 +528,7 @@ function SkillsManager() {
 
   const loadSkills = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/skills');
+      const response = await fetch(`${API_BASE_URL}/skills`);
       const data = await response.json();
       setSkills(data);
     } catch (error) {
@@ -538,7 +541,7 @@ function SkillsManager() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      await fetch(`http://localhost:3001/api/skills/${id}`, {
+      await fetch(`${API_BASE_URL}/skills/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -661,8 +664,8 @@ function SkillForm({ skill, onClose, onSave }: any) {
     try {
       const token = localStorage.getItem('adminToken');
       const url = skill
-        ? `http://localhost:3001/api/skills/${skill.id}`
-        : 'http://localhost:3001/api/skills';
+        ? `${API_BASE_URL}/skills/${skill.id}`
+        : `${API_BASE_URL}/skills`;
       const method = skill ? 'PUT' : 'POST';
 
       await fetch(url, {
@@ -765,7 +768,7 @@ function MediaManager() {
 
   const loadMedia = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/media');
+      const response = await fetch(`${API_BASE_URL}/media`);
       const data = await response.json();
       setMedia(data);
     } catch (error) {
@@ -778,7 +781,7 @@ function MediaManager() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      await fetch(`http://localhost:3001/api/media/${id}`, {
+      await fetch(`${API_BASE_URL}/media/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -938,8 +941,8 @@ function MediaForm({ media, onClose, onSave }: any) {
     try {
       const token = localStorage.getItem('adminToken');
       const url = media
-        ? `http://localhost:3001/api/media/${media.id}`
-        : 'http://localhost:3001/api/media';
+        ? `${API_BASE_URL}/media/${media.id}`
+        : `${API_BASE_URL}/media`;
       const method = media ? 'PUT' : 'POST';
 
       await fetch(url, {
@@ -1165,7 +1168,7 @@ function PhotosManager() {
 
   const loadPhotos = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/photos');
+      const response = await fetch(`${API_BASE_URL}/photos`);
       const data = await response.json();
       setPhotos(data);
     } catch (error) {
@@ -1178,7 +1181,7 @@ function PhotosManager() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      await fetch(`http://localhost:3001/api/photos/${id}`, {
+      await fetch(`${API_BASE_URL}/photos/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -1336,8 +1339,8 @@ function PhotoForm({ photo, onClose, onSave }: any) {
     try {
       const token = localStorage.getItem('adminToken');
       const url = photo
-        ? `http://localhost:3001/api/photos/${photo.id}`
-        : 'http://localhost:3001/api/photos';
+        ? `${API_BASE_URL}/photos/${photo.id}`
+        : `${API_BASE_URL}/photos`;
       const method = photo ? 'PUT' : 'POST';
 
       await fetch(url, {
@@ -1465,7 +1468,7 @@ function BatchPhotoUploadForm({ onClose, onSave }: any) {
 
       // 批量创建照片记录
       const promises = uploadedPhotos.map((url, index) =>
-        fetch('http://localhost:3001/api/photos', {
+        fetch(`${API_BASE_URL}/photos`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1583,7 +1586,7 @@ function DocumentsManager() {
 
   const loadDocuments = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/documents');
+      const response = await fetch(`${API_BASE_URL}/documents`);
       const data = await response.json();
       setDocuments(data);
     } catch (error) {
@@ -1596,7 +1599,7 @@ function DocumentsManager() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      await fetch(`http://localhost:3001/api/documents/${id}`, {
+      await fetch(`${API_BASE_URL}/documents/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -1760,8 +1763,8 @@ function DocumentForm({ document, onClose, onSave }: any) {
     try {
       const token = localStorage.getItem('adminToken');
       const url = document
-        ? `http://localhost:3001/api/documents/${document.id}`
-        : 'http://localhost:3001/api/documents';
+        ? `${API_BASE_URL}/documents/${document.id}`
+        : `${API_BASE_URL}/documents`;
       const method = document ? 'PUT' : 'POST';
 
       await fetch(url, {
@@ -1946,7 +1949,7 @@ function PersonalInfoManager() {
 
   const loadPersonalInfo = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/personal-info');
+      const response = await fetch(`${API_BASE_URL}/personal-info`);
       const data = await response.json();
       setPersonalInfo(data);
     } catch (error) {
@@ -1958,7 +1961,7 @@ function PersonalInfoManager() {
     setIsSaving(true);
     try {
       const token = localStorage.getItem('adminToken');
-      await fetch('http://localhost:3001/api/personal-info', {
+      await fetch(`${API_BASE_URL}/personal-info`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -2279,7 +2282,7 @@ function MessagesManager() {
   const loadMessages = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/messages', {
+      const response = await fetch(`${API_BASE_URL}/messages`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -2292,7 +2295,7 @@ function MessagesManager() {
   const handleMarkAsRead = async (id: string) => {
     try {
       const token = localStorage.getItem('adminToken');
-      await fetch(`http://localhost:3001/api/messages/${id}/read`, {
+      await fetch(`${API_BASE_URL}/messages/${id}/read`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -2307,7 +2310,7 @@ function MessagesManager() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      await fetch(`http://localhost:3001/api/messages/${id}`, {
+      await fetch(`${API_BASE_URL}/messages/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });

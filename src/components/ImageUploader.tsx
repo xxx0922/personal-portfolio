@@ -1,5 +1,8 @@
 import { useState, useRef } from 'react';
 
+// API 基础 URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL.replace('/api', '')}/api`;
+
 interface ImageUploaderProps {
   onUploadSuccess: (imageUrl: string) => void;
   currentImage?: string;

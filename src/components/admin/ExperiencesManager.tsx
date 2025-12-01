@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import type { Experience } from '../../types';
 import ImageUploader from '../ImageUploader';
 
+// API 基础 URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL.replace('/api', '')}/api`;
+
 const ExperiencesManager = () => {
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +29,7 @@ const ExperiencesManager = () => {
 
   const loadExperiences = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/experiences');
+      const response = await fetch(`${API_BASE_URL}/experiences`);
       const data = await response.json();
       setExperiences(data);
     } catch (error) {
@@ -51,8 +54,8 @@ const ExperiencesManager = () => {
 
     try {
       const url = editingExperience
-        ? `http://localhost:3001/api/experiences/${editingExperience.id}`
-        : 'http://localhost:3001/api/experiences';
+        ? `${API_BASE_URL}/experiences/${editingExperience.id}`
+        : `${API_BASE_URL}/experiences`;
 
       const response = await fetch(url, {
         method: editingExperience ? 'PUT' : 'POST',
@@ -95,7 +98,7 @@ const ExperiencesManager = () => {
 
     const token = localStorage.getItem('adminToken');
     try {
-      const response = await fetch(`http://localhost:3001/api/experiences/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/experiences/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });

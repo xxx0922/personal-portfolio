@@ -4,6 +4,9 @@ import 'easymde/dist/easymde.min.css';
 import type { Article } from '../../types';
 import ImageUploader from '../ImageUploader';
 
+// API 基础 URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL.replace('/api', '')}/api`;
+
 const ArticlesManager = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +30,7 @@ const ArticlesManager = () => {
   const loadArticles = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/articles/all', {
+      const response = await fetch(`${API_BASE_URL}/articles/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -50,8 +53,8 @@ const ArticlesManager = () => {
 
     try {
       const url = editingArticle
-        ? `http://localhost:3001/api/articles/${editingArticle.id}`
-        : 'http://localhost:3001/api/articles';
+        ? `${API_BASE_URL}/articles/${editingArticle.id}`
+        : `${API_BASE_URL}/articles`;
 
       const response = await fetch(url, {
         method: editingArticle ? 'PUT' : 'POST',
@@ -93,7 +96,7 @@ const ArticlesManager = () => {
 
     const token = localStorage.getItem('adminToken');
     try {
-      const response = await fetch(`http://localhost:3001/api/articles/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/articles/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });

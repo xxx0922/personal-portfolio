@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import type { News } from '../../types';
 import ImageUploader from '../ImageUploader';
 
+// API 基础 URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL.replace('/api', '')}/api`;
+
 const NewsManager = () => {
   const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +25,7 @@ const NewsManager = () => {
   const loadNews = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/news/all', {
+      const response = await fetch(`${API_BASE_URL}/news/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -40,8 +43,8 @@ const NewsManager = () => {
 
     try {
       const url = editingNews
-        ? `http://localhost:3001/api/news/${editingNews.id}`
-        : 'http://localhost:3001/api/news';
+        ? `${API_BASE_URL}/news/${editingNews.id}`
+        : `${API_BASE_URL}/news`;
 
       const response = await fetch(url, {
         method: editingNews ? 'PUT' : 'POST',
@@ -80,7 +83,7 @@ const NewsManager = () => {
 
     const token = localStorage.getItem('adminToken');
     try {
-      const response = await fetch(`http://localhost:3001/api/news/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/news/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });

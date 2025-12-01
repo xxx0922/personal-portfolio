@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 
+// API 基础 URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL.replace('/api', '')}/api`;
+
 interface SocialLink {
   id: string;
   platform: string;
@@ -35,7 +38,7 @@ export default function SocialMediaManager() {
 
   const loadSocialLinks = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/social-links');
+      const response = await fetch(`${API_BASE_URL}/social-links`);
       if (response.ok) {
         const data = await response.json();
         setSocialLinks(data);
@@ -55,8 +58,8 @@ export default function SocialMediaManager() {
     try {
       const token = localStorage.getItem('adminToken');
       const url = link.id
-        ? `http://localhost:3001/api/social-links/${link.id}`
-        : 'http://localhost:3001/api/social-links';
+        ? `${API_BASE_URL}/social-links/${link.id}`
+        : `${API_BASE_URL}/social-links`;
       const method = link.id ? 'PUT' : 'POST';
 
       await fetch(url, {
@@ -89,7 +92,7 @@ export default function SocialMediaManager() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      await fetch(`http://localhost:3001/api/social-links/${id}`, {
+      await fetch(`${API_BASE_URL}/social-links/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });

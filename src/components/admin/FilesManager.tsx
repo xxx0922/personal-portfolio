@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 
+// API 基础 URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL.replace('/api', '')}/api`;
+
 interface FileItem {
   filename: string;
   url: string;
@@ -22,7 +25,7 @@ export default function FilesManager() {
   const loadFiles = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/upload/list', {
+      const response = await fetch(`${API_BASE_URL}/upload/list`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -47,7 +50,7 @@ export default function FilesManager() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      await fetch(`http://localhost:3001/api/upload/${filename}`, {
+      await fetch(`${API_BASE_URL}/upload/${filename}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
