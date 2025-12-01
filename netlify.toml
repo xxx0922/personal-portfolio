@@ -1,0 +1,14 @@
+# Netlify 配置文件
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# 单页应用路由重定向规则
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# 环境变量（也可以在 Netlify Dashboard 设置）
+[build.environment]
+  VITE_API_URL = "https://personal-portfolio-production-c8c9.up.railway.app/api"
