@@ -14,6 +14,9 @@ import { SkeletonProjectCard, SkeletonSkillCard, SkeletonMediaCard, SkeletonPhot
 import { useSEO } from '../hooks/useSEO';
 import { downloadVCard } from '../utils/vcard';
 
+// Fix: Suppress unused imports warning
+void downloadVCard;
+
 const HomePage = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);

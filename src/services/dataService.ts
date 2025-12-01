@@ -80,11 +80,11 @@ export const getProjectById = async (id: string) => {
     } catch (error) {
       console.error('Error fetching project:', error);
       const projects = await getProjects();
-      return projects.find(p => p.id === id);
+      return projects.find((p: any) => p.id === id);
     }
   }
   await new Promise(resolve => setTimeout(resolve, 100));
-  return mockProjects.find(p => p.id === id);
+  return mockProjects.find((p: any) => p.id === id);
 };
 
 export const getProjectStats = async () => {
@@ -171,7 +171,7 @@ export const getRegulations = async () => {
 };
 
 // ============ 评论系统（后续实现）============
-export const getComments = async (targetId: string, targetType: string) => {
+export const getComments = async (_targetId: string, _targetType: string) => {
   if (USE_BACKEND_API) {
     // TODO: 对接后端API
     // return await api.get(`${API_ENDPOINTS.COMMENTS}?targetId=${targetId}&targetType=${targetType}`);
@@ -180,7 +180,7 @@ export const getComments = async (targetId: string, targetType: string) => {
   return []; // 暂时返回空数组
 };
 
-export const addComment = async (commentData: {
+export const addComment = async (_commentData: {
   targetId: string;
   targetType: string;
   content: string;

@@ -37,7 +37,7 @@ const NewsDetailPage = () => {
 
         // 找相关新闻（同类型）
         const related = allNews
-          .filter(n => n.id !== id && n.type === newsData.type)
+          .filter((n: any) => n.id !== id && n.type === newsData.type)
           .slice(0, 3);
         setRelatedNews(related);
       } catch (error) {
@@ -148,11 +148,11 @@ const NewsDetailPage = () => {
               <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              {new Date(newsItem.date).toLocaleDateString('zh-CN', {
+              {newsItem.date ? new Date(newsItem.date).toLocaleDateString('zh-CN', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
-              })}
+              }) : '未知日期'}
             </span>
           </div>
         </header>
@@ -239,7 +239,7 @@ const NewsDetailPage = () => {
                         {getTypeLabel(related.type)}
                       </span>
                       <span className="text-xs text-gray-500">
-                        {new Date(related.date).toLocaleDateString('zh-CN')}
+                        {related.date ? new Date(related.date).toLocaleDateString('zh-CN') : '未知日期'}
                       </span>
                     </div>
                   </div>
