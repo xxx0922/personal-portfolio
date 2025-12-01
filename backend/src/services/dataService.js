@@ -1,3 +1,8 @@
+/**
+ * 数据服务层 - 自动适配文件系统或 Netlify Blobs
+ * 在 Netlify 环境使用 Blobs，本地开发使用文件系统
+ */
+
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -8,7 +13,22 @@ const __dirname = dirname(__filename);
 
 const DATA_DIR = path.join(__dirname, '../../data');
 
-// 确保数据目录存在
+// 检测是否在 Netlify 环境
+const isNetlify = () => process.env.NETLIFY === 'true';
+
+// Netlify Blobs 实例（延迟加载）
+let blobsStore = null;
+
+async function getBlobsStore() {
+  if (!blobsStore) {
+    const { getStore } = await import('@netlify/blobs');
+    blobsStore = getStore('portfolio-data');
+  }
+  return blobsStore;
+}
+
+// ============ 文件系统操作（本地开发）============
+
 async function ensureDataDir() {
   try {
     await fs.access(DATA_DIR);
@@ -17,30 +37,79 @@ async function ensureDataDir() {
   }
 }
 
-// 读取JSON文件
-export async function readData(filename) {
+async function readDataFromFile(filename) {
   try {
     const filePath = path.join(DATA_DIR, `${filename}.json`);
     const data = await fs.readFile(filePath, 'utf-8');
     return JSON.parse(data);
   } catch (error) {
     if (error.code === 'ENOENT') {
-      return null; // 文件不存在
+      return null;
     }
     throw error;
   }
 }
 
-// 写入JSON文件
-export async function writeData(filename, data) {
+async function writeDataToFile(filename, data) {
   await ensureDataDir();
   const filePath = path.join(DATA_DIR, `${filename}.json`);
   await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
 }
 
-// 初始化数据
+// ============ Netlify Blobs 操作 ============
+
+async function readDataFromBlobs(key) {
+  try {
+    const store = await getBlobsStore();
+    const data = await store.get(key, { type: 'json' });
+    return data;
+  } catch (error) {
+    console.error(`Error reading from Blobs (key: ${key}):`, error);
+    return null;
+  }
+}
+
+async function writeDataToBlobs(key, data) {
+  try {
+    const store = await getBlobsStore();
+    await store.setJSON(key, data);
+  } catch (error) {
+    console.error(`Error writing to Blobs (key: ${key}):`, error);
+    throw error;
+  }
+}
+
+// ============ 统一接口 ============
+
+/**
+ * 读取数据 - 自动选择存储方式
+ */
+export async function readData(filename) {
+  if (isNetlify()) {
+    return await readDataFromBlobs(filename);
+  } else {
+    return await readDataFromFile(filename);
+  }
+}
+
+/**
+ * 写入数据 - 自动选择存储方式
+ */
+export async function writeData(filename, data) {
+  if (isNetlify()) {
+    await writeDataToBlobs(filename, data);
+  } else {
+    await writeDataToFile(filename, data);
+  }
+}
+
+/**
+ * 初始化数据
+ */
 export async function initializeData() {
-  await ensureDataDir();
+  if (!isNetlify()) {
+    await ensureDataDir();
+  }
 
   // 初始化个人信息
   const personalInfo = await readData('personalInfo');
@@ -119,5 +188,5 @@ export async function initializeData() {
     ]);
   }
 
-  console.log('✅ Data initialized successfully');
+  console.log(`✅ Data initialized successfully (${isNetlify() ? 'Netlify Blobs' : 'File System'})`);
 }

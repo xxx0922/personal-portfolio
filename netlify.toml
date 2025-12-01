@@ -2,13 +2,25 @@
 [build]
   command = "npm run build"
   publish = "dist"
+  functions = "netlify/functions"
 
-# 单页应用路由重定向规则
+# Functions 配置
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["express"]
+
+# API 路由重定向到 Netlify Function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# 单页应用路由重定向规则（放在最后，作为fallback）
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# 环境变量（也可以在 Netlify Dashboard 设置）
+# 环境变量
 [build.environment]
-  VITE_API_URL = "https://personal-portfolio-production-c8c9.up.railway.app/api"
+  NODE_VERSION = "18"
