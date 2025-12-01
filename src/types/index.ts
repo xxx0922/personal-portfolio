@@ -111,6 +111,7 @@ export interface Experience {
   responsibilities: string[];
   achievements: string[];
   technologies?: string[];
+  skills?: string[]; // 添加技能字段
   logo?: string;
   createdAt: string;
   updatedAt: string;
@@ -138,8 +139,12 @@ export interface News {
   id: string;
   title: string;
   content: string;
+  excerpt?: string; // 摘要
   type: 'industry' | 'company' | 'achievement' | 'project'; // 行业动态、公司公告、最新成就、即将开展的项目
   image?: string;
+  date?: string; // 日期
+  link?: string; // 链接
+  important?: boolean; // 是否重要
   status: 'draft' | 'published';
   publishedAt: string | null;
   createdAt: string;
