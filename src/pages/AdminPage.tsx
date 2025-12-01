@@ -581,7 +581,7 @@ function SkillsManager() {
             <div key={category} className="border rounded-lg p-4 bg-gray-50">
               <h3 className="text-lg font-semibold mb-4 text-blue-600">{category}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {categorySkills.map(skill => (
+                {(categorySkills as any[]).map((skill: any) => (
                   <div key={skill.id} className="bg-white border rounded-lg p-4 hover:shadow-md transition">
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-semibold text-gray-800">{skill.name}</h4>
