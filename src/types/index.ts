@@ -12,6 +12,7 @@ export interface PersonalInfo {
 
 // 技能类型
 export interface Skill {
+  id?: string;
   name: string;
   level: number; // 1-5
   category: string;
@@ -107,6 +108,7 @@ export interface Experience {
   location: string;
   startDate: string;
   endDate: string | null; // null表示当前在职
+  period?: string; // 时间段描述
   description: string;
   responsibilities: string[];
   achievements: string[];
@@ -122,12 +124,15 @@ export interface Article {
   id: string;
   title: string;
   summary: string;
+  excerpt?: string; // 摘要
   content: string; // Markdown格式
   coverImage?: string;
   category: string;
   tags: string[];
   status: 'draft' | 'published';
   views: number;
+  readTime?: number; // 阅读时间（分钟）
+  featured?: boolean; // 是否精选
   author: string;
   publishedAt: string | null;
   createdAt: string;
