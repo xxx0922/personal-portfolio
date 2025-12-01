@@ -31,8 +31,35 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// CORS 配置 - 允许前端域名访问
+const corsOptions = {
+  origin: function (origin, callback) {
+    // 允许的源列表
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'https://www.bohenan.com',
+      'https://bohenan.com',
+      'https://velvety-travesseiro-9de532.netlify.app'
+    ];
+
+    // 允许没有 origin 的请求（如 Postman）
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.warn(`⚠️  CORS blocked origin: ${origin}`);
+      callback(null, true); // 暂时允许所有源，方便调试
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
