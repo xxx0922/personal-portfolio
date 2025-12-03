@@ -1378,11 +1378,11 @@ function PhotoForm({ photo, onClose, onSave }: any) {
             <div className="mt-2">
               <label className="block text-xs font-medium text-gray-500 mb-1">或输入照片 URL（可选）</label>
               <input
-                type="url"
+                type="text"
                 value={formData.url}
                 onChange={e => setFormData({ ...formData, url: e.target.value })}
                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border text-sm bg-white"
-                placeholder="https://example.com/photo.jpg"
+                placeholder="https://example.com/photo.jpg 或 /uploads/photo.jpg"
               />
             </div>
           </div>
