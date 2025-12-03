@@ -71,7 +71,11 @@ router.post('/single', authenticateToken, requireAdmin, upload.single('image'), 
     }
 
     const timestamp = Date.now();
-    const filename = `${timestamp}-${req.file.originalname.replace(/\s+/g, '-')}`;
+    // 获取文件扩展名
+    const ext = path.extname(req.file.originalname);
+    // 生成随机字符串作为文件名，避免中文乱码问题
+    const randomStr = Math.random().toString(36).substring(2, 8);
+    const filename = `${timestamp}-${randomStr}${ext}`;
     const filePath = path.join(uploadDir, filename);
     const thumbnailPath = path.join(thumbnailDir, `thumb-${filename}`);
 
@@ -124,7 +128,11 @@ router.post('/multiple', authenticateToken, requireAdmin, upload.array('images',
 
     for (const file of req.files) {
       const timestamp = Date.now();
-      const filename = `${timestamp}-${file.originalname.replace(/\s+/g, '-')}`;
+      // 获取文件扩展名
+      const ext = path.extname(file.originalname);
+      // 生成随机字符串作为文件名，避免中文乱码问题
+      const randomStr = Math.random().toString(36).substring(2, 8);
+      const filename = `${timestamp}-${randomStr}${ext}`;
       const filePath = path.join(uploadDir, filename);
       const thumbnailPath = path.join(thumbnailDir, `thumb-${filename}`);
 
