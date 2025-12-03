@@ -46,9 +46,9 @@ const ImageUploader = ({
       }
 
       const token = localStorage.getItem('adminToken');
-      const endpoint = multiple ? '/api/upload/multiple' : '/api/upload/single';
+      const endpoint = multiple ? '/upload/multiple' : '/upload/single';
 
-      const response = await fetch(`http://localhost:3001${endpoint}`, {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -65,11 +65,11 @@ const ImageUploader = ({
       if (multiple) {
         // 多图上传
         result.data.forEach((img: any) => {
-          onUploadSuccess(`http://localhost:3001${img.url}`);
+          onUploadSuccess(img.url);
         });
       } else {
         // 单图上传
-        const imageUrl = `http://localhost:3001${result.data.url}`;
+        const imageUrl = result.data.url;
         setPreview(imageUrl);
         onUploadSuccess(imageUrl);
       }
