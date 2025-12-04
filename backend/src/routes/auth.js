@@ -18,8 +18,8 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: '用户名或密码错误' });
     }
 
-    // 简单密码验证 (实际应用中应使用bcrypt)
-    const isValid = password === 'admin123'; // 临时简化验证
+    // 使用bcrypt验证密码
+    const isValid = await bcrypt.compare(password, user.password);
 
     if (!isValid) {
       return res.status(401).json({ error: '用户名或密码错误' });
