@@ -270,9 +270,14 @@ const HomePage = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {mediaItems.slice(0, 8).map((item) => (
                 <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="h-64 bg-gray-200 flex items-center justify-center">
+                  <div className="h-64 bg-gray-200 flex items-center justify-center overflow-hidden">
                     {item.coverImage ? (
-                      <img src={item.coverImage} alt={item.title} className="w-full h-full object-cover" />
+                      <LazyImage
+                        src={item.coverImage}
+                        alt={item.title}
+                        className="w-full h-full object-cover"
+                        wrapperClassName="w-full h-full"
+                      />
                     ) : (
                       <span className="text-5xl">{item.type === 'movie' ? '🎬' : '📚'}</span>
                     )}
