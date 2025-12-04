@@ -327,8 +327,8 @@ const HomePage = () => {
                     alt={photo.title}
                     className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 flex items-end">
-                    <div className="p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 flex items-end opacity-0 group-hover:opacity-100">
+                    <div className="p-4 text-white transition-opacity duration-300">
                       <h3 className="font-semibold mb-1">{photo.title}</h3>
                       {photo.description && (
                         <p className="text-sm text-gray-200">{photo.description}</p>
