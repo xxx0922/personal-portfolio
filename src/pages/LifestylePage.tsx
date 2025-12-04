@@ -231,8 +231,8 @@ const LifestylePage = () => {
                     alt={photo.title}
                     className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300">
-                    <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 flex items-end opacity-0 group-hover:opacity-100">
+                    <div className="p-4 text-white transition-opacity duration-300">
                       <h4 className="font-semibold">{photo.title}</h4>
                       <p className="text-sm opacity-90">{photo.category}</p>
                     </div>
