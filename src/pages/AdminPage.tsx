@@ -4,8 +4,6 @@ import ExperiencesManager from '../components/admin/ExperiencesManager';
 import ArticlesManager from '../components/admin/ArticlesManager';
 import NewsManager from '../components/admin/NewsManager';
 import FooterSettingsManager from '../components/admin/FooterSettingsManager';
-import SiteConfigManager from '../components/admin/SiteConfigManager';
-import SeoSettingsManager from '../components/admin/SeoSettingsManager';
 import NavigationManager from '../components/admin/NavigationManager';
 import FriendLinksManager from '../components/admin/FriendLinksManager';
 import ImageUploader from '../components/ImageUploader';
@@ -128,8 +126,6 @@ export default function AdminPage() {
             <nav className="flex -mb-px">
               {[
                 { id: 'overview', label: '概览' },
-                { id: 'site-config', label: '网站配置' },
-                { id: 'seo-settings', label: 'SEO设置' },
                 { id: 'navigation', label: '导航菜单' },
                 { id: 'friend-links', label: '友情链接' },
                 { id: 'experiences', label: '工作经历' },
@@ -183,8 +179,6 @@ export default function AdminPage() {
             </div>
           )}
 
-          {activeTab === 'site-config' && <SiteConfigManager />}
-          {activeTab === 'seo-settings' && <SeoSettingsManager />}
           {activeTab === 'navigation' && <NavigationManager />}
           {activeTab === 'friend-links' && <FriendLinksManager />}
           {activeTab === 'experiences' && <ExperiencesManager />}

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Masonry from 'react-masonry-css';
-import { getPersonalInfo, getSkills, getProjects, getMediaItems, getPhotos, getDocuments, getExperiences, getNews, getSiteConfig } from '../services/dataService';
-import type { Skill, PersonalInfo, Project, MediaItem, Photo, Document, Experience, News } from '../types';
+import { getPersonalInfo, getSkills, getProjects, getMediaItems, getPhotos, getDocuments, getExperiences, getNews, getSiteConfig, getArticles } from '../services/dataService';
+import type { Skill, PersonalInfo, Project, MediaItem, Photo, Document, Experience, News, Article } from '../types';
 import LazyImage from '../components/LazyImage';
 import Navbar from '../components/Navbar';
 import ContactForm from '../components/ContactForm';
@@ -27,13 +27,14 @@ const HomePage = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [news, setNews] = useState<News[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
   const [siteConfig, setSiteConfig] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [infoData, skillsData, projectsData, mediaData, photosData, documentsData, experiencesData, newsData, configData] = await Promise.all([
+        const [infoData, skillsData, projectsData, mediaData, photosData, documentsData, experiencesData, newsData, articlesData, configData] = await Promise.all([
           getPersonalInfo(),
           getSkills(),
           getProjects(),
@@ -42,6 +43,7 @@ const HomePage = () => {
           getDocuments(),
           getExperiences(),
           getNews(),
+          getArticles(),
           getSiteConfig()
         ]);
         setPersonalInfo(infoData);
@@ -52,6 +54,7 @@ const HomePage = () => {
         setDocuments(documentsData);
         setExperiences(experiencesData);
         setNews(newsData);
+        setArticles(articlesData);
         setSiteConfig(configData);
       } catch (error) {
         console.error('Failed to load data:', error);
@@ -354,6 +357,66 @@ const HomePage = () => {
               工作经历
             </h2>
             <ExperienceTimeline experiences={experiences} />
+          </div>
+        </section>
+      )}
+
+      {/* Articles/Blog Section */}
+      {articles.length > 0 && (
+        <section id="articles" className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-12">
+              <h2 className="text-3xl font-bold text-gray-900">
+                博客文章
+              </h2>
+              <Link to="/blog" className="text-primary-600 hover:text-primary-700 font-medium flex items-center">
+                查看全部
+                <svg className="w-5 h-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {articles.slice(0, 6).map((article) => (
+                <Link
+                  key={article.id}
+                  to={`/blog/${article.id}`}
+                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                >
+                  {article.coverImage && (
+                    <div className="h-48 bg-gray-200">
+                      <LazyImage
+                        src={article.coverImage}
+                        alt={article.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="p-6">
+                    <div className="flex items-center mb-3 text-sm text-gray-500">
+                      <span>{article.publishedAt || article.createdAt}</span>
+                      {article.category && (
+                        <>
+                          <span className="mx-2">•</span>
+                          <span className="text-primary-600">{article.category}</span>
+                        </>
+                      )}
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-900">{article.title}</h3>
+                    <p className="text-gray-600 mb-4 line-clamp-3">{article.summary || article.excerpt || article.content.substring(0, 150) + '...'}</p>
+                    {article.tags && article.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {article.tags.slice(0, 3).map((tag, idx) => (
+                          <span key={idx} className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded">
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
       )}
