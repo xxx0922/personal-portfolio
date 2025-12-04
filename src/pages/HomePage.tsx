@@ -320,12 +320,12 @@ const HomePage = () => {
               {photos.map((photo) => (
                 <div
                   key={photo.id}
-                  className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mb-6"
+                  className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mb-6 aspect-square"
                 >
                   <LazyImage
                     src={photo.url}
                     alt={photo.title}
-                    className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 flex items-end opacity-0 group-hover:opacity-100">
                     <div className="p-4 text-white transition-opacity duration-300">
