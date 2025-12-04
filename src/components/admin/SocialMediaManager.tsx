@@ -18,16 +18,18 @@ export default function SocialMediaManager() {
   const [editingLink, setEditingLink] = useState<SocialLink | null>(null);
 
   const platformOptions = [
-    { name: 'GitHub', icon: '💻', placeholder: 'https://github.com/username' },
-    { name: 'LinkedIn', icon: '💼', placeholder: 'https://linkedin.com/in/username' },
-    { name: 'Twitter', icon: '🐦', placeholder: 'https://twitter.com/username' },
-    { name: 'Email', icon: '📧', placeholder: 'mailto:your@email.com' },
+    { name: '抖音', icon: '🎵', placeholder: 'https://www.douyin.com/user/MS4wLjABAAAA...' },
+    { name: '小红书', icon: '📕', placeholder: 'https://www.xiaohongshu.com/user/profile/...' },
     { name: 'WeChat', icon: '💬', placeholder: 'WeChat ID or QR code URL' },
-    { name: 'YouTube', icon: '📺', placeholder: 'https://youtube.com/@channel' },
-    { name: 'Instagram', icon: '📷', placeholder: 'https://instagram.com/username' },
-    { name: 'Facebook', icon: '👥', placeholder: 'https://facebook.com/username' },
     { name: 'Bilibili', icon: '📺', placeholder: 'https://space.bilibili.com/uid' },
     { name: 'Zhihu', icon: '📝', placeholder: 'https://zhihu.com/people/username' },
+    { name: 'Twitter', icon: '🐦', placeholder: 'https://twitter.com/username' },
+    { name: 'Instagram', icon: '📷', placeholder: 'https://instagram.com/username' },
+    { name: 'YouTube', icon: '📺', placeholder: 'https://youtube.com/@channel' },
+    { name: 'GitHub', icon: '💻', placeholder: 'https://github.com/username' },
+    { name: 'LinkedIn', icon: '💼', placeholder: 'https://linkedin.com/in/username' },
+    { name: 'Email', icon: '📧', placeholder: 'mailto:your@email.com' },
+    { name: 'Facebook', icon: '👥', placeholder: 'https://facebook.com/username' },
     { name: '个人网站', icon: '🌐', placeholder: 'https://your-website.com' },
     { name: '其他', icon: '🔗', placeholder: 'https://...' }
   ];
@@ -45,8 +47,8 @@ export default function SocialMediaManager() {
       } else {
         // 使用默认数据
         setSocialLinks([
-          { id: '1', platform: 'GitHub', url: 'https://github.com', icon: '💻', order: 0, visible: true },
-          { id: '2', platform: 'LinkedIn', url: 'https://linkedin.com', icon: '💼', order: 1, visible: true }
+          { id: '1', platform: '抖音', url: 'https://www.douyin.com', icon: '🎵', order: 0, visible: true },
+          { id: '2', platform: '小红书', url: 'https://www.xiaohongshu.com', icon: '📕', order: 1, visible: true }
         ]);
       }
     } catch (error) {
