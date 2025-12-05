@@ -366,82 +366,92 @@ const HomePage = () => {
         </section>
       )}
 
-      {/* Articles/Blog Section */}
-      {articles.length > 0 && (
-        <section id="articles" className="py-16 bg-gray-50">
+      {/* Articles & News Combined Section */}
+      {(articles.length > 0 || news.length > 0) && (
+        <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-12">
-              <h2 className="text-3xl font-bold text-gray-900">
-                博客文章
-              </h2>
-              <Link to="/blog" className="text-primary-600 hover:text-primary-700 font-medium flex items-center">
-                查看全部
-                <svg className="w-5 h-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {articles.slice(0, 6).map((article) => (
-                <Link
-                  key={article.id}
-                  to={`/blog/${article.id}`}
-                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-                >
-                  {article.coverImage && (
-                    <div className="h-48 bg-gray-200">
-                      <LazyImage
-                        src={article.coverImage}
-                        alt={article.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+            <div className="grid lg:grid-cols-2 gap-12">
+              {/* Articles/Blog Section */}
+              <div id="articles">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    📝 博客文章
+                  </h2>
+                  {articles.length > 0 && (
+                    <Link to="/blog" className="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center">
+                      查看全部
+                      <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
                   )}
-                  <div className="p-6">
-                    <div className="flex items-center mb-3 text-sm text-gray-500">
-                      <span>{article.publishedAt || article.createdAt}</span>
-                      {article.category && (
-                        <>
-                          <span className="mx-2">•</span>
-                          <span className="text-primary-600">{article.category}</span>
-                        </>
-                      )}
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2 text-gray-900">{article.title}</h3>
-                    <p className="text-gray-600 mb-4 line-clamp-3">{article.summary || article.excerpt || article.content.substring(0, 150) + '...'}</p>
-                    {article.tags && article.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {article.tags.slice(0, 3).map((tag, idx) => (
-                          <span key={idx} className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded">
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                </div>
+                {articles.length > 0 ? (
+                  <div className="space-y-6">
+                    {articles.slice(0, 3).map((article) => (
+                      <Link
+                        key={article.id}
+                        to={`/blog/${article.id}`}
+                        className="block bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+                      >
+                        <div className="p-6">
+                          <div className="flex items-center mb-2 text-xs text-gray-500">
+                            <span>{article.publishedAt || article.createdAt}</span>
+                            {article.category && (
+                              <>
+                                <span className="mx-2">•</span>
+                                <span className="text-primary-600">{article.category}</span>
+                              </>
+                            )}
+                          </div>
+                          <h3 className="text-lg font-semibold mb-2 text-gray-900 line-clamp-2">{article.title}</h3>
+                          <p className="text-gray-600 text-sm line-clamp-2">{article.summary || article.excerpt || article.content.substring(0, 100) + '...'}</p>
+                          {article.tags && article.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mt-3">
+                              {article.tags.slice(0, 3).map((tag, idx) => (
+                                <span key={idx} className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded">
+                                  #{tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </Link>
+                    ))}
                   </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+                ) : (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <p className="text-gray-500">暂无博客文章</p>
+                    <p className="text-sm text-gray-400 mt-2">请在管理后台添加文章</p>
+                  </div>
+                )}
+              </div>
 
-      {/* News Section */}
-      {news.length > 0 && (
-        <section id="news" className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-12">
-              <h2 className="text-3xl font-bold text-gray-900">
-                新闻动态
-              </h2>
-              <Link to="/news" className="text-primary-600 hover:text-primary-700 font-medium flex items-center">
-                查看全部
-                <svg className="w-5 h-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
+              {/* News Section */}
+              <div id="news">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    📰 新闻动态
+                  </h2>
+                  {news.length > 0 && (
+                    <Link to="/news" className="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center">
+                      查看全部
+                      <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  )}
+                </div>
+                {news.length > 0 ? (
+                  <NewsList news={news} limit={3} />
+                ) : (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <p className="text-gray-500">暂无新闻动态</p>
+                    <p className="text-sm text-gray-400 mt-2">请在管理后台添加新闻</p>
+                  </div>
+                )}
+              </div>
             </div>
-            <NewsList news={news} limit={6} />
           </div>
         </section>
       )}

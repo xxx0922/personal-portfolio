@@ -98,11 +98,7 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-gray-600">
-          <p>默认账号: admin / admin123</p>
-        </div>
-
-        <div className="mt-4 text-center">
+        <div className="mt-6 text-center">
           <button
             onClick={() => navigate('/')}
             className="text-blue-600 hover:text-blue-800 text-sm"
