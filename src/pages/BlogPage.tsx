@@ -1,23 +1,28 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getArticles } from '../services/dataService';
-import type { Article } from '../types';
+import { getArticles, getPersonalInfo } from '../services/dataService';
+import type { Article, PersonalInfo } from '../types';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const BlogPage = () => {
   const [articles, setArticles] = useState<Article[]>([]);
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const data = await getArticles();
-        setArticles(data);
+        const [articlesData, infoData] = await Promise.all([
+          getArticles(),
+          getPersonalInfo()
+        ]);
+        setArticles(articlesData);
+        setPersonalInfo(infoData);
       } catch (error) {
-        console.error('Failed to load articles:', error);
+        console.error('Failed to load data:', error);
       } finally {
         setLoading(false);
       }
@@ -46,7 +51,7 @@ const BlogPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
+      <Navbar personalInfo={personalInfo || undefined} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* 页头 */}
