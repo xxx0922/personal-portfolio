@@ -303,6 +303,40 @@ const NavigationManager = () => {
                 <p className="text-xs text-gray-500 mt-1">
                   内部链接使用 / 或 #section，外部链接使用完整URL
                 </p>
+
+                {/* 常用内部链接快捷选择 */}
+                {!editingItem.isExternal && (
+                  <div className="mt-3 p-3 bg-blue-50 rounded-md">
+                    <p className="text-xs font-medium text-gray-700 mb-2">快捷选择常用链接：</p>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { label: '首页', path: '/' },
+                        { label: '关于我', path: '/about' },
+                        { label: '博客文章', path: '/blog' },
+                        { label: '新闻动态', path: '/news' },
+                        { label: '项目经验', path: '#projects' },
+                        { label: '影音书籍', path: '#media' },
+                        { label: '精彩瞬间', path: '#photos' },
+                        { label: '工作经历', path: '#experience' },
+                        { label: '知识文档', path: '#documents' },
+                        { label: '联系我', path: '#contact' }
+                      ].map((link) => (
+                        <button
+                          key={link.path}
+                          type="button"
+                          onClick={() => setEditingItem({ ...editingItem, path: link.path })}
+                          className={`px-2 py-1 text-xs rounded border transition ${
+                            editingItem.path === link.path
+                              ? 'bg-blue-500 text-white border-blue-600'
+                              : 'bg-white text-gray-700 border-gray-300 hover:bg-blue-100'
+                          }`}
+                        >
+                          {link.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div>
