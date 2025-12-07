@@ -178,45 +178,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Skills Section */}
-      <section id="skills" className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
-            专业技能
-          </h2>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {Object.entries(
-              skills.reduce((acc, skill) => {
-                if (!acc[skill.category]) acc[skill.category] = [];
-                acc[skill.category].push(skill);
-                return acc;
-              }, {} as Record<string, Skill[]>)
-            ).map(([category, categorySkills]) => (
-              <div key={category} className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold mb-4 text-gray-800">{category}</h3>
-                <div className="space-y-3">
-                  {categorySkills.map((skill) => (
-                    <div key={skill.name}>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm font-medium text-gray-700">{skill.name}</span>
-                        <span className="text-sm text-gray-500">{skill.level}/5</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-primary-600 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${(skill.level / 5) * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Projects Section */}
       {projects.length > 0 && (
         <section id="projects" className="py-16 bg-gray-50">

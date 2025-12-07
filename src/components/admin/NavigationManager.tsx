@@ -305,16 +305,36 @@ const NavigationManager = () => {
                 </p>
               </div>
 
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={editingItem.isExternal}
-                  onChange={(e) => setEditingItem({ ...editingItem, isExternal: e.target.checked })}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label className="ml-2 block text-sm text-gray-900">
-                  外部链接（在新标签页打开）
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  链接类型 <span className="text-red-500">*</span>
                 </label>
+                <div className="flex space-x-4">
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={!editingItem.isExternal}
+                      onChange={() => setEditingItem({ ...editingItem, isExternal: false })}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                    />
+                    <span className="ml-2 text-sm text-gray-900">
+                      <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold">内部链接</span>
+                      <span className="ml-2 text-gray-500">（本站页面）</span>
+                    </span>
+                  </label>
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={editingItem.isExternal}
+                      onChange={() => setEditingItem({ ...editingItem, isExternal: true })}
+                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300"
+                    />
+                    <span className="ml-2 text-sm text-gray-900">
+                      <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-semibold">外部链接</span>
+                      <span className="ml-2 text-gray-500">（新标签打开）</span>
+                    </span>
+                  </label>
+                </div>
               </div>
 
               <div className="flex items-center">

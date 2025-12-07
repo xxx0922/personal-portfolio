@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getNews } from '../services/dataService';
-import type { News } from '../types';
+import { getNews, getPersonalInfo } from '../services/dataService';
+import type { News, PersonalInfo } from '../types';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -9,21 +9,26 @@ import { useSEO } from '../hooks/useSEO';
 
 const NewsPage = () => {
   const [news, setNews] = useState<News[]>([]);
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
 
   useEffect(() => {
-    const loadNews = async () => {
+    const loadData = async () => {
       try {
-        const data = await getNews();
-        setNews(data);
+        const [newsData, infoData] = await Promise.all([
+          getNews(),
+          getPersonalInfo()
+        ]);
+        setNews(newsData);
+        setPersonalInfo(infoData);
       } catch (error) {
-        console.error('Failed to load news:', error);
+        console.error('Failed to load data:', error);
       } finally {
         setLoading(false);
       }
     };
-    loadNews();
+    loadData();
   }, []);
 
   // SEO优化
@@ -59,7 +64,7 @@ const NewsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
+      <Navbar personalInfo={personalInfo || undefined} />
 
       {/* Page Header */}
       <div className="bg-gradient-to-r from-primary-600 to-primary-700 text-white pt-24 pb-12">
