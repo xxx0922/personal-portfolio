@@ -115,6 +115,12 @@ const NavigationManager = () => {
     ));
   };
 
+  const handleToggleExternal = (id: string) => {
+    setItems(items.map(item =>
+      item.id === id ? { ...item, isExternal: !item.isExternal } : item
+    ));
+  };
+
   const handleSaveEdit = () => {
     if (!editingItem) return;
 
@@ -216,11 +222,14 @@ const NavigationManager = () => {
                   <div className="text-sm text-gray-900 font-mono">{item.path}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    item.isExternal ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
-                  }`}>
+                  <button
+                    onClick={() => handleToggleExternal(item.id)}
+                    className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full cursor-pointer hover:opacity-80 transition ${
+                      item.isExternal ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                    }`}
+                  >
                     {item.isExternal ? '外部链接' : '内部链接'}
-                  </span>
+                  </button>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <button
