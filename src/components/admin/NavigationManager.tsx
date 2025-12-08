@@ -360,7 +360,11 @@ const NavigationManager = () => {
                         <span className="ml-2 text-sm text-gray-700">本站页面</span>
                       </div>
                       <div className="mt-1 text-xs text-gray-500 font-mono">
-                        https://www.bohenan.com<span className="text-blue-600">{editingItem.path || '/...'}</span>
+                        https://www.bohenan.com<span className="text-blue-600">
+                          {editingItem.path
+                            ? (editingItem.path.startsWith('#') ? '/' + editingItem.path : editingItem.path)
+                            : '/...'}
+                        </span>
                       </div>
                     </div>
                   </label>
