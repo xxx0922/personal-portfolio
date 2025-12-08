@@ -19,6 +19,7 @@ void downloadVCard;
 
 const HomePage = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
+  const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -230,15 +231,31 @@ const HomePage = () => {
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {mediaItems.slice(0, 8).map((item) => (
-                <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="h-64 bg-gray-200 flex items-center justify-center overflow-hidden">
+                <div
+                  key={item.id}
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedMedia(item)}
+                >
+                  <div className="h-64 bg-gray-200 flex items-center justify-center overflow-hidden relative group">
                     {item.coverImage ? (
-                      <LazyImage
-                        src={item.coverImage}
-                        alt={item.title}
-                        className="w-full h-full object-cover"
-                        wrapperClassName="w-full h-full"
-                      />
+                      <>
+                        <LazyImage
+                          src={item.coverImage}
+                          alt={item.title}
+                          className="w-full h-full object-cover"
+                          wrapperClassName="w-full h-full"
+                        />
+                        {/* 播放按钮覆盖层 (仅电影类型显示) */}
+                        {item.type === 'movie' && item.videoUrl && (
+                          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center">
+                            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:scale-110">
+                              <svg className="w-8 h-8 text-purple-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                              </svg>
+                            </div>
+                          </div>
+                        )}
+                      </>
                     ) : (
                       <span className="text-5xl">{item.type === 'movie' ? '🎬' : '📚'}</span>
                     )}
@@ -266,6 +283,82 @@ const HomePage = () => {
             </div>
           </div>
         </section>
+      )}
+
+      {/* Media Detail Modal */}
+      {selectedMedia && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedMedia(null)}
+        >
+          <div
+            className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 关闭按钮 */}
+            <button
+              onClick={() => setSelectedMedia(null)}
+              className="absolute top-4 right-4 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* 视频或封面 */}
+            {selectedMedia.type === 'movie' && selectedMedia.videoUrl ? (
+              <div className="relative pb-[56.25%] bg-black">
+                <video
+                  controls
+                  autoPlay
+                  className="absolute inset-0 w-full h-full"
+                  poster={selectedMedia.coverImage}
+                >
+                  <source src={selectedMedia.videoUrl} type="video/mp4" />
+                  您的浏览器不支持视频播放
+                </video>
+              </div>
+            ) : (
+              selectedMedia.coverImage && (
+                <div className="w-full">
+                  <img
+                    src={selectedMedia.coverImage}
+                    alt={selectedMedia.title}
+                    className="w-full h-auto"
+                  />
+                </div>
+              )
+            )}
+
+            {/* 详情内容 */}
+            <div className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <div className="flex items-center mb-2">
+                    <span className={`text-xs px-2 py-1 rounded mr-2 ${
+                      selectedMedia.type === 'movie' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'
+                    }`}>
+                      {selectedMedia.type === 'movie' ? '电影' : '书籍'}
+                    </span>
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i} className={`text-lg ${i < selectedMedia.rating ? 'text-yellow-400' : 'text-gray-300'}`}>
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedMedia.title}</h2>
+                </div>
+              </div>
+
+              <div className="prose max-w-none">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">我的评价</h3>
+                <p className="text-gray-700 whitespace-pre-line">{selectedMedia.review}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Photo Gallery Section */}

@@ -45,6 +45,7 @@ export interface MediaItem {
   rating: number; // 1-5
   review: string;
   coverImage: string;
+  videoUrl?: string; // 视频URL（可选，仅电影类型使用）
   tags: string[];
   date: string;
   attachments?: Array<{

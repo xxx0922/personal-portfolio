@@ -133,7 +133,7 @@ export default function AdminPage() {
                 { id: 'news', label: '新闻动态' },
                 { id: 'projects', label: '项目管理' },
                 { id: 'skills', label: '技能管理' },
-                { id: 'media', label: '媒体管理' },
+                { id: 'media', label: '影音书籍' },
                 { id: 'photos', label: '照片管理' },
                 { id: 'documents', label: '文档管理' },
                 { id: 'messages', label: '留言管理' },
@@ -749,7 +749,7 @@ function SkillForm({ skill, onClose, onSave }: any) {
   );
 }
 
-// 媒体管理组件
+// 影音书籍管理组件
 function MediaManager() {
   const [media, setMedia] = useState<any[]>([]);
   const [isAdding, setIsAdding] = useState(false);
@@ -792,7 +792,7 @@ function MediaManager() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">媒体管理</h2>
+        <h2 className="text-2xl font-bold">影音书籍管理</h2>
         <div className="flex items-center space-x-4">
           <div className="flex space-x-2">
             <button
