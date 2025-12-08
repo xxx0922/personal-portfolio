@@ -46,7 +46,7 @@ const Navbar = ({ personalInfo }: NavbarProps) => {
           { id: '1', label: '首页', path: '/', order: 0, visible: true, isExternal: false },
           { id: '2', label: '关于我', path: '/about', order: 1, visible: true, isExternal: false },
           { id: '3', label: '博客文章', path: '#articles', order: 2, visible: true, isExternal: false },
-          { id: '10', label: '新闻动态', path: '/news', order: 3, visible: true, isExternal: false },
+          { id: '10', label: '新闻动态', path: '#news', order: 3, visible: true, isExternal: false },
           { id: '4', label: '项目经验', path: '#projects', order: 4, visible: true, isExternal: false },
           { id: '5', label: '专业技能', path: '#skills', order: 5, visible: true, isExternal: false },
           { id: '6', label: '影音书籍', path: '#media', order: 6, visible: true, isExternal: false },

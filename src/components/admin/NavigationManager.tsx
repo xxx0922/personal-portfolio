@@ -313,7 +313,7 @@ const NavigationManager = () => {
                         { label: '首页', path: '/' },
                         { label: '关于我', path: '/about' },
                         { label: '博客文章', path: '#articles' },
-                        { label: '新闻动态', path: '/news' },
+                        { label: '新闻动态', path: '#news' },
                         { label: '项目经验', path: '#projects' },
                         { label: '影音书籍', path: '#media' },
                         { label: '精彩瞬间', path: '#photos' },

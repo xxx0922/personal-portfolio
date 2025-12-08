@@ -27,7 +27,7 @@
     {
       "id": "10",
       "label": "新闻动态",
-      "path": "/news",
+      "path": "#news",
       "order": 3,
       "visible": true,
       "isExternal": false

@@ -20,6 +20,7 @@ void downloadVCard;
 const HomePage = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
+  const [selectedGalleryPhoto, setSelectedGalleryPhoto] = useState<Photo | null>(null);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -352,10 +353,74 @@ const HomePage = () => {
                 </div>
               </div>
 
-              <div className="prose max-w-none">
+              <div className="prose max-w-none mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">我的评价</h3>
                 <p className="text-gray-700 whitespace-pre-line">{selectedMedia.review}</p>
               </div>
+
+              {/* 附件列表（PDF、文档等） */}
+              {selectedMedia.attachments && selectedMedia.attachments.length > 0 && (
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">相关资料</h3>
+                  <div className="space-y-2">
+                    {selectedMedia.attachments.map((attachment, index) => {
+                      const isPDF = attachment.url.toLowerCase().endsWith('.pdf') || attachment.type === 'application/pdf';
+                      return (
+                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                          <div className="flex items-center flex-1">
+                            <div className={`w-10 h-10 rounded flex items-center justify-center mr-3 ${
+                              isPDF ? 'bg-red-100' : 'bg-blue-100'
+                            }`}>
+                              {isPDF ? (
+                                <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M4 18h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z"/>
+                                  <text x="6" y="14" fontSize="8" fill="currentColor">PDF</text>
+                                </svg>
+                              ) : (
+                                <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-gray-900 truncate">{attachment.name}</p>
+                              {attachment.size && (
+                                <p className="text-sm text-gray-500">{(attachment.size / 1024 / 1024).toFixed(2)} MB</p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2 ml-4">
+                            {isPDF && (
+                              <a
+                                href={attachment.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition flex items-center"
+                              >
+                                <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                预览
+                              </a>
+                            )}
+                            <a
+                              href={attachment.url}
+                              download={attachment.name}
+                              className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition flex items-center"
+                            >
+                              <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                              </svg>
+                              下载
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -383,6 +448,7 @@ const HomePage = () => {
                 <div
                   key={photo.id}
                   className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mb-6 aspect-square"
+                  onClick={() => setSelectedGalleryPhoto(photo)}
                 >
                   <LazyImage
                     src={photo.url}
@@ -588,6 +654,43 @@ const HomePage = () => {
             )}
           </div>
         </section>
+      )}
+
+      {/* Photo Lightbox Modal */}
+      {selectedGalleryPhoto && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedGalleryPhoto(null)}
+        >
+          <button
+            onClick={() => setSelectedGalleryPhoto(null)}
+            className="absolute top-4 right-4 z-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition"
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <div
+            className="max-w-7xl max-h-[90vh] w-full flex flex-col items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={selectedGalleryPhoto.url}
+              alt={selectedGalleryPhoto.title}
+              className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+            />
+            <div className="mt-6 text-center bg-white rounded-lg p-6 max-w-2xl">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedGalleryPhoto.title}</h3>
+              {selectedGalleryPhoto.description && (
+                <p className="text-gray-600 mb-3">{selectedGalleryPhoto.description}</p>
+              )}
+              <span className="inline-block bg-primary-100 text-primary-700 text-sm px-3 py-1 rounded-full">
+                {selectedGalleryPhoto.category}
+              </span>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Footer */}
