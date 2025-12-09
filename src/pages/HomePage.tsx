@@ -538,7 +538,7 @@ const HomePage = () => {
                     {articles.slice(0, 3).map((article) => (
                       <Link
                         key={article.id}
-                        to={`/blog/${article.id}`}
+                        to={`/article/${article.id}`}
                         className="block bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
                       >
                         <div className="p-6">
@@ -652,40 +652,6 @@ const HomePage = () => {
           <ContactForm />
         </div>
       </section>
-
-      {/* Call to Action */}
-      {siteConfig?.homepage?.showHeroSection && (
-        <section className="py-20 bg-primary-600 text-white">
-          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold mb-4">
-              {siteConfig?.homepage?.heroTitle || '欢迎了解更多'}
-            </h2>
-            <p className="text-xl mb-8 text-primary-100">
-              {siteConfig?.homepage?.heroDescription || '探索更多工作成就、兴趣爱好和知识文档'}
-            </p>
-            {siteConfig?.homepage?.showStatsSection && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
-                  <div className="text-3xl font-bold">{projects.length}</div>
-                  <div className="text-sm text-primary-100">项目经验</div>
-                </div>
-                <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
-                  <div className="text-3xl font-bold">{skills.length}</div>
-                  <div className="text-sm text-primary-100">专业技能</div>
-                </div>
-                <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
-                  <div className="text-3xl font-bold">{mediaItems.length}</div>
-                  <div className="text-sm text-primary-100">影音书籍</div>
-                </div>
-                <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
-                  <div className="text-3xl font-bold">{documents.length}</div>
-                  <div className="text-sm text-primary-100">知识文档</div>
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
 
       {/* Photo Lightbox Modal */}
       {selectedGalleryPhoto && (
