@@ -96,6 +96,28 @@ const NewsDetailPage = () => {
     return colors[type] || 'bg-gray-100 text-gray-700';
   };
 
+  const handleShare = (platform: string) => {
+    const url = window.location.href;
+    const title = newsItem?.title || '新闻动态';
+
+    switch (platform) {
+      case 'weibo':
+        window.open(`https://service.weibo.com/share/share.php?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`, '_blank');
+        break;
+      case 'wechat':
+        // 微信分享需要复制链接
+        navigator.clipboard.writeText(url).then(() => {
+          alert('链接已复制到剪贴板，请在微信中粘贴分享');
+        });
+        break;
+      case 'copy':
+        navigator.clipboard.writeText(url).then(() => {
+          alert('链接已复制到剪贴板');
+        });
+        break;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -188,17 +210,29 @@ const NewsDetailPage = () => {
             <div>
               <h3 className="text-lg font-semibold mb-2">分享新闻</h3>
               <div className="flex space-x-3">
-                <button className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition" title="分享到微博">
+                <button
+                  onClick={() => handleShare('weibo')}
+                  className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                  title="分享到微博"
+                >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M9.68 15.92c-2.27 0-4.12-1.5-4.12-3.35 0-1.85 1.85-3.35 4.12-3.35 2.28 0 4.13 1.5 4.13 3.35 0 1.85-1.85 3.35-4.13 3.35zM22 7.5c0-1.38-1.12-2.5-2.5-2.5S17 6.12 17 7.5s1.12 2.5 2.5 2.5S22 8.88 22 7.5z"/>
                   </svg>
                 </button>
-                <button className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition" title="分享到微信">
+                <button
+                  onClick={() => handleShare('wechat')}
+                  className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                  title="分享到微信"
+                >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.478c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348z"/>
                   </svg>
                 </button>
-                <button className="p-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition" title="复制链接">
+                <button
+                  onClick={() => handleShare('copy')}
+                  className="p-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition"
+                  title="复制链接"
+                >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>

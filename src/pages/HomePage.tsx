@@ -397,7 +397,7 @@ const HomePage = () => {
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-gray-900 truncate">{attachment.name}</p>
+                              <p className="font-medium text-gray-900 truncate">{decodeURIComponent(attachment.name)}</p>
                               {attachment.size && (
                                 <p className="text-sm text-gray-500">{(attachment.size / 1024 / 1024).toFixed(2)} MB</p>
                               )}
@@ -772,7 +772,7 @@ const HomePage = () => {
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-gray-900 truncate">{attachment.name}</p>
+                              <p className="font-medium text-gray-900 truncate">{decodeURIComponent(attachment.name)}</p>
                               {attachment.size && (
                                 <p className="text-sm text-gray-500">{(attachment.size / 1024 / 1024).toFixed(2)} MB</p>
                               )}
