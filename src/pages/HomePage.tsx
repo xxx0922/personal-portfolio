@@ -375,6 +375,23 @@ const HomePage = () => {
                         fullUrl = `https://www.bohenan.com${fullUrl}`;
                       }
 
+                      // 从URL中提取并解码文件名
+                      let displayName = attachment.name;
+                      try {
+                        // 如果name包含编码字符，尝试解码
+                        if (attachment.name.includes('%')) {
+                          displayName = decodeURIComponent(attachment.name);
+                        } else if (fullUrl.includes('%')) {
+                          // 从URL中提取文件名并解码
+                          const urlParts = fullUrl.split('/');
+                          const encodedFilename = urlParts[urlParts.length - 1];
+                          displayName = decodeURIComponent(encodedFilename);
+                        }
+                      } catch (e) {
+                        // 解码失败，使用原始名称
+                        displayName = attachment.name;
+                      }
+
                       return (
                         <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
                           <div className="flex items-center flex-1">
@@ -397,7 +414,7 @@ const HomePage = () => {
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-gray-900 truncate">{decodeURIComponent(attachment.name)}</p>
+                              <p className="font-medium text-gray-900 truncate">{displayName}</p>
                               {attachment.size && (
                                 <p className="text-sm text-gray-500">{(attachment.size / 1024 / 1024).toFixed(2)} MB</p>
                               )}
@@ -750,6 +767,23 @@ const HomePage = () => {
                         fullUrl = `https://www.bohenan.com${fullUrl}`;
                       }
 
+                      // 从URL中提取并解码文件名
+                      let displayName = attachment.name;
+                      try {
+                        // 如果name包含编码字符，尝试解码
+                        if (attachment.name.includes('%')) {
+                          displayName = decodeURIComponent(attachment.name);
+                        } else if (fullUrl.includes('%')) {
+                          // 从URL中提取文件名并解码
+                          const urlParts = fullUrl.split('/');
+                          const encodedFilename = urlParts[urlParts.length - 1];
+                          displayName = decodeURIComponent(encodedFilename);
+                        }
+                      } catch (e) {
+                        // 解码失败，使用原始名称
+                        displayName = attachment.name;
+                      }
+
                       return (
                         <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
                           <div className="flex items-center flex-1">
@@ -772,7 +806,7 @@ const HomePage = () => {
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-gray-900 truncate">{decodeURIComponent(attachment.name)}</p>
+                              <p className="font-medium text-gray-900 truncate">{displayName}</p>
                               {attachment.size && (
                                 <p className="text-sm text-gray-500">{(attachment.size / 1024 / 1024).toFixed(2)} MB</p>
                               )}
