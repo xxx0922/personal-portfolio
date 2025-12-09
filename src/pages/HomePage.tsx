@@ -21,6 +21,7 @@ const HomePage = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
   const [selectedGalleryPhoto, setSelectedGalleryPhoto] = useState<Photo | null>(null);
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -611,7 +612,11 @@ const HomePage = () => {
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
               {documents.slice(0, 6).map((doc) => (
-                <div key={doc.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <div
+                  key={doc.id}
+                  className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedDocument(doc)}
+                >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold mb-2 text-gray-900">{doc.title}</h3>
@@ -706,6 +711,153 @@ const HomePage = () => {
               alt={selectedGalleryPhoto.title}
               className="max-w-full max-h-[95vh] object-contain"
             />
+          </div>
+        </div>
+      )}
+
+      {/* Document Detail Modal */}
+      {selectedDocument && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedDocument(null)}
+        >
+          <div
+            className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 关闭按钮 */}
+            <button
+              onClick={() => setSelectedDocument(null)}
+              className="absolute top-4 right-4 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* 详情内容 */}
+            <div className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <div className="flex items-center mb-2">
+                    <span className="text-xs px-2 py-1 rounded mr-2 bg-blue-100 text-blue-700">
+                      {selectedDocument.category}
+                    </span>
+                    <span className="text-sm text-gray-500">{selectedDocument.date}</span>
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedDocument.title}</h2>
+                </div>
+              </div>
+
+              <div className="prose max-w-none mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">内容详情</h3>
+                <p className="text-gray-700 whitespace-pre-line">{selectedDocument.content}</p>
+              </div>
+
+              {/* 标签 */}
+              {selectedDocument.tags && selectedDocument.tags.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">相关标签</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedDocument.tags.map((tag, idx) => (
+                      <span key={idx} className="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 附件列表 */}
+              {selectedDocument.attachments && selectedDocument.attachments.length > 0 && (
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">相关资料</h3>
+                  <div className="space-y-2">
+                    {selectedDocument.attachments.map((attachment, index) => {
+                      const isPDF = attachment.url.toLowerCase().endsWith('.pdf') || attachment.type === 'application/pdf';
+                      const isVideo = attachment.url.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/);
+                      // 处理URL：替换localhost为正确的域名，或添加域名前缀
+                      let fullUrl = attachment.url;
+                      if (fullUrl.includes('localhost')) {
+                        fullUrl = fullUrl.replace(/http:\/\/localhost:\d+/, 'https://www.bohenan.com');
+                      } else if (!fullUrl.startsWith('http')) {
+                        fullUrl = `https://www.bohenan.com${fullUrl}`;
+                      }
+
+                      return (
+                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                          <div className="flex items-center flex-1">
+                            <div className={`w-10 h-10 rounded flex items-center justify-center mr-3 ${
+                              isPDF ? 'bg-red-100' : isVideo ? 'bg-purple-100' : 'bg-blue-100'
+                            }`}>
+                              {isPDF ? (
+                                <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M4 18h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z"/>
+                                  <text x="6" y="14" fontSize="8" fill="currentColor">PDF</text>
+                                </svg>
+                              ) : isVideo ? (
+                                <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z"/>
+                                </svg>
+                              ) : (
+                                <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-gray-900 truncate">{attachment.name}</p>
+                              {attachment.size && (
+                                <p className="text-sm text-gray-500">{(attachment.size / 1024 / 1024).toFixed(2)} MB</p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2 ml-4">
+                            {isPDF && (
+                              <a
+                                href={fullUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition flex items-center"
+                              >
+                                <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                预览
+                              </a>
+                            )}
+                            {isVideo && (
+                              <a
+                                href={fullUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-1.5 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition flex items-center"
+                              >
+                                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                播放
+                              </a>
+                            )}
+                            <a
+                              href={fullUrl}
+                              download={attachment.name}
+                              className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition flex items-center"
+                            >
+                              <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                              </svg>
+                              下载
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
