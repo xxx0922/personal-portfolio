@@ -264,16 +264,59 @@ function ProjectsManager() {
     }
   };
 
+  const handleExport = () => {
+    try {
+      // 准备导出数据
+      const exportData = projects.map((p, index) => ({
+        '序号': index + 1,
+        '项目名称': p.title,
+        '项目年份': p.year || '-',
+        '合同金额': p.contractAmount ? `¥${p.contractAmount.toLocaleString()}` : '-',
+        '角色': p.role,
+        '周期': p.duration,
+        '技术栈': Array.isArray(p.technologies) ? p.technologies.join(', ') : '-',
+        '项目描述': p.description
+      }));
+
+      // 转换为CSV格式
+      const headers = Object.keys(exportData[0]);
+      const csv = [
+        headers.join(','),
+        ...exportData.map(row => headers.map(h => `"${row[h]}"`).join(','))
+      ].join('\n');
+
+      // 创建并下载文件
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `项目汇总_${new Date().toISOString().slice(0, 10)}.csv`;
+      link.click();
+    } catch (error) {
+      alert('导出失败');
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">项目管理</h2>
-        <button
-          onClick={() => setIsAdding(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          + 添加项目
-        </button>
+        <div className="flex space-x-2">
+          <button
+            onClick={handleExport}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 flex items-center"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            导出项目汇总
+          </button>
+          <button
+            onClick={() => setIsAdding(true)}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            + 添加项目
+          </button>
+        </div>
       </div>
 
       <div className="space-y-4">
@@ -283,9 +326,13 @@ function ProjectsManager() {
               <div className="flex-1">
                 <h3 className="text-lg font-semibold">{project.title}</h3>
                 <p className="text-gray-600 mt-1">{project.description}</p>
-                <div className="mt-2 text-sm text-gray-500">
-                  <span className="mr-4">角色: {project.role}</span>
-                  <span>周期: {project.duration}</span>
+                <div className="mt-2 text-sm text-gray-500 space-y-1">
+                  <div className="flex flex-wrap gap-4">
+                    <span>👤 角色: {project.role}</span>
+                    <span>⏱️ 周期: {project.duration}</span>
+                    {project.year && <span>📅 年份: {project.year}</span>}
+                    {project.contractAmount && <span>💰 金额: ¥{project.contractAmount.toLocaleString()}</span>}
+                  </div>
                 </div>
               </div>
               <div className="flex space-x-2">
@@ -332,6 +379,8 @@ function ProjectForm({ project, onClose, onSave }: any) {
     description: '',
     role: '',
     duration: '',
+    year: '',
+    contractAmount: undefined,
     technologies: [],
     images: [],
     attachments: [],
@@ -408,6 +457,30 @@ function ProjectForm({ project, onClose, onSave }: any) {
                 onChange={e => setFormData({ ...formData, duration: e.target.value })}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white px-3 py-2 border"
                 required
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">项目年份</label>
+              <input
+                type="text"
+                placeholder="例如: 2024"
+                value={formData.year || ''}
+                onChange={e => setFormData({ ...formData, year: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white px-3 py-2 border"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">合同金额（元）</label>
+              <input
+                type="number"
+                placeholder="例如: 100000"
+                value={formData.contractAmount || ''}
+                onChange={e => setFormData({ ...formData, contractAmount: e.target.value ? Number(e.target.value) : undefined })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white px-3 py-2 border"
+                min="0"
+                step="0.01"
               />
             </div>
           </div>

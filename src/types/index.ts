@@ -25,6 +25,8 @@ export interface Project {
   description: string;
   role: string;
   duration: string;
+  year?: string; // 项目年份
+  contractAmount?: number; // 合同金额
   technologies: string[];
   images: string[];
   achievements: string[];
