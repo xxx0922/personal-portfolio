@@ -365,6 +365,11 @@ const HomePage = () => {
                   <div className="space-y-2">
                     {selectedMedia.attachments.map((attachment, index) => {
                       const isPDF = attachment.url.toLowerCase().endsWith('.pdf') || attachment.type === 'application/pdf';
+                      // 处理URL：如果是相对路径，转换为完整URL
+                      const fullUrl = attachment.url.startsWith('http')
+                        ? attachment.url
+                        : `https://www.bohenan.com${attachment.url}`;
+
                       return (
                         <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
                           <div className="flex items-center flex-1">
@@ -392,7 +397,7 @@ const HomePage = () => {
                           <div className="flex items-center space-x-2 ml-4">
                             {isPDF && (
                               <a
-                                href={attachment.url}
+                                href={fullUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition flex items-center"
@@ -405,7 +410,7 @@ const HomePage = () => {
                               </a>
                             )}
                             <a
-                              href={attachment.url}
+                              href={fullUrl}
                               download={attachment.name}
                               className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition flex items-center"
                             >
@@ -659,36 +664,27 @@ const HomePage = () => {
       {/* Photo Lightbox Modal */}
       {selectedGalleryPhoto && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4"
           onClick={() => setSelectedGalleryPhoto(null)}
         >
           <button
             onClick={() => setSelectedGalleryPhoto(null)}
-            className="absolute top-4 right-4 z-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition"
+            className="absolute top-4 right-4 z-10 w-12 h-12 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full shadow-lg flex items-center justify-center transition"
           >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
           <div
-            className="max-w-7xl max-h-[90vh] w-full flex flex-col items-center"
+            className="max-w-7xl max-h-[95vh] w-full flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
             <img
               src={selectedGalleryPhoto.url}
               alt={selectedGalleryPhoto.title}
-              className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+              className="max-w-full max-h-[95vh] object-contain"
             />
-            <div className="mt-6 text-center bg-white rounded-lg p-6 max-w-2xl">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedGalleryPhoto.title}</h3>
-              {selectedGalleryPhoto.description && (
-                <p className="text-gray-600 mb-3">{selectedGalleryPhoto.description}</p>
-              )}
-              <span className="inline-block bg-primary-100 text-primary-700 text-sm px-3 py-1 rounded-full">
-                {selectedGalleryPhoto.category}
-              </span>
-            </div>
           </div>
         </div>
       )}

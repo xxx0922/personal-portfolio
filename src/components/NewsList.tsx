@@ -40,15 +40,15 @@ const NewsList = ({ news, limit }: NewsListProps) => {
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="space-y-6">
       {displayNews.map((item) => (
         <Link
           key={item.id}
           to={`/news/${item.id}`}
-          className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow overflow-hidden block"
+          className="bg-gray-50 rounded-lg hover:shadow-lg transition-shadow overflow-hidden block flex items-start"
         >
           {item.image && (
-            <div className="h-48 overflow-hidden">
+            <div className="w-32 h-24 flex-shrink-0 overflow-hidden">
               <img
                 src={item.image}
                 alt={item.title}

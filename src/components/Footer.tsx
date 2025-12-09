@@ -23,7 +23,6 @@ const Footer = () => {
   const quickLinks = [
     { name: '首页', href: '/' },
     { name: '项目经验', href: '/#projects' },
-    { name: '专业技能', href: '/#skills' },
     { name: '影音书籍', href: '/#media' },
     { name: '精彩瞬间', href: '/#photos' },
     { name: '知识文档', href: '/#documents' },
