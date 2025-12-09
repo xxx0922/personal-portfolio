@@ -181,6 +181,96 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Articles & News Combined Section */}
+      {(articles.length > 0 || news.length > 0) && (
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12">
+              {/* Articles/Blog Section */}
+              <div id="articles">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    📝 博客文章
+                  </h2>
+                  {articles.length > 0 && (
+                    <Link to="/blog" className="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center">
+                      查看全部
+                      <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  )}
+                </div>
+                {articles.length > 0 ? (
+                  <div className="space-y-6">
+                    {articles.slice(0, 3).map((article) => (
+                      <Link
+                        key={article.id}
+                        to={`/article/${article.id}`}
+                        className="block bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+                      >
+                        <div className="p-6">
+                          <div className="flex items-center mb-2 text-xs text-gray-500">
+                            <span>{article.publishedAt || article.createdAt}</span>
+                            {article.category && (
+                              <>
+                                <span className="mx-2">•</span>
+                                <span className="text-primary-600">{article.category}</span>
+                              </>
+                            )}
+                          </div>
+                          <h3 className="text-lg font-semibold mb-2 text-gray-900 line-clamp-2">{article.title}</h3>
+                          <p className="text-gray-600 text-sm line-clamp-2">{article.summary || article.excerpt || article.content.substring(0, 100) + '...'}</p>
+                          {article.tags && article.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mt-3">
+                              {article.tags.slice(0, 3).map((tag, idx) => (
+                                <span key={idx} className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded">
+                                  #{tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <p className="text-gray-500">暂无博客文章</p>
+                    <p className="text-sm text-gray-400 mt-2">请在管理后台添加文章</p>
+                  </div>
+                )}
+              </div>
+
+              {/* News Section */}
+              <div id="news">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    📰 新闻动态
+                  </h2>
+                  {news.length > 0 && (
+                    <Link to="/news" className="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center">
+                      查看全部
+                      <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  )}
+                </div>
+                {news.length > 0 ? (
+                  <NewsList news={news} limit={3} />
+                ) : (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <p className="text-gray-500">暂无新闻动态</p>
+                    <p className="text-sm text-gray-400 mt-2">请在管理后台添加新闻</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Projects Section */}
       {projects.length > 0 && (
         <section id="projects" className="py-16 bg-gray-50">
@@ -220,6 +310,54 @@ const HomePage = () => {
                 </Link>
               ))}
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* Photo Gallery Section */}
+      {photos.length > 0 && (
+        <section id="photos" className="pt-24 pb-16 bg-gray-50 scroll-mt-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
+              精彩瞬间
+            </h2>
+            <Masonry
+              breakpointCols={{
+                default: 4,
+                1280: 3,
+                1024: 3,
+                768: 2,
+                640: 1
+              }}
+              className="flex -ml-6 w-auto"
+              columnClassName="pl-6 bg-clip-padding"
+            >
+              {photos.map((photo) => (
+                <div
+                  key={photo.id}
+                  className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mb-6 aspect-square"
+                  onClick={() => setSelectedGalleryPhoto(photo)}
+                >
+                  <LazyImage
+                    src={photo.url}
+                    alt={photo.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    wrapperClassName="w-full h-full"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 flex items-end opacity-0 group-hover:opacity-100">
+                    <div className="p-4 text-white transition-opacity duration-300">
+                      <h3 className="font-semibold mb-1">{photo.title}</h3>
+                      {photo.description && (
+                        <p className="text-sm text-gray-200">{photo.description}</p>
+                      )}
+                      <span className="text-xs bg-white/20 px-2 py-1 rounded mt-2 inline-block">
+                        {photo.category}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </Masonry>
           </div>
         </section>
       )}
@@ -468,156 +606,6 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-      )}
-
-      {/* Photo Gallery Section */}
-      {photos.length > 0 && (
-        <section id="photos" className="pt-24 pb-16 bg-gray-50 scroll-mt-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
-              精彩瞬间
-            </h2>
-            <Masonry
-              breakpointCols={{
-                default: 4,
-                1280: 3,
-                1024: 3,
-                768: 2,
-                640: 1
-              }}
-              className="flex -ml-6 w-auto"
-              columnClassName="pl-6 bg-clip-padding"
-            >
-              {photos.map((photo) => (
-                <div
-                  key={photo.id}
-                  className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mb-6 aspect-square"
-                  onClick={() => setSelectedGalleryPhoto(photo)}
-                >
-                  <LazyImage
-                    src={photo.url}
-                    alt={photo.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    wrapperClassName="w-full h-full"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 flex items-end opacity-0 group-hover:opacity-100">
-                    <div className="p-4 text-white transition-opacity duration-300">
-                      <h3 className="font-semibold mb-1">{photo.title}</h3>
-                      {photo.description && (
-                        <p className="text-sm text-gray-200">{photo.description}</p>
-                      )}
-                      <span className="text-xs bg-white/20 px-2 py-1 rounded mt-2 inline-block">
-                        {photo.category}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </Masonry>
-          </div>
-        </section>
-      )}
-
-      {/* Experience Section */}
-      {experiences.length > 0 && (
-        <section id="experience" className="py-16 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
-              工作经历
-            </h2>
-            <ExperienceTimeline experiences={experiences} />
-          </div>
-        </section>
-      )}
-
-      {/* Articles & News Combined Section */}
-      {(articles.length > 0 || news.length > 0) && (
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12">
-              {/* Articles/Blog Section */}
-              <div id="articles">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    📝 博客文章
-                  </h2>
-                  {articles.length > 0 && (
-                    <Link to="/blog" className="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center">
-                      查看全部
-                      <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
-                  )}
-                </div>
-                {articles.length > 0 ? (
-                  <div className="space-y-6">
-                    {articles.slice(0, 3).map((article) => (
-                      <Link
-                        key={article.id}
-                        to={`/article/${article.id}`}
-                        className="block bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
-                      >
-                        <div className="p-6">
-                          <div className="flex items-center mb-2 text-xs text-gray-500">
-                            <span>{article.publishedAt || article.createdAt}</span>
-                            {article.category && (
-                              <>
-                                <span className="mx-2">•</span>
-                                <span className="text-primary-600">{article.category}</span>
-                              </>
-                            )}
-                          </div>
-                          <h3 className="text-lg font-semibold mb-2 text-gray-900 line-clamp-2">{article.title}</h3>
-                          <p className="text-gray-600 text-sm line-clamp-2">{article.summary || article.excerpt || article.content.substring(0, 100) + '...'}</p>
-                          {article.tags && article.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-2 mt-3">
-                              {article.tags.slice(0, 3).map((tag, idx) => (
-                                <span key={idx} className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded">
-                                  #{tag}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12 bg-gray-50 rounded-lg">
-                    <p className="text-gray-500">暂无博客文章</p>
-                    <p className="text-sm text-gray-400 mt-2">请在管理后台添加文章</p>
-                  </div>
-                )}
-              </div>
-
-              {/* News Section */}
-              <div id="news">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    📰 新闻动态
-                  </h2>
-                  {news.length > 0 && (
-                    <Link to="/news" className="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center">
-                      查看全部
-                      <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
-                  )}
-                </div>
-                {news.length > 0 ? (
-                  <NewsList news={news} limit={3} />
-                ) : (
-                  <div className="text-center py-12 bg-gray-50 rounded-lg">
-                    <p className="text-gray-500">暂无新闻动态</p>
-                    <p className="text-sm text-gray-400 mt-2">请在管理后台添加新闻</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
       )}
 
       {/* Documents Section */}
