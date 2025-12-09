@@ -313,9 +313,9 @@ const HomePage = () => {
                   controls
                   autoPlay
                   className="absolute inset-0 w-full h-full"
-                  poster={selectedMedia.coverImage}
+                  poster={selectedMedia.coverImage?.replace(/http:\/\/localhost:\d+/, 'https://www.bohenan.com')}
                 >
-                  <source src={selectedMedia.videoUrl} type="video/mp4" />
+                  <source src={selectedMedia.videoUrl.replace(/http:\/\/localhost:\d+/, 'https://www.bohenan.com')} type="video/mp4" />
                   您的浏览器不支持视频播放
                 </video>
               </div>
@@ -365,21 +365,29 @@ const HomePage = () => {
                   <div className="space-y-2">
                     {selectedMedia.attachments.map((attachment, index) => {
                       const isPDF = attachment.url.toLowerCase().endsWith('.pdf') || attachment.type === 'application/pdf';
-                      // 处理URL：如果是相对路径，转换为完整URL
-                      const fullUrl = attachment.url.startsWith('http')
-                        ? attachment.url
-                        : `https://www.bohenan.com${attachment.url}`;
+                      const isVideo = attachment.url.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/);
+                      // 处理URL：替换localhost为正确的域名，或添加域名前缀
+                      let fullUrl = attachment.url;
+                      if (fullUrl.includes('localhost')) {
+                        fullUrl = fullUrl.replace(/http:\/\/localhost:\d+/, 'https://www.bohenan.com');
+                      } else if (!fullUrl.startsWith('http')) {
+                        fullUrl = `https://www.bohenan.com${fullUrl}`;
+                      }
 
                       return (
                         <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
                           <div className="flex items-center flex-1">
                             <div className={`w-10 h-10 rounded flex items-center justify-center mr-3 ${
-                              isPDF ? 'bg-red-100' : 'bg-blue-100'
+                              isPDF ? 'bg-red-100' : isVideo ? 'bg-purple-100' : 'bg-blue-100'
                             }`}>
                               {isPDF ? (
                                 <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
                                   <path d="M4 18h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z"/>
                                   <text x="6" y="14" fontSize="8" fill="currentColor">PDF</text>
+                                </svg>
+                              ) : isVideo ? (
+                                <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z"/>
                                 </svg>
                               ) : (
                                 <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -407,6 +415,19 @@ const HomePage = () => {
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
                                 预览
+                              </a>
+                            )}
+                            {isVideo && (
+                              <a
+                                href={fullUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-1.5 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition flex items-center"
+                              >
+                                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                播放
                               </a>
                             )}
                             <a
