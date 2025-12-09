@@ -68,6 +68,25 @@ const HomePage = () => {
     loadData();
   }, []);
 
+  // 照片墙自动轮播
+  useEffect(() => {
+    if (!personalInfo || !personalInfo.photos || personalInfo.photos.length === 0) {
+      return;
+    }
+
+    // 设置定时器，每6秒切换一张照片
+    const interval = setInterval(() => {
+      setSelectedPhoto((prevPhoto) => {
+        const currentIndex = prevPhoto === null ? 0 : prevPhoto;
+        const nextIndex = (currentIndex + 1) % personalInfo.photos.length;
+        return nextIndex;
+      });
+    }, 6000); // 6000毫秒 = 6秒
+
+    // 清理定时器，避免内存泄漏
+    return () => clearInterval(interval);
+  }, [personalInfo]);
+
   // SEO优化
   useSEO({
     title: personalInfo ? `${personalInfo.name} - ${personalInfo.title}` : '个人主页',
