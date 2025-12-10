@@ -2608,6 +2608,13 @@ function MusicManager() {
     }
   };
 
+  const handleDeleteMusic = () => {
+    if (!confirm('确定要删除当前音乐吗？')) return;
+
+    setSettings({ ...settings, musicUrl: '' });
+    alert('已删除音乐，请点击"保存设置"按钮保存更改');
+  };
+
   return (
     <div>
       <div className="mb-6">
@@ -2637,10 +2644,21 @@ function MusicManager() {
           <h3 className="text-lg font-semibold mb-4">音频文件</h3>
 
           {settings.musicUrl && (
-            <div className="mb-4 p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-gray-700 mb-2">当前音频：</p>
-              <audio controls src={settings.musicUrl} className="w-full" />
-              <p className="text-xs text-gray-500 mt-2 break-all">{settings.musicUrl}</p>
+            <div className="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm font-medium text-gray-700">当前音频：</p>
+                <button
+                  onClick={handleDeleteMusic}
+                  className="text-red-600 hover:text-red-800 text-sm font-medium flex items-center"
+                >
+                  <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  删除音乐
+                </button>
+              </div>
+              <audio controls src={settings.musicUrl} className="w-full mb-2" />
+              <p className="text-xs text-gray-500 break-all">{settings.musicUrl}</p>
             </div>
           )}
 

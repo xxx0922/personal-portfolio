@@ -316,9 +316,17 @@ const HomePage = () => {
                   <div className="p-6">
                     <h3 className="text-xl font-semibold mb-2 text-gray-900">{project.title}</h3>
                     <p className="text-gray-600 mb-3 line-clamp-2">{project.description}</p>
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
-                      <span>👤 {project.role}</span>
-                      <span>⏱️ {project.duration}</span>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500 mb-3">
+                      <span className="flex items-center">👤 {project.role}</span>
+                      <span className="flex items-center">⏱️ {project.duration}</span>
+                      {project.year && (
+                        <span className="flex items-center">📅 {project.year}</span>
+                      )}
+                      {project.contractAmount && (
+                        <span className="flex items-center text-green-600 font-semibold">
+                          💰 ¥{project.contractAmount.toLocaleString()}
+                        </span>
+                      )}
                     </div>
                     {project.technologies && project.technologies.length > 0 && (
                       <div className="flex flex-wrap gap-2">
