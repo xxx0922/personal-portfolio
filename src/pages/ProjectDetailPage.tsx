@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import LazyImage from '../components/LazyImage';
 import Footer from '../components/Footer';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { getFullFileUrl, decodeFileName, isPDF, formatFileSize, previewPDF, downloadFile } from '../utils/fileUtils';
 
 const ProjectDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -144,35 +145,74 @@ const ProjectDetailPage = () => {
               <div className="bg-white rounded-lg shadow-lg p-8">
                 <h2 className="text-2xl font-bold mb-4 text-gray-900">项目附件</h2>
                 <div className="space-y-3">
-                  {project.attachments.map((attachment, idx) => (
-                    <a
-                      key={idx}
-                      href={attachment.url}
-                      download
-                      className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-primary-500 transition-all group"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-                          <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900 group-hover:text-primary-600">
-                            {attachment.name}
-                          </p>
-                          {attachment.size && (
-                            <p className="text-sm text-gray-500">
-                              {(attachment.size / 1024 / 1024).toFixed(2)} MB
+                  {project.attachments.map((attachment, idx) => {
+                    const fullUrl = getFullFileUrl(attachment.url);
+                    const displayName = decodeFileName(attachment.name, attachment.url);
+                    const isPdf = isPDF(attachment.url, attachment.type);
+
+                    return (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-primary-500 transition-all group"
+                      >
+                        <div className="flex items-center space-x-3 flex-1 min-w-0">
+                          <div className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center ${
+                            isPdf ? 'bg-red-100' : 'bg-primary-100'
+                          }`}>
+                            {isPdf ? (
+                              <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M4 18h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z"/>
+                                <text x="6" y="14" fontSize="8" fill="currentColor">PDF</text>
+                              </svg>
+                            ) : (
+                              <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                              </svg>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 group-hover:text-primary-600 truncate">
+                              {displayName}
                             </p>
+                            {attachment.size && (
+                              <p className="text-sm text-gray-500">
+                                {formatFileSize(attachment.size)}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2 ml-4 flex-shrink-0">
+                          {isPdf && (
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                previewPDF(attachment.url);
+                              }}
+                              className="px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition flex items-center whitespace-nowrap"
+                            >
+                              <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                              预览
+                            </button>
                           )}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              downloadFile(attachment.url, attachment.name);
+                            }}
+                            className="px-3 py-1.5 bg-primary-600 text-white text-sm rounded hover:bg-primary-700 transition flex items-center whitespace-nowrap"
+                          >
+                            <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            下载
+                          </button>
                         </div>
                       </div>
-                      <svg className="w-5 h-5 text-gray-400 group-hover:text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
-                    </a>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}

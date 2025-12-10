@@ -2560,7 +2560,7 @@ function MusicManager() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`${API_BASE_URL}/upload`, {
+      const response = await fetch(`${API_BASE_URL}/upload/file`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`
@@ -2570,14 +2570,16 @@ function MusicManager() {
 
       if (response.ok) {
         const data = await response.json();
-        setSettings({ ...settings, musicUrl: data.url });
+        setSettings({ ...settings, musicUrl: data.data.url });
         setCurrentFile(null);
         alert('音频上传成功！');
       } else {
-        alert('上传失败');
+        const errorData = await response.json();
+        alert('上传失败: ' + (errorData.error || '未知错误'));
       }
     } catch (error) {
-      alert('上传失败');
+      console.error('Upload error:', error);
+      alert('上传失败: ' + error.message);
     } finally {
       setIsUploading(false);
     }
