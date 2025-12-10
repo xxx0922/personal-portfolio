@@ -31,6 +31,42 @@ router.put('/', authenticateToken, async (req, res) => {
   }
 });
 
+// 获取音乐配置
+router.get('/music', async (req, res) => {
+  try {
+    const config = await readData('site-config');
+    const musicConfig = config?.music || getDefaultMusicConfig();
+    res.json(musicConfig);
+  } catch (error) {
+    console.error('Error reading music config:', error);
+    res.json(getDefaultMusicConfig());
+  }
+});
+
+// 更新音乐配置（需要认证）
+router.put('/music', authenticateToken, async (req, res) => {
+  try {
+    // 读取现有配置
+    const existingConfig = await readData('site-config');
+
+    // 更新音乐部分
+    const updatedConfig = {
+      ...existingConfig,
+      music: {
+        ...req.body,
+        updatedAt: new Date().toISOString()
+      },
+      updatedAt: new Date().toISOString()
+    };
+
+    await writeData('site-config', updatedConfig);
+    res.json({ message: '音乐配置更新成功', data: updatedConfig.music });
+  } catch (error) {
+    console.error('Error updating music config:', error);
+    res.status(500).json({ message: '更新失败' });
+  }
+});
+
 // 默认配置
 function getDefaultConfig() {
   return {
@@ -55,7 +91,17 @@ function getDefaultConfig() {
       showContactForm: true,
       contactEmail: 'contact@example.com'
     },
+    music: getDefaultMusicConfig(),
     updatedAt: new Date().toISOString()
+  };
+}
+
+// 默认音乐配置
+function getDefaultMusicConfig() {
+  return {
+    enabled: false,
+    musicUrl: '',
+    volume: 0.3
   };
 }
 
