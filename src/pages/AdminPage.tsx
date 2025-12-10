@@ -141,6 +141,7 @@ export default function AdminPage() {
                 { id: 'analytics', label: '访问统计' },
                 { id: 'tags', label: '标签管理' },
                 { id: 'social', label: '社交媒体' },
+                { id: 'music', label: '背景音乐' },
                 { id: 'personal', label: '个人信息' },
                 { id: 'footer', label: 'Footer设置' }
               ].map(tab => (
@@ -194,6 +195,7 @@ export default function AdminPage() {
           {activeTab === 'analytics' && <AnalyticsManager />}
           {activeTab === 'tags' && <TagsManager />}
           {activeTab === 'social' && <SocialMediaManager />}
+          {activeTab === 'music' && <MusicManager />}
           {activeTab === 'personal' && <PersonalInfoManager />}
           {activeTab === 'footer' && <FooterSettingsManager />}
         </div>
@@ -2507,6 +2509,214 @@ function MessagesManager() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+// 背景音乐管理组件
+function MusicManager() {
+  const [settings, setSettings] = useState({
+    enabled: false,
+    musicUrl: '',
+    volume: 0.3
+  });
+  const [isUploading, setIsUploading] = useState(false);
+  const [currentFile, setCurrentFile] = useState<File | null>(null);
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/site-config/music`);
+      if (response.ok) {
+        const data = await response.json();
+        setSettings(data);
+      }
+    } catch (error) {
+      console.error('Failed to load music settings:', error);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // 检查文件类型
+      if (!file.type.startsWith('audio/')) {
+        alert('请上传音频文件（MP3、WAV等）');
+        return;
+      }
+      setCurrentFile(file);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!currentFile) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('file', currentFile);
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_BASE_URL}/upload`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSettings({ ...settings, musicUrl: data.url });
+        setCurrentFile(null);
+        alert('音频上传成功！');
+      } else {
+        alert('上传失败');
+      }
+    } catch (error) {
+      alert('上传失败');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_BASE_URL}/site-config/music`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(settings)
+      });
+
+      if (response.ok) {
+        alert('保存成功！');
+        loadSettings();
+      } else {
+        alert('保存失败');
+      }
+    } catch (error) {
+      alert('保存失败');
+    }
+  };
+
+  return (
+    <div>
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">背景音乐设置</h2>
+        <p className="text-gray-600">为网站添加背景音乐，访客可以控制播放/暂停和音量</p>
+      </div>
+
+      <div className="space-y-6">
+        {/* 启用开关 */}
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <label className="flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={settings.enabled}
+              onChange={(e) => setSettings({ ...settings, enabled: e.target.checked })}
+              className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
+            />
+            <span className="ml-3 text-lg font-medium">启用背景音乐</span>
+          </label>
+          <p className="text-sm text-gray-500 mt-2 ml-8">
+            开启后，访客访问网站时会自动播放背景音乐（可通过右下角控制器控制）
+          </p>
+        </div>
+
+        {/* 音频上传 */}
+        <div className="bg-white border rounded-lg p-6">
+          <h3 className="text-lg font-semibold mb-4">音频文件</h3>
+
+          {settings.musicUrl && (
+            <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+              <p className="text-sm text-gray-700 mb-2">当前音频：</p>
+              <audio controls src={settings.musicUrl} className="w-full" />
+              <p className="text-xs text-gray-500 mt-2 break-all">{settings.musicUrl}</p>
+            </div>
+          )}
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                上传新音频文件
+              </label>
+              <input
+                type="file"
+                accept="audio/*"
+                onChange={handleFileChange}
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                支持MP3、WAV、OGG等格式，建议文件大小不超过10MB
+              </p>
+            </div>
+
+            {currentFile && (
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                <span className="text-sm text-gray-700">{currentFile.name}</span>
+                <button
+                  onClick={handleUpload}
+                  disabled={isUploading}
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400 text-sm"
+                >
+                  {isUploading ? '上传中...' : '上传'}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 默认音量设置 */}
+        <div className="bg-white border rounded-lg p-6">
+          <h3 className="text-lg font-semibold mb-4">默认音量</h3>
+          <div className="flex items-center space-x-4">
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.1"
+              value={settings.volume}
+              onChange={(e) => setSettings({ ...settings, volume: parseFloat(e.target.value) })}
+              className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            />
+            <span className="text-sm font-medium w-12 text-right">
+              {Math.round(settings.volume * 100)}%
+            </span>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">
+            设置音乐播放的默认音量（访客可以自己调整）
+          </p>
+        </div>
+
+        {/* 保存按钮 */}
+        <div className="flex justify-end">
+          <button
+            onClick={handleSave}
+            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 font-medium"
+          >
+            💾 保存设置
+          </button>
+        </div>
+
+        {/* 使用说明 */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <h4 className="font-semibold text-yellow-800 mb-2">💡 使用说明</h4>
+          <ul className="text-sm text-yellow-700 space-y-1 list-disc list-inside">
+            <li>音乐会自动循环播放</li>
+            <li>访客可以通过右下角的音乐控制器播放/暂停、调整音量</li>
+            <li>访客的音量偏好会被记住（使用localStorage）</li>
+            <li>建议上传轻柔的背景音乐，避免干扰浏览</li>
+            <li>音频文件会存储在服务器上，请确保有足够空间</li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

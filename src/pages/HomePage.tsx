@@ -10,6 +10,7 @@ import Footer from '../components/Footer';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ExperienceTimeline from '../components/ExperienceTimeline';
 import NewsList from '../components/NewsList';
+import BackgroundMusic from '../components/BackgroundMusic';
 import { SkeletonProjectCard, SkeletonSkillCard, SkeletonMediaCard, SkeletonPhoto, SkeletonDocumentCard } from '../components/SkeletonLoader';
 import { useSEO } from '../hooks/useSEO';
 import { downloadVCard } from '../utils/vcard';
@@ -110,6 +111,9 @@ const HomePage = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Navbar */}
       <Navbar personalInfo={personalInfo} />
+
+      {/* Background Music */}
+      <BackgroundMusic />
 
       {/* Hero Section */}
       <section id="home" className="bg-gradient-to-r from-primary-600 to-primary-700 text-white pt-16">
