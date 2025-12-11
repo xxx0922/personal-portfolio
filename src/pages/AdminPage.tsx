@@ -2533,10 +2533,27 @@ function MusicManager() {
       const response = await fetch(`${API_BASE_URL}/site-config/music`);
       if (response.ok) {
         const data = await response.json();
+        // 确保 musicList 存在
+        if (!data.musicList) {
+          data.musicList = [];
+        }
         setSettings(data);
+      } else {
+        // API 失败时设置默认值
+        setSettings({
+          enabled: false,
+          musicList: [],
+          volume: 0.3
+        });
       }
     } catch (error) {
       console.error('Failed to load music settings:', error);
+      // 错误时设置默认值
+      setSettings({
+        enabled: false,
+        musicList: [],
+        volume: 0.3
+      });
     }
   };
 
