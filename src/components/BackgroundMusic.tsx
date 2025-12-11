@@ -4,18 +4,19 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
 interface MusicSettings {
   enabled: boolean;
-  musicUrl: string;
+  musicList: Array<{
+    url: string;
+    name: string;
+  }>;
   volume: number;
 }
 
 export default function BackgroundMusic() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(() => {
-    // 从localStorage读取用户偏好
-    return localStorage.getItem('musicMuted') === 'true';
-  });
+  const [isMuted, setIsMuted] = useState(false); // 移除 localStorage 记忆，刷新后恢复初始状态
   const [volume, setVolume] = useState(0.3);
   const [settings, setSettings] = useState<MusicSettings | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   // 加载音乐设置
@@ -38,20 +39,20 @@ export default function BackgroundMusic() {
     }
   };
 
-  // 控制音频播放
+  // 控制音频播放 - 刷新后自动播放
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     audio.volume = isMuted ? 0 : volume;
 
-    if (settings?.enabled && settings?.musicUrl && !isMuted) {
+    if (settings?.enabled && settings?.musicList && settings.musicList.length > 0 && !isMuted) {
       audio.play().catch(err => {
         console.log('Auto-play prevented:', err);
       });
       setIsPlaying(true);
     }
-  }, [settings, isMuted, volume]);
+  }, [settings, isMuted, volume, currentIndex]);
 
   const togglePlay = () => {
     const audio = audioRef.current;
@@ -69,8 +70,6 @@ export default function BackgroundMusic() {
   const toggleMute = () => {
     const newMuted = !isMuted;
     setIsMuted(newMuted);
-    // 保存到localStorage
-    localStorage.setItem('musicMuted', String(newMuted));
 
     const audio = audioRef.current;
     if (audio) {
@@ -86,24 +85,56 @@ export default function BackgroundMusic() {
     }
   };
 
-  // 如果没有启用音乐或没有音乐URL，不显示
-  if (!settings?.enabled || !settings?.musicUrl) {
+  // 播放下一首
+  const playNext = () => {
+    if (!settings?.musicList || settings.musicList.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % settings.musicList.length);
+  };
+
+  // 播放上一首
+  const playPrevious = () => {
+    if (!settings?.musicList || settings.musicList.length === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + settings.musicList.length) % settings.musicList.length);
+  };
+
+  // 当歌曲结束时自动播放下一首
+  const handleEnded = () => {
+    playNext();
+  };
+
+  // 如果没有启用音乐或没有音乐列表，不显示
+  if (!settings?.enabled || !settings?.musicList || settings.musicList.length === 0) {
     return null;
   }
+
+  const currentSong = settings.musicList[currentIndex];
 
   return (
     <>
       {/* 音频元素 */}
       <audio
         ref={audioRef}
-        src={settings.musicUrl}
-        loop
+        src={currentSong.url}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
+        onEnded={handleEnded}
       />
 
       {/* 音乐控制器 - 固定在右下角 */}
       <div className="fixed bottom-20 right-8 z-40 bg-white rounded-full shadow-lg p-3 flex items-center space-x-2 hover:shadow-xl transition-all">
+        {/* 上一首按钮 */}
+        {settings.musicList.length > 1 && (
+          <button
+            onClick={playPrevious}
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition"
+            aria-label="上一首"
+          >
+            <svg className="w-4 h-4 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/>
+            </svg>
+          </button>
+        )}
+
         {/* 播放/暂停按钮 */}
         <button
           onClick={togglePlay}
@@ -120,6 +151,19 @@ export default function BackgroundMusic() {
             </svg>
           )}
         </button>
+
+        {/* 下一首按钮 */}
+        {settings.musicList.length > 1 && (
+          <button
+            onClick={playNext}
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition"
+            aria-label="下一首"
+          >
+            <svg className="w-4 h-4 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M16 18h2V6h-2v12zM6 18l8.5-6L6 6v12z"/>
+            </svg>
+          </button>
+        )}
 
         {/* 音量图标 */}
         <button
@@ -157,10 +201,20 @@ export default function BackgroundMusic() {
           </div>
         )}
 
-        {/* 音乐图标 */}
-        <div className="text-xs text-gray-500 flex items-center">
-          🎵
+        {/* 当前播放信息 */}
+        <div className="text-xs text-gray-500 flex items-center max-w-32 truncate">
+          <span className="mr-1">🎵</span>
+          <span className="truncate" title={currentSong.name}>
+            {currentSong.name || `歌曲 ${currentIndex + 1}`}
+          </span>
         </div>
+
+        {/* 播放列表指示器 */}
+        {settings.musicList.length > 1 && (
+          <div className="text-xs text-gray-400">
+            {currentIndex + 1}/{settings.musicList.length}
+          </div>
+        )}
       </div>
     </>
   );

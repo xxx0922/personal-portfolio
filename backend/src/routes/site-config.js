@@ -100,7 +100,7 @@ function getDefaultConfig() {
 function getDefaultMusicConfig() {
   return {
     enabled: false,
-    musicUrl: '',
+    musicList: [], // 改为数组支持多首歌曲
     volume: 0.3
   };
 }

@@ -2517,11 +2517,12 @@ function MessagesManager() {
 function MusicManager() {
   const [settings, setSettings] = useState({
     enabled: false,
-    musicUrl: '',
+    musicList: [] as Array<{ url: string; name: string }>,
     volume: 0.3
   });
   const [isUploading, setIsUploading] = useState(false);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
+  const [songName, setSongName] = useState('');
 
   useEffect(() => {
     loadSettings();
@@ -2553,6 +2554,10 @@ function MusicManager() {
 
   const handleUpload = async () => {
     if (!currentFile) return;
+    if (!songName.trim()) {
+      alert('请输入歌曲名称');
+      return;
+    }
 
     setIsUploading(true);
     const formData = new FormData();
@@ -2570,9 +2575,12 @@ function MusicManager() {
 
       if (response.ok) {
         const data = await response.json();
-        setSettings({ ...settings, musicUrl: data.data.url });
+        // 添加到播放列表而不是替换
+        const newSong = { url: data.data.url, name: songName.trim() };
+        setSettings({ ...settings, musicList: [...settings.musicList, newSong] });
         setCurrentFile(null);
-        alert('音频上传成功！');
+        setSongName('');
+        alert('音频上传成功！请点击"保存设置"按钮保存更改');
       } else {
         const errorData = await response.json();
         alert('上传失败: ' + (errorData.error || '未知错误'));
@@ -2608,10 +2616,11 @@ function MusicManager() {
     }
   };
 
-  const handleDeleteMusic = () => {
-    if (!confirm('确定要删除当前音乐吗？')) return;
+  const handleDeleteMusic = (index: number) => {
+    if (!confirm('确定要删除这首音乐吗？')) return;
 
-    setSettings({ ...settings, musicUrl: '' });
+    const updatedList = settings.musicList.filter((_, i) => i !== index);
+    setSettings({ ...settings, musicList: updatedList });
     alert('已删除音乐，请点击"保存设置"按钮保存更改');
   };
 
@@ -2641,32 +2650,53 @@ function MusicManager() {
 
         {/* 音频上传 */}
         <div className="bg-white border rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-4">音频文件</h3>
+          <h3 className="text-lg font-semibold mb-4">播放列表 ({settings.musicList.length} 首歌曲)</h3>
 
-          {settings.musicUrl && (
-            <div className="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-medium text-gray-700">当前音频：</p>
-                <button
-                  onClick={handleDeleteMusic}
-                  className="text-red-600 hover:text-red-800 text-sm font-medium flex items-center"
-                >
-                  <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                  删除音乐
-                </button>
-              </div>
-              <audio controls src={settings.musicUrl} className="w-full mb-2" />
-              <p className="text-xs text-gray-500 break-all">{settings.musicUrl}</p>
+          {settings.musicList.length > 0 && (
+            <div className="mb-6 space-y-3">
+              {settings.musicList.map((song, index) => (
+                <div key={index} className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-3 flex-1">
+                      <span className="text-lg font-semibold text-gray-700">#{index + 1}</span>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">{song.name}</p>
+                        <p className="text-xs text-gray-500 break-all mt-1">{song.url}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteMusic(index)}
+                      className="text-red-600 hover:text-red-800 text-sm font-medium flex items-center ml-4"
+                    >
+                      <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      删除
+                    </button>
+                  </div>
+                  <audio controls src={song.url} className="w-full" />
+                </div>
+              ))}
             </div>
           )}
 
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                上传新音频文件
+                添加新歌曲到播放列表
               </label>
+
+              <div className="mb-3">
+                <label className="block text-xs font-medium text-gray-600 mb-1">歌曲名称</label>
+                <input
+                  type="text"
+                  value={songName}
+                  onChange={(e) => setSongName(e.target.value)}
+                  placeholder="例如：轻音乐 - 春天"
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-white"
+                />
+              </div>
+
               <input
                 type="file"
                 accept="audio/*"
@@ -2683,10 +2713,10 @@ function MusicManager() {
                 <span className="text-sm text-gray-700">{currentFile.name}</span>
                 <button
                   onClick={handleUpload}
-                  disabled={isUploading}
+                  disabled={isUploading || !songName.trim()}
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400 text-sm"
                 >
-                  {isUploading ? '上传中...' : '上传'}
+                  {isUploading ? '上传中...' : '添加到播放列表'}
                 </button>
               </div>
             )}
@@ -2729,9 +2759,10 @@ function MusicManager() {
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <h4 className="font-semibold text-yellow-800 mb-2">💡 使用说明</h4>
           <ul className="text-sm text-yellow-700 space-y-1 list-disc list-inside">
-            <li>音乐会自动循环播放</li>
-            <li>访客可以通过右下角的音乐控制器播放/暂停、调整音量</li>
-            <li>访客的音量偏好会被记住（使用localStorage）</li>
+            <li>支持添加多首歌曲，按顺序循环播放</li>
+            <li>访客可以通过右下角的音乐控制器控制播放/暂停、切换歌曲、调整音量</li>
+            <li>页面刷新后音乐将重新开始播放</li>
+            <li>每首歌曲播放完毕后会自动播放下一首</li>
             <li>建议上传轻柔的背景音乐，避免干扰浏览</li>
             <li>音频文件会存储在服务器上，请确保有足够空间</li>
           </ul>
