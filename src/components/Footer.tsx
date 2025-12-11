@@ -96,14 +96,12 @@ const Footer = () => {
               © {currentYear} {settings?.about?.copyright || '个人网站'}. All rights reserved.
             </p>
             <p className="text-gray-400 text-sm mt-2">
-              <a
-                href="https://beian.miit.gov.cn/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
+              <span
+                onClick={() => window.open('https://beian.miit.gov.cn/', '_blank', 'noopener,noreferrer')}
+                className="hover:text-white transition-colors cursor-pointer"
               >
                 苏ICP备2025221859号
-              </a>
+              </span>
             </p>
           </div>
 
@@ -114,8 +112,7 @@ const Footer = () => {
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   {link.href.startsWith('/#') ? (
-                    <a
-                      href={link.href}
+                    <span
                       onClick={(e) => {
                         e.preventDefault();
                         handleScrollToSection(link.href);
@@ -123,14 +120,14 @@ const Footer = () => {
                       className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                     >
                       {link.name}
-                    </a>
+                    </span>
                   ) : (
-                    <Link
-                      to={link.href}
-                      className="text-gray-400 hover:text-white transition-colors"
+                    <span
+                      onClick={() => window.location.href = link.href}
+                      className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                     >
                       {link.name}
-                    </Link>
+                    </span>
                   )}
                 </li>
               ))}
@@ -223,17 +220,32 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
             <p>Designed & Built by {settings?.branding?.designedBy || '个人'}</p>
             <div className="flex space-x-4 mt-4 md:mt-0">
-              <Link to="/admin/login" className="hover:text-white transition-colors">
+              <span
+                onClick={() => window.location.href = '/admin/login'}
+                className="hover:text-white transition-colors cursor-pointer"
+              >
                 管理后台
-              </Link>
+              </span>
               <span>|</span>
-              <a href={settings?.links?.privacyPolicy || '#'} className="hover:text-white transition-colors">
+              <span
+                onClick={() => {
+                  const url = settings?.links?.privacyPolicy || '#';
+                  if (url !== '#') window.location.href = url;
+                }}
+                className="hover:text-white transition-colors cursor-pointer"
+              >
                 隐私政策
-              </a>
+              </span>
               <span>|</span>
-              <a href={settings?.links?.termsOfService || '#'} className="hover:text-white transition-colors">
+              <span
+                onClick={() => {
+                  const url = settings?.links?.termsOfService || '#';
+                  if (url !== '#') window.location.href = url;
+                }}
+                className="hover:text-white transition-colors cursor-pointer"
+              >
                 使用条款
-              </a>
+              </span>
             </div>
           </div>
         </div>
