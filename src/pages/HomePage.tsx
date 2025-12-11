@@ -155,25 +155,26 @@ const HomePage = () => {
             </div>
 
             {/* 右侧：照片轮播 */}
-            <div className="relative">
-              <div className="w-full h-96 rounded-lg overflow-hidden shadow-2xl bg-gray-200">
+            <div className="relative w-full">
+              <div className="w-full rounded-lg overflow-hidden shadow-2xl bg-gray-200" style={{ height: '400px' }}>
                 <LazyImage
                   src={selectedPhoto !== null ? personalInfo.photos[selectedPhoto] : personalInfo.photos[0]}
                   alt="个人照片"
                   className="w-full h-full object-cover"
+                  wrapperClassName="w-full h-full"
                 />
               </div>
 
               {/* 照片缩略图 */}
-              <div className="flex space-x-2 mt-4 overflow-x-auto">
+              <div className="flex space-x-2 mt-4 overflow-x-auto pb-2">
                 {personalInfo.photos.map((photo, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedPhoto(index)}
-                    className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
                       selectedPhoto === index
-                        ? 'border-primary-400 scale-110'
-                        : 'border-gray-300 hover:border-primary-400'
+                        ? 'border-white scale-110 shadow-lg'
+                        : 'border-primary-300 hover:border-white opacity-80 hover:opacity-100'
                     }`}
                   >
                     <LazyImage
