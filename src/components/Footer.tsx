@@ -96,7 +96,14 @@ const Footer = () => {
               © {currentYear} {settings?.about?.copyright || '个人网站'}. All rights reserved.
             </p>
             <p className="text-gray-400 text-sm mt-2">
-              {settings?.about?.icpNumber || 'ICP备案号: 京ICP备XXXXXXXX号'}
+              <a
+                href="https://beian.miit.gov.cn/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors"
+              >
+                苏ICP备2025221859号
+              </a>
             </p>
           </div>
 
