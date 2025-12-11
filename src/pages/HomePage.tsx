@@ -152,24 +152,11 @@ const HomePage = () => {
                   <span>{personalInfo.location}</span>
                 </div>
               </div>
-
-              {/* 电子名片按钮 */}
-              <div className="mt-6">
-                <button
-                  onClick={() => downloadVCard(personalInfo)}
-                  className="inline-flex items-center px-6 py-3 bg-white text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition-colors shadow-lg"
-                >
-                  <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                  </svg>
-                  下载电子名片
-                </button>
-              </div>
             </div>
 
             {/* 右侧：照片轮播 */}
             <div className="relative">
-              <div className="aspect-w-4 aspect-h-3 rounded-lg overflow-hidden shadow-2xl">
+              <div className="w-full h-96 rounded-lg overflow-hidden shadow-2xl bg-gray-200">
                 <LazyImage
                   src={selectedPhoto !== null ? personalInfo.photos[selectedPhoto] : personalInfo.photos[0]}
                   alt="个人照片"
