@@ -60,8 +60,9 @@ const corsOptions = {
 
 // Middleware
 app.use(cors(corsOptions));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// 增加请求体大小限制到 50MB（用于文件上传）
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // 静态文件服务 - 提供上传的图片
 app.use('/uploads', express.static(join(__dirname, '../uploads')));
