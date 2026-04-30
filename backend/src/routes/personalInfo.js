@@ -4,11 +4,23 @@ import { authenticateToken, requireAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
+// 获取服务器基础 URL
+const getBaseUrl = (req) => {
+  return `${req.protocol}://${req.get('host')}`;
+};
+
 // 获取个人信息
 router.get('/', async (req, res) => {
   try {
     const personalInfo = await readData('personalInfo');
-    res.json(personalInfo || {});
+    const data = personalInfo || {};
+
+    // 如果头像路径是相对路径，转换为完整 URL
+    if (data.avatar && data.avatar.startsWith('/uploads/')) {
+      data.avatar = `${getBaseUrl(req)}${data.avatar}`;
+    }
+
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: '获取个人信息失败' });
   }

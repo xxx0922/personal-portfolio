@@ -1,25 +1,23 @@
 /**
  * 数据服务层 - 统一数据获取接口
  *
- * 从后端API获取数据
+ * 从后端 API 获取数据
  */
 
 import {
   personalInfo as mockPersonalInfo,
   skills as mockSkills,
   projects as mockProjects,
-  projectStats as mockProjectStats,
   mediaItems as mockMediaItems,
   photos as mockPhotos,
-  documents as mockDocuments,
-  regulations as mockRegulations
+  documents as mockDocuments
 } from '../data/mockData';
 
-// 标记：是否使用后端API
-const USE_BACKEND_API = true; // 使用后端API
+// 标记：是否使用后端 API
+const USE_BACKEND_API = true; // 使用后端 API
 
-// API基础URL - 从环境变量读取
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+// API 基础 URL - 从环境变量读取
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
 
 // ============ 个人信息相关 ============
 export const getPersonalInfo = async () => {
@@ -30,7 +28,7 @@ export const getPersonalInfo = async () => {
       return await response.json();
     } catch (error) {
       console.error('Error fetching personal info:', error);
-      return mockPersonalInfo; // 降级到mockData
+      return mockPersonalInfo; // 降级到 mockData
     }
   }
   await new Promise(resolve => setTimeout(resolve, 100));
@@ -44,7 +42,7 @@ export const getSkills = async () => {
       const response = await fetch(`${API_BASE_URL}/skills`);
       if (!response.ok) throw new Error('Failed to fetch skills');
       const data = await response.json();
-      return data.length > 0 ? data : mockSkills; // 如果后端无数据，使用mockData
+      return data.length > 0 ? data : mockSkills; // 如果后端无数据，使用 mockData
     } catch (error) {
       console.error('Error fetching skills:', error);
       return mockSkills;
@@ -85,23 +83,6 @@ export const getProjectById = async (id: string) => {
   }
   await new Promise(resolve => setTimeout(resolve, 100));
   return mockProjects.find((p: any) => p.id === id);
-};
-
-export const getProjectStats = async () => {
-  if (USE_BACKEND_API) {
-    try {
-      const response = await fetch(`${API_BASE_URL}/stats`);
-      if (!response.ok) throw new Error('Failed to fetch stats');
-      const data = await response.json();
-      // 如果后端有数据就用后端的，否则用mockData
-      return data.yearly && data.yearly.length > 0 ? data : mockProjectStats;
-    } catch (error) {
-      console.error('Error fetching stats:', error);
-      return mockProjectStats;
-    }
-  }
-  await new Promise(resolve => setTimeout(resolve, 100));
-  return mockProjectStats;
 };
 
 // ============ 媒体内容相关 ============
@@ -154,46 +135,6 @@ export const getDocuments = async () => {
   return mockDocuments;
 };
 
-export const getRegulations = async () => {
-  if (USE_BACKEND_API) {
-    try {
-      const response = await fetch(`${API_BASE_URL}/regulations`);
-      if (!response.ok) throw new Error('Failed to fetch regulations');
-      const data = await response.json();
-      return data.length > 0 ? data : mockRegulations;
-    } catch (error) {
-      console.error('Error fetching regulations:', error);
-      return mockRegulations;
-    }
-  }
-  await new Promise(resolve => setTimeout(resolve, 100));
-  return mockRegulations;
-};
-
-// ============ 评论系统（后续实现）============
-export const getComments = async (_targetId: string, _targetType: string) => {
-  if (USE_BACKEND_API) {
-    // TODO: 对接后端API
-    // return await api.get(`${API_ENDPOINTS.COMMENTS}?targetId=${targetId}&targetType=${targetType}`);
-  }
-  await new Promise(resolve => setTimeout(resolve, 100));
-  return []; // 暂时返回空数组
-};
-
-export const addComment = async (_commentData: {
-  targetId: string;
-  targetType: string;
-  content: string;
-  author: string;
-}) => {
-  if (USE_BACKEND_API) {
-    // TODO: 对接后端API
-    // return await api.post(API_ENDPOINTS.COMMENTS, commentData);
-  }
-  await new Promise(resolve => setTimeout(resolve, 100));
-  return { success: true, id: Date.now().toString() };
-};
-
 // ============ 工作经历相关 ============
 export const getExperiences = async () => {
   if (USE_BACKEND_API) {
@@ -231,7 +172,8 @@ export const getArticles = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/articles`);
       if (!response.ok) throw new Error('Failed to fetch articles');
-      return await response.json();
+      const data = await response.json();
+      return data.length > 0 ? data : [];
     } catch (error) {
       console.error('Error fetching articles:', error);
       return [];
@@ -332,111 +274,129 @@ export const getNewsByType = async (type: string) => {
   return [];
 };
 
-// ============ Footer设置相关 ============
-export const getFooterSettings = async () => {
+// ============ 产品展示相关 ============
+export const getProducts = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/footer-settings`);
-      if (!response.ok) throw new Error('Failed to fetch footer settings');
+      const response = await fetch(`${API_BASE_URL}/products`);
+      if (!response.ok) throw new Error('Failed to fetch products');
       return await response.json();
     } catch (error) {
-      console.error('Error fetching footer settings:', error);
+      console.error('Error fetching products:', error);
+      return [];
+    }
+  }
+  await new Promise(resolve => setTimeout(resolve, 100));
+  return [];
+};
+
+export const getProductById = async (id: string) => {
+  if (USE_BACKEND_API) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/products/${id}`);
+      if (!response.ok) throw new Error('Failed to fetch product');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching product:', error);
       return null;
     }
   }
+  await new Promise(resolve => setTimeout(resolve, 100));
   return null;
 };
 
-// ============ 网站配置相关 ============
-export const getSiteConfig = async () => {
+// ============ 实用工具相关 ============
+export const getTools = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/site-config`);
-      if (!response.ok) throw new Error('Failed to fetch site config');
+      const response = await fetch(`${API_BASE_URL}/tools`);
+      if (!response.ok) throw new Error('Failed to fetch tools');
       return await response.json();
     } catch (error) {
-      console.error('Error fetching site config:', error);
+      console.error('Error fetching tools:', error);
+      return [];
+    }
+  }
+  await new Promise(resolve => setTimeout(resolve, 100));
+  return [];
+};
+
+export const getToolById = async (id: string) => {
+  if (USE_BACKEND_API) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/tools/${id}`);
+      if (!response.ok) throw new Error('Failed to fetch tool');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching tool:', error);
       return null;
     }
   }
+  await new Promise(resolve => setTimeout(resolve, 100));
   return null;
 };
 
-// ============ SEO设置相关 ============
-export const getSeoSettings = async () => {
+export const getToolCategories = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/seo-settings`);
-      if (!response.ok) throw new Error('Failed to fetch SEO settings');
+      const response = await fetch(`${API_BASE_URL}/tools/utils/categories`);
+      if (!response.ok) throw new Error('Failed to fetch categories');
       return await response.json();
     } catch (error) {
-      console.error('Error fetching SEO settings:', error);
-      return null;
-    }
-  }
-  return null;
-};
-
-// ============ 导航菜单相关 ============
-export const getNavigation = async () => {
-  if (USE_BACKEND_API) {
-    try {
-      const response = await fetch(`${API_BASE_URL}/navigation`);
-      if (!response.ok) throw new Error('Failed to fetch navigation');
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching navigation:', error);
+      console.error('Error fetching categories:', error);
       return [];
     }
   }
+  await new Promise(resolve => setTimeout(resolve, 100));
   return [];
 };
 
-export const getAllNavigation = async () => {
+// ============ 专业相关 ============
+export const getProfessions = async () => {
   if (USE_BACKEND_API) {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch(`${API_BASE_URL}/navigation/all`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (!response.ok) throw new Error('Failed to fetch all navigation');
+      const response = await fetch(`${API_BASE_URL}/professions`);
+      if (!response.ok) throw new Error('Failed to fetch professions');
       return await response.json();
     } catch (error) {
-      console.error('Error fetching all navigation:', error);
+      console.error('Error fetching professions:', error);
       return [];
     }
   }
+  await new Promise(resolve => setTimeout(resolve, 100));
   return [];
 };
 
-// ============ 友情链接相关 ============
-export const getFriendLinks = async () => {
+// ============ 联系信息相关 ============
+export const getContact = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/friend-links`);
-      if (!response.ok) throw new Error('Failed to fetch friend links');
+      const response = await fetch(`${API_BASE_URL}/contact`);
+      if (!response.ok) throw new Error('Failed to fetch contact info');
       return await response.json();
     } catch (error) {
-      console.error('Error fetching friend links:', error);
-      return [];
+      console.error('Error fetching contact info:', error);
+      return {
+        email: 'bohenan@163.com',
+        phone: '+86 138-0000-0000',
+        images: [
+          { url: '', label: '抖音' },
+          { url: '', label: '公众号' },
+          { url: '', label: '小红书' },
+          { url: '', label: '微信' }
+        ]
+      }; // 降级到默认值
     }
   }
-  return [];
-};
-
-export const getAllFriendLinks = async () => {
-  if (USE_BACKEND_API) {
-    try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch(`${API_BASE_URL}/friend-links/all`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (!response.ok) throw new Error('Failed to fetch all friend links');
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching all friend links:', error);
-      return [];
-    }
-  }
-  return [];
+  await new Promise(resolve => setTimeout(resolve, 100));
+  return {
+    email: 'bohenan@163.com',
+    phone: '+86 138-0000-0000',
+    images: [
+      { url: '', label: '抖音' },
+      { url: '', label: '公众号' },
+      { url: '', label: '小红书' },
+      { url: '', label: '微信' }
+    ]
+  };
 };

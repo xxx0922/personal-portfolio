@@ -31,6 +31,26 @@ router.post('/', authenticateToken, requireAdmin, async (req, res) => {
   }
 });
 
+// 批量添加照片
+router.post('/batch', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const photos = await readData('photos') || [];
+    const newPhotos = req.body.photos || [];
+
+    const addedPhotos = newPhotos.map((photoData, index) => ({
+      id: (Date.now() + index).toString(),
+      ...photoData,
+      date: new Date().toISOString().split('T')[0]
+    }));
+
+    photos.push(...addedPhotos);
+    await writeData('photos', photos);
+    res.status(201).json({ success: true, count: addedPhotos.length, photos: addedPhotos });
+  } catch (error) {
+    res.status(500).json({ error: '批量添加照片失败' });
+  }
+});
+
 // 更新照片
 router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {

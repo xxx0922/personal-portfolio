@@ -2,12 +2,29 @@
 export interface PersonalInfo {
   name: string;
   title: string;
-  email: string;
-  phone: string;
   location: string;
   bio: string;
+  welcomeMessage?: string;
   avatar: string;
   photos: string[];
+}
+
+// 联系信息类型
+export interface ContactImage {
+  url: string;
+  label: string;
+}
+
+export interface Contact {
+  email: string;
+  phone?: string;
+  wechat?: string;
+  qq?: string;
+  telegram?: string;
+  whatsapp?: string;
+  other?: string;
+  location?: string;
+  images?: ContactImage[];
 }
 
 // 技能类型
@@ -65,6 +82,7 @@ export interface Photo {
   title: string;
   description: string;
   category: string;
+  folder?: string;
   date: string;
 }
 
@@ -157,4 +175,121 @@ export interface News {
   publishedAt: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+// 任务类型
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  priority: 'high' | 'medium' | 'low';
+  status: 'pending' | 'in_progress' | 'completed' | 'postponed';
+  createdAt: string;
+  dueDate: string;
+  category?: string;
+  tags?: string[];
+}
+
+// HTML分享类型
+export interface HtmlShare {
+  id: string;
+  title: string;
+  content: string;
+  type: 'upload' | 'paste';
+  fileName?: string;
+  createdAt: string;
+  updatedAt?: string;
+  views: number;
+  lastViewedAt?: string;
+}
+// 留言类型
+export interface Message {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  status: 'read' | 'unread';
+  createdAt: string;
+  readAt?: string;
+}
+
+// 产品分类类型
+export interface ProductCategory {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  coverImage?: string; // 封面图
+  shortDescription?: string; // 简短介绍
+  detailedDescription?: string; // 详细描述（富文本）
+  mediaResources?: MediaResource[]; // 媒体资源列表
+  sortOrder?: number; // 排序值
+  isPublished?: boolean; // 是否上架
+  folders: ProductFolder[];
+}
+
+export interface MediaResource {
+  id: string;
+  type: 'image' | 'video';
+  url: string;
+  thumbnailUrl?: string; // 视频封面图
+  title?: string;
+  description?: string;
+  sortOrder: number;
+  uploadedAt?: string;
+}
+
+export interface ProductFolder {
+  id: string;
+  name: string;
+  count: number;
+  attachments?: ProductAttachment[];
+  subFolders?: ProductSubFolder[];
+}
+
+export interface ProductSubFolder {
+  id: string;
+  name: string;
+  count: number;
+  attachments?: ProductAttachment[];
+}
+
+export interface ProductAttachment {
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  originalName: string;
+  size: number;
+  mimeType: string;
+  uploadedAt: string;
+}
+
+// 工具类型
+export interface Tool {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  url: string;
+  category: string;
+}
+
+// 专业类型
+export interface Profession {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  skills: Array<{
+    id: string;
+    name: string;
+    level: number;
+  }>;
+  certifications: Array<{
+    id: string;
+    name: string;
+    date: string;
+  }>;
 }

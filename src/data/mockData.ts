@@ -29,8 +29,6 @@ export const projectStats = {
 export const personalInfo: PersonalInfo = {
   name: "丰生水起",
   title: "弱电工程师 & 项目经理",
-  email: "contact@example.com",
-  phone: "+86 138-0000-0000",
   location: "中国·上海",
   bio: "拥有8年弱电系统工程经验的专业工程师，专注于监控系统、门禁系统、综合布线等弱电工程的设计与实施。精通安防监控、智能化系统集成，致力于为客户提供安全可靠的弱电解决方案。",
   avatar: "https://ui-avatars.com/api/?name=Feng+Sheng&size=400&background=3b82f6&color=fff",

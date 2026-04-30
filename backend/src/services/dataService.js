@@ -181,9 +181,11 @@ export async function initializeData() {
     await writeData('users', [
       {
         id: "1",
-        username: "admin",
-        password: "$2a$10$rQZ5qXqW5qXqW5qXqW5qXeO", // admin123 (需要实际加密)
-        role: "admin"
+        username: "xue",
+        password: "$2a$10$wfuPTa9VuG0Y081TKZWob.Gd6pPCUwN.crDtzSDCezDihfrasj/6q", // Xue0922@ 的 bcrypt 哈希
+        email: "",
+        role: "admin",
+        createdAt: new Date().toISOString()
       }
     ]);
   }

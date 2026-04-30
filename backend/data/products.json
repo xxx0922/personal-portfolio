@@ -1,0 +1,66 @@
+[
+  {
+    "id": "1776086176678",
+    "name": "AI项目",
+    "description": "通过CSS+verl",
+    "icon": "📦",
+    "folders": [
+      {
+        "id": "folder-1776086136277",
+        "name": "个人网站",
+        "count": 0,
+        "attachments": [],
+        "subFolders": []
+      }
+    ],
+    "coverImage": "",
+    "shortDescription": "",
+    "detailedDescription": "",
+    "mediaResources": [
+      {
+        "id": "media-1776091567078",
+        "type": "image",
+        "url": "/uploads/products/product-1776091565898-471327544.png",
+        "thumbnailUrl": "",
+        "title": "",
+        "description": "",
+        "sortOrder": 0,
+        "uploadedAt": "2026-04-13T14:46:07.078Z"
+      }
+    ],
+    "sortOrder": 1,
+    "isPublished": true
+  },
+  {
+    "id": "1776252549284",
+    "name": "AI视频",
+    "description": "",
+    "icon": "📦",
+    "coverImage": "",
+    "shortDescription": "鼋头渚比赛",
+    "detailedDescription": "2025.5.6",
+    "mediaResources": [
+      {
+        "id": "media-1776252541368",
+        "type": "image",
+        "url": "/uploads/products/product-1776252540085-998417814.png",
+        "thumbnailUrl": "",
+        "title": "",
+        "description": "",
+        "sortOrder": 0,
+        "uploadedAt": "2026-04-15T11:29:01.368Z"
+      }
+    ],
+    "sortOrder": 1,
+    "isPublished": true,
+    "folders": [
+      {
+        "id": "folder-1776252533479",
+        "name": "参赛作品",
+        "count": 0,
+        "attachments": [],
+        "subFolders": []
+      }
+    ]
+  }
+]

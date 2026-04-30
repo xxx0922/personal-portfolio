@@ -1,24 +1,34 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { getFooterSettings, getFriendLinks } from '../services/dataService';
+import { useState } from 'react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  const [settings, setSettings] = useState<any>(null);
-  const [friendLinks, setFriendLinks] = useState<any[]>([]);
 
-  useEffect(() => {
-    const loadSettings = async () => {
-      const data = await getFooterSettings();
-      if (data) setSettings(data);
-    };
-    const loadFriendLinks = async () => {
-      const links = await getFriendLinks();
-      setFriendLinks(links);
-    };
-    loadSettings();
-    loadFriendLinks();
-  }, []);
+  // 使用静态配置数据
+  const settings = {
+    about: {
+      title: '关于本站',
+      description: '这是一个展示个人项目、技能和经验的个人网站。',
+      copyright: '个人网站'
+    },
+    contact: {
+      email: 'contact@example.com',
+      phone: '+86 138-0000-0000',
+      location: '中国·上海'
+    },
+    social: {
+      wechat: 'your-wechat',
+      douyin: 'https://www.douyin.com',
+      xiaohongshu: 'https://www.xiaohongshu.com'
+    },
+    branding: {
+      designedBy: '个人'
+    },
+    links: {
+      privacyPolicy: '#',
+      termsOfService: '#'
+    }
+  };
 
   const quickLinks = [
     { name: '首页', href: '/' },
@@ -83,22 +93,22 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="clay-footer text-gray-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* 关于部分 */}
           <div className="col-span-1 md:col-span-2">
-            <h3 className="text-white text-lg font-bold mb-4">{settings?.about?.title || '关于本站'}</h3>
-            <p className="text-gray-400 mb-4 leading-relaxed">
+            <h3 className="clay-title text-lg font-bold mb-4">{settings?.about?.title || '关于本站'}</h3>
+            <p className="clay-text-muted mb-4 leading-relaxed">
               {settings?.about?.description || '这是一个展示个人项目、技能和经验的个人网站。'}
             </p>
-            <p className="text-gray-400 text-sm">
+            <p className="clay-text-muted text-sm">
               © {currentYear} {settings?.about?.copyright || '个人网站'}. All rights reserved.
             </p>
-            <p className="text-gray-400 text-sm mt-2">
+            <p className="clay-text-muted text-sm mt-2">
               <span
                 onClick={() => window.open('https://beian.miit.gov.cn/', '_blank', 'noopener,noreferrer')}
-                className="hover:text-white transition-colors cursor-pointer"
+                className="hover:text-clay-base transition-colors cursor-pointer"
               >
                 苏ICP备2025221859号
               </span>
@@ -107,7 +117,7 @@ const Footer = () => {
 
           {/* 快速链接 */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">快速链接</h3>
+            <h3 className="clay-title text-lg font-bold mb-4">快速链接</h3>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.name}>
@@ -117,14 +127,14 @@ const Footer = () => {
                         e.preventDefault();
                         handleScrollToSection(link.href);
                       }}
-                      className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+                      className="clay-text-muted hover:text-clay-base transition-colors cursor-pointer"
                     >
                       {link.name}
                     </span>
                   ) : (
                     <span
                       onClick={() => window.location.href = link.href}
-                      className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+                      className="clay-text-muted hover:text-clay-base transition-colors cursor-pointer"
                     >
                       {link.name}
                     </span>
@@ -136,32 +146,32 @@ const Footer = () => {
 
           {/* 联系方式 */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">联系方式</h3>
+            <h3 className="clay-title text-lg font-bold mb-4">联系方式</h3>
             <div className="space-y-3 text-sm">
               <div className="flex items-center space-x-2">
-                <svg className="w-5 h-5 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span className="text-gray-400">{settings?.contact?.email || 'contact@example.com'}</span>
+                <span className="clay-text-muted">{settings?.contact?.email || 'contact@example.com'}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <svg className="w-5 h-5 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                <span className="text-gray-400">{settings?.contact?.phone || '+86 138-0000-0000'}</span>
+                <span className="clay-text-muted">{settings?.contact?.phone || '+86 138-0000-0000'}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <svg className="w-5 h-5 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span className="text-gray-400">{settings?.contact?.location || '中国·上海'}</span>
+                <span className="clay-text-muted">{settings?.contact?.location || '中国·上海'}</span>
               </div>
             </div>
 
             {/* 社交媒体 */}
             <div className="mt-6">
-              <h4 className="text-white font-semibold mb-3">关注我</h4>
+              <h4 className="clay-title font-semibold mb-3">关注我</h4>
               <div className="flex space-x-4">
                 {socialLinks.map((social) => (
                   <a
@@ -170,7 +180,7 @@ const Footer = () => {
                     target={social.href ? '_blank' : undefined}
                     rel={social.href ? 'noopener noreferrer' : undefined}
                     onClick={social.onClick}
-                    className="text-gray-400 hover:text-white transition-colors"
+                    className="clay-text-muted hover:text-clay-base transition-colors"
                     title={social.name}
                   >
                     {social.icon}
@@ -181,48 +191,14 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* 友情链接 */}
-        {friendLinks.length > 0 && (
-          <div className="mt-8 pt-8 border-t border-gray-800">
-            <h3 className="text-white text-lg font-bold mb-4">友情链接</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {friendLinks.map((link) => (
-                <a
-                  key={link.id}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-2 p-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition group"
-                  title={link.description}
-                >
-                  {link.logo ? (
-                    <img
-                      src={link.logo}
-                      alt={link.name}
-                      className="w-8 h-8 rounded object-cover flex-shrink-0"
-                    />
-                  ) : (
-                    <div className="w-8 h-8 bg-gray-700 rounded flex items-center justify-center flex-shrink-0 text-sm">
-                      🔗
-                    </div>
-                  )}
-                  <span className="text-gray-400 group-hover:text-white text-sm truncate">
-                    {link.name}
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* 底部分隔线和额外信息 */}
-        <div className="mt-8 pt-8 border-t border-gray-800">
-          <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+        <div className="mt-8 pt-8 clay-divider">
+          <div className="flex flex-col md:flex-row justify-between items-center text-sm clay-text-muted">
             <p>Designed & Built by {settings?.branding?.designedBy || '个人'}</p>
             <div className="flex space-x-4 mt-4 md:mt-0">
               <span
                 onClick={() => window.location.href = '/admin/login'}
-                className="hover:text-white transition-colors cursor-pointer"
+                className="hover:text-clay-base transition-colors cursor-pointer"
               >
                 管理后台
               </span>
@@ -232,7 +208,7 @@ const Footer = () => {
                   const url = settings?.links?.privacyPolicy || '#';
                   if (url !== '#') window.location.href = url;
                 }}
-                className="hover:text-white transition-colors cursor-pointer"
+                className="hover:text-clay-base transition-colors cursor-pointer"
               >
                 隐私政策
               </span>
@@ -242,7 +218,7 @@ const Footer = () => {
                   const url = settings?.links?.termsOfService || '#';
                   if (url !== '#') window.location.href = url;
                 }}
-                className="hover:text-white transition-colors cursor-pointer"
+                className="hover:text-clay-base transition-colors cursor-pointer"
               >
                 使用条款
               </span>
@@ -254,7 +230,7 @@ const Footer = () => {
       {/* 回到顶部按钮 */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-8 right-8 bg-primary-600 text-white p-3 rounded-full shadow-lg hover:bg-primary-700 transition-all hover:scale-110 z-50"
+        className="fixed bottom-8 right-8 clay-button clay-button-primary rounded-full shadow-lg hover:scale-110 transition-all z-50"
         aria-label="回到顶部"
       >
         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,65 +1,83 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import Masonry from 'react-masonry-css';
-import { getPersonalInfo, getSkills, getProjects, getMediaItems, getPhotos, getDocuments, getExperiences, getNews, getSiteConfig, getArticles } from '../services/dataService';
-import type { Skill, PersonalInfo, Project, MediaItem, Photo, Document, Experience, News, Article } from '../types';
+import { getPersonalInfo, getProjects, getPhotos, getDocuments, getArticles, getProfessions, getContact, getSkills } from '../services/dataService';
+import type { PersonalInfo, Project, Photo, Document, Article, Profession, Contact, Skill } from '../types';
 import LazyImage from '../components/LazyImage';
 import Navbar from '../components/Navbar';
-import ContactForm from '../components/ContactForm';
 import Footer from '../components/Footer';
 import LoadingSpinner from '../components/LoadingSpinner';
-import ExperienceTimeline from '../components/ExperienceTimeline';
-import NewsList from '../components/NewsList';
 import BackgroundMusic from '../components/BackgroundMusic';
-import { SkeletonProjectCard, SkeletonSkillCard, SkeletonMediaCard, SkeletonPhoto, SkeletonDocumentCard } from '../components/SkeletonLoader';
 import { useSEO } from '../hooks/useSEO';
-import { downloadVCard } from '../utils/vcard';
 
-// Fix: Suppress unused imports warning
-void downloadVCard;
 
 const HomePage = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
-  const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
-  const [selectedGalleryPhoto, setSelectedGalleryPhoto] = useState<Photo | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
-  const [skills, setSkills] = useState<Skill[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [experiences, setExperiences] = useState<Experience[]>([]);
-  const [news, setNews] = useState<News[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
-  const [siteConfig, setSiteConfig] = useState<any>(null);
+  const [products, setProducts] = useState<Profession[]>([]);
+  const [contact, setContact] = useState<Contact | null>(null);
+  const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
+  const [imageLabels, setImageLabels] = useState<string[]>([]);
+
+  // 初始化图片标签
+  useEffect(() => {
+    if (contact?.images) {
+      setImageLabels(contact.images.map(img => img.label || ''));
+    }
+  }, [contact]);
+
+  // 处理标签变化
+  const handleLabelChange = (index: number, value: string) => {
+    setImageLabels(prev => {
+      const newLabels = [...prev];
+      newLabels[index] = value;
+      return newLabels;
+    });
+  };
+
+  // 获取完整的图片 URL
+  const getImageUrl = (url: string) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    // 注意：这里使用 localhost:3002 而不是 API_URL，因为 uploads 是静态文件目录
+    const backendUrl = 'http://localhost:3002';
+    return `${backendUrl}${url}`;
+  };
+
+  // 获取头像 URL（处理相对路径）
+  const getAvatarUrl = useCallback(() => {
+    if (!personalInfo?.avatar) return '';
+    return getImageUrl(personalInfo.avatar);
+  }, [personalInfo?.avatar]);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [infoData, skillsData, projectsData, mediaData, photosData, documentsData, experiencesData, newsData, articlesData, configData] = await Promise.all([
+        const [infoData, projectsData, photosData, documentsData, articlesData, professionsData, contactData, skillsData] = await Promise.all([
           getPersonalInfo(),
-          getSkills(),
           getProjects(),
-          getMediaItems(),
           getPhotos(),
           getDocuments(),
-          getExperiences(),
-          getNews(),
           getArticles(),
-          getSiteConfig()
+          getProfessions(),
+          getContact(),
+          getSkills()
         ]);
         setPersonalInfo(infoData);
-        setSkills(skillsData);
         setProjects(projectsData);
-        setMediaItems(mediaData);
         setPhotos(photosData);
         setDocuments(documentsData);
-        setExperiences(experiencesData);
-        setNews(newsData);
         setArticles(articlesData);
-        setSiteConfig(configData);
+        setProducts(professionsData);
+        setContact(contactData);
+        setSkills(skillsData);
       } catch (error) {
         console.error('Failed to load data:', error);
       } finally {
@@ -74,28 +92,354 @@ const HomePage = () => {
     if (!personalInfo || !personalInfo.photos || personalInfo.photos.length === 0) {
       return;
     }
-
-    // 设置定时器，每6秒切换一张照片
     const interval = setInterval(() => {
       setSelectedPhoto((prevPhoto) => {
         const currentIndex = prevPhoto === null ? 0 : prevPhoto;
         const nextIndex = (currentIndex + 1) % personalInfo.photos.length;
+        // 直接控制滚动容器
+        const scrollContainer = document.getElementById('photo-scroll-container');
+        if (scrollContainer) {
+          const containerWidth = scrollContainer.offsetWidth; // 容器宽度
+          scrollContainer.scrollTo({
+            left: nextIndex * containerWidth,
+            behavior: 'smooth'
+          });
+        }
         return nextIndex;
       });
-    }, 6000); // 6000毫秒 = 6秒
-
-    // 清理定时器，避免内存泄漏
+    }, 4000); // 每 4 秒切换一张
     return () => clearInterval(interval);
   }, [personalInfo]);
 
-  // SEO优化
+  // 初始化照片位置
+  useEffect(() => {
+    if (personalInfo?.photos && personalInfo.photos.length > 0) {
+      const scrollContainer = document.getElementById('photo-scroll-container');
+      if (scrollContainer && selectedPhoto !== null) {
+        const containerWidth = scrollContainer.offsetWidth;
+        scrollContainer.scrollLeft = selectedPhoto * containerWidth;
+      }
+    }
+  }, [personalInfo, selectedPhoto]);
+
+  // 鼠标移动流星尾翼特效
+  useEffect(() => {
+    const canvas = document.getElementById('meteor-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let mousePosition = { x: 0, y: 0 };
+    let lastMouseX = 0;
+    let lastMouseY = 0;
+    let mouseSpeed = 0;
+    let hue = 0;
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // 流星类 - 鼠标位置的主流星
+    class MouseMeteor {
+      x: number;
+      y: number;
+      targetX: number;
+      targetY: number;
+      vx: number;
+      vy: number;
+      trail: TrailParticle[];
+      hue: number;
+
+      constructor() {
+        this.x = 0;
+        this.y = 0;
+        this.targetX = 0;
+        this.targetY = 0;
+        this.vx = 0;
+        this.vy = 0;
+        this.trail = [];
+        this.hue = 0;
+      }
+
+      update() {
+        // 平滑跟随鼠标
+        const dx = this.targetX - this.x;
+        const dy = this.targetY - this.y;
+        this.vx += dx * 0.15;
+        this.vy += dy * 0.15;
+        this.vx *= 0.85;
+        this.vy *= 0.85;
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // 计算速度
+        const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+
+        // 创建尾迹粒子
+        if (speed > 0.5) {
+          const particleCount = Math.min(3, Math.floor(speed / 2) + 1);
+          for (let i = 0; i < particleCount; i++) {
+            this.trail.push(new TrailParticle(
+              this.x + (Math.random() - 0.5) * 10,
+              this.y + (Math.random() - 0.5) * 10,
+              -this.vx * 0.3 + (Math.random() - 0.5) * 2,
+              -this.vy * 0.3 + (Math.random() - 0.5) * 2,
+              this.hue
+            ));
+          }
+        }
+
+        // 更新尾迹
+        this.trail = this.trail.filter(p => p.life > 0);
+        this.trail.forEach(p => p.update());
+
+        // 颜色循环
+        this.hue = (this.hue + 2) % 360;
+      }
+
+      draw(ctx: CanvasRenderingContext2D) {
+        // 绘制尾迹 - 流星尾巴
+        for (let i = 0; i < this.trail.length; i++) {
+          this.trail[i].draw(ctx);
+        }
+
+        // 绘制流星主体（鼠标位置的光晕）
+        const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, 30);
+        gradient.addColorStop(0, `hsla(${this.hue}, 100%, 70%, 1)`);
+        gradient.addColorStop(0.5, `hsla(${this.hue}, 100%, 50%, 0.5)`);
+        gradient.addColorStop(1, `hsla(${this.hue}, 100%, 50%, 0)`);
+
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 30, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+
+        // 流星核心
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 8, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 100%, 90%, 1)`;
+        ctx.fill();
+      }
+    }
+
+    // 尾迹粒子类
+    class TrailParticle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      life: number;
+      maxLife: number;
+      size: number;
+      hue: number;
+      sparkles: Array<{ x: number; y: number; size: number; life: number; maxLife: number }>;
+
+      constructor(x: number, y: number, vx: number, vy: number, hue: number) {
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = vy;
+        this.hue = hue;
+        this.maxLife = 40 + Math.random() * 20;
+        this.life = this.maxLife;
+        this.size = 4 + Math.random() * 6;
+        this.sparkles = [];
+
+        // 创建闪烁粒子
+        const sparkleCount = 2 + Math.floor(Math.random() * 3);
+        for (let i = 0; i < sparkleCount; i++) {
+          this.sparkles.push({
+            x: x + (Math.random() - 0.5) * 20,
+            y: y + (Math.random() - 0.5) * 20,
+            size: 1 + Math.random() * 2,
+            life: 10 + Math.random() * 10,
+            maxLife: 10 + Math.random() * 10
+          });
+        }
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life--;
+        this.vx *= 0.96;
+        this.vy *= 0.96;
+        this.vy += 0.05; // 轻微重力
+
+        // 更新闪烁粒子
+        this.sparkles = this.sparkles.filter(s => s.life > 0);
+        this.sparkles.forEach(s => {
+          s.x += (Math.random() - 0.5) * 0.5;
+          s.y += (Math.random() - 0.5) * 0.5;
+          s.life--;
+        });
+      }
+
+      draw(ctx: CanvasRenderingContext2D) {
+        const alpha = (this.life / this.maxLife) * 0.9;
+        const currentSize = this.size * (this.life / this.maxLife);
+
+        // 绘制光晕
+        const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, currentSize * 2);
+        gradient.addColorStop(0, `hsla(${this.hue}, 100%, 60%, ${alpha})`);
+        gradient.addColorStop(1, `hsla(${this.hue}, 100%, 50%, 0)`);
+
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, currentSize * 2, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+
+        // 绘制核心
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, currentSize, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 100%, 80%, ${alpha})`;
+        ctx.fill();
+
+        // 绘制闪烁粒子
+        this.sparkles.forEach(s => {
+          const sparkleAlpha = (s.life / s.maxLife) * alpha;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${this.hue + 30}, 100%, 90%, ${sparkleAlpha})`;
+          ctx.fill();
+        });
+      }
+    }
+
+    // 连接尾迹的流星效果
+    class TrailMeteor {
+      startX: number;
+      startY: number;
+      endX: number;
+      endY: number;
+      life: number;
+      maxLife: number;
+      hue: number;
+
+      constructor(x: number, y: number, vx: number, vy: number, hue: number) {
+        this.startX = x;
+        this.startY = y;
+        this.endX = x - vx * 15;
+        this.endY = y - vy * 15;
+        this.hue = hue;
+        this.maxLife = 20 + Math.random() * 10;
+        this.life = this.maxLife;
+      }
+
+      update() {
+        this.life--;
+        this.endX += (Math.random() - 0.5) * 2;
+        this.endY += (Math.random() - 0.5) * 2;
+      }
+
+      draw(ctx: CanvasRenderingContext2D) {
+        const alpha = (this.life / this.maxLife) * 0.6;
+        const length = Math.sqrt(
+          Math.pow(this.endX - this.startX, 2) + Math.pow(this.endY - this.startY, 2)
+        );
+
+        if (length < 5) return;
+
+        const angle = Math.atan2(this.endY - this.startY, this.endX - this.startX);
+        const perpAngle = angle + Math.PI / 2;
+        const width = Math.min(length * 0.3, 15);
+
+        // 创建流星尾巴的渐变
+        const gradient = ctx.createLinearGradient(this.startX, this.startY, this.endX, this.endY);
+        gradient.addColorStop(0, `hsla(${this.hue}, 100%, 70%, ${alpha})`);
+        gradient.addColorStop(0.5, `hsla(${this.hue + 20}, 100%, 60%, ${alpha * 0.7})`);
+        gradient.addColorStop(1, `hsla(${this.hue + 40}, 100%, 50%, 0)`);
+
+        ctx.save();
+        ctx.translate(this.startX, this.startY);
+        ctx.rotate(angle);
+
+        // 绘制流星尾巴
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(length * 0.5, -width, length, 0);
+        ctx.quadraticCurveTo(length * 0.5, width, 0, 0);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      isDead(): boolean {
+        return this.life <= 0;
+      }
+    }
+
+    const meteor = new MouseMeteor();
+    let trailMeteors: TrailMeteor[] = [];
+
+    // 鼠标移动处理
+    const handleMouseMove = (e: MouseEvent) => {
+      mousePosition.x = e.clientX;
+      mousePosition.y = e.clientY;
+      meteor.targetX = e.clientX;
+      meteor.targetY = e.clientY;
+
+      // 计算鼠标速度
+      const deltaX = e.clientX - lastMouseX;
+      const deltaY = e.clientY - lastMouseY;
+      mouseSpeed = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+      // 快速移动时创建额外的流星效果
+      if (mouseSpeed > 20) {
+        trailMeteors.push(new TrailMeteor(
+          meteor.x,
+          meteor.y,
+          deltaX,
+          deltaY,
+          meteor.hue
+        ));
+      }
+
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 更新和绘制流星尾迹
+      trailMeteors = trailMeteors.filter(m => !m.isDead());
+      trailMeteors.forEach(m => {
+        m.update();
+        m.draw(ctx);
+      });
+
+      // 更新和绘制主流星（鼠标）
+      meteor.update();
+      meteor.draw(ctx);
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      document.removeEventListener('mousemove', handleMouseMove);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  // SEO 优化
   useSEO({
     title: personalInfo ? `${personalInfo.name} - ${personalInfo.title}` : '个人主页',
     description: personalInfo?.bio || '个人展示网站',
-    keywords: '个人网站, 全栈开发, 项目管理, 技术博客',
+    keywords: '个人网站，全栈开发，项目管理，技术博客',
     ogTitle: personalInfo ? `${personalInfo.name} - 个人主页` : '个人主页',
     ogDescription: personalInfo?.bio || '个人展示网站',
-    ogImage: personalInfo?.avatar,
+    ogImage: getAvatarUrl(),
     ogUrl: window.location.href,
   });
 
@@ -108,594 +452,401 @@ const HomePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navbar */}
-      <Navbar personalInfo={personalInfo} />
+    <div className="relative min-h-screen">
+      {/* 星空背景 - 固定外框 + 旋转内容 */}
+      <div className="fixed inset-0 z-0 overflow-hidden">
+        {/* 底层：静态背景图 */}
+        <div
+          className="absolute inset-0 bg-cover bg-center brightness-150"
+          style={{
+            backgroundImage: `url('/背景星空.png')`,
+          }}
+        ></div>
 
-      {/* Background Music */}
-      <BackgroundMusic />
+        {/* 上层：旋转的径向遮罩，制造中心旋转视觉效果 */}
+        <div
+          className="absolute inset-[-50%] w-[200%] h-[200%] animate-rotate-center"
+          style={{
+            background: `conic-gradient(from 0deg at 50% 50%,
+              rgba(0,0,0,0) 0deg,
+              rgba(0,0,0,0.1) 10deg,
+              rgba(0,0,0,0.15) 30deg,
+              rgba(0,0,0,0.2) 60deg,
+              rgba(0,0,0,0.25) 90deg,
+              rgba(0,0,0,0.2) 120deg,
+              rgba(0,0,0,0.15) 150deg,
+              rgba(0,0,0,0.1) 170deg,
+              rgba(0,0,0,0) 180deg,
+              rgba(0,0,0,0.1) 190deg,
+              rgba(0,0,0,0.15) 210deg,
+              rgba(0,0,0,0.2) 240deg,
+              rgba(0,0,0,0.25) 270deg,
+              rgba(0,0,0,0.2) 300deg,
+              rgba(0,0,0,0.15) 330deg,
+              rgba(0,0,0,0.1) 350deg,
+              rgba(0,0,0,0) 360deg)`,
+            mixBlendMode: 'multiply',
+          }}
+        ></div>
 
-      {/* Hero Section */}
-      <section id="home" className="bg-gradient-to-r from-primary-600 to-primary-700 text-white pt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* 左侧：个人信息 */}
-            <div className="space-y-6">
-              <div className="flex items-center space-x-4">
-                <LazyImage
-                  src={personalInfo.avatar}
-                  alt={personalInfo.name}
-                  className="w-24 h-24 rounded-full border-4 border-white shadow-lg"
-                  effect="opacity"
-                />
-                <div>
-                  <h1 className="text-4xl font-bold">{personalInfo.name}</h1>
-                  <p className="text-xl text-primary-100">{personalInfo.title}</p>
-                </div>
-              </div>
+        {/* 顶部渐变遮罩 - 更亮 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/10 via-slate-900/5 to-slate-900/20 z-10"></div>
+      </div>
 
-              <p className="text-lg text-primary-100 leading-relaxed">
-                {personalInfo.bio}
-              </p>
+      {/* 流星特效画布 */}
+      <canvas id="meteor-canvas" className="fixed inset-0 z-20 pointer-events-none"></canvas>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                <div className="flex items-center space-x-2">
-                  <span className="text-primary-200">📧</span>
-                  <span>{personalInfo.email}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-primary-200">📱</span>
-                  <span>{personalInfo.phone}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-primary-200">📍</span>
-                  <span>{personalInfo.location}</span>
-                </div>
-              </div>
-            </div>
+      {/* 内容容器 */}
+      <div className="relative z-10">
+        {/* Navbar */}
+        <Navbar personalInfo={personalInfo} />
 
-            {/* 右侧：照片轮播 */}
-            <div className="relative w-full">
-              <div className="w-full rounded-lg overflow-hidden shadow-2xl bg-gray-200" style={{ height: '400px' }}>
-                <LazyImage
-                  src={selectedPhoto !== null ? personalInfo.photos[selectedPhoto] : personalInfo.photos[0]}
-                  alt="个人照片"
-                  className="w-full h-full object-cover"
-                  wrapperClassName="w-full h-full"
-                />
-              </div>
+        {/* Background Music */}
+        <BackgroundMusic />
 
-              {/* 照片缩略图 */}
-              <div className="flex space-x-2 mt-4 overflow-x-auto pb-2">
-                {personalInfo.photos.map((photo, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedPhoto(index)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                      selectedPhoto === index
-                        ? 'border-white scale-110 shadow-lg'
-                        : 'border-primary-300 hover:border-white opacity-80 hover:opacity-100'
-                    }`}
-                  >
-                    <LazyImage
-                      src={photo}
-                      alt={`照片 ${index + 1}`}
-                      className="w-full h-full object-cover"
-                      effect="opacity"
-                      threshold={50}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+        {/* 主内容区域 */}
+        {/* 隐藏滚动条样式 */}
+        <style>{`
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
 
-      {/* Articles & News Combined Section */}
-      {(articles.length > 0 || news.length > 0) && (
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12">
-              {/* Articles/Blog Section */}
-              <div id="articles">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    📝 博客文章
-                  </h2>
-                  {articles.length > 0 && (
-                    <Link to="/blog" className="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center">
-                      查看全部
-                      <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
-                  )}
-                </div>
-                {articles.length > 0 ? (
-                  <div className="space-y-6">
-                    {articles.slice(0, 3).map((article) => (
-                      <Link
-                        key={article.id}
-                        to={`/article/${article.id}`}
-                        className="block bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+        <main className="pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-[1920px] mx-auto">
+
+          {/* 左右两侧装饰性背景 - 星空光晕 */}
+          <div className="fixed left-0 top-1/2 -translate-y-1/2 w-80 h-[600px] bg-gradient-to-r from-blue-600/30 via-blue-400/15 to-transparent rounded-r-full blur-3xl pointer-events-none"></div>
+          <div className="fixed right-0 top-1/2 -translate-y-1/2 w-80 h-[600px] bg-gradient-to-l from-purple-600/30 via-purple-400/15 to-transparent rounded-l-full blur-3xl pointer-events-none"></div>
+          <div className="fixed left-10 top-1/4 w-40 h-40 bg-cyan-500/30 rounded-full blur-2xl pointer-events-none animate-pulse"></div>
+          <div className="fixed right-10 bottom-1/4 w-40 h-40 bg-pink-500/30 rounded-full blur-2xl pointer-events-none animate-pulse"></div>
+          <div className="fixed left-1/4 top-1/3 w-24 h-24 bg-indigo-400/25 rounded-full blur-xl pointer-events-none animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+          <div className="fixed right-1/4 top-1/3 w-24 h-24 bg-rose-400/25 rounded-full blur-xl pointer-events-none animate-pulse" style={{ animationDelay: '1s' }}></div>
+
+          {/* 个人介绍区域 - 全屏展示 */}
+          <div className="mb-10">
+            <div className="clay-card p-8 md:p-12 relative overflow-hidden">
+              {/* 装饰性背景 */}
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10"></div>
+              <div className="absolute -right-32 -top-32 w-96 h-96 rounded-full bg-gradient-to-br from-indigo-500/20 to-transparent blur-3xl"></div>
+              <div className="absolute -left-32 -bottom-32 w-96 h-96 rounded-full bg-gradient-to-tr from-pink-500/20 to-transparent blur-3xl"></div>
+
+              <div className="relative z-10">
+                <div className="flex flex-col lg:flex-row items-center gap-8">
+                  {/* 左侧：头像和信息 */}
+                  <div className="flex-1 flex flex-col lg:flex-row items-center gap-8">
+                    {/* 头像区域 */}
+                    <div className="flex-shrink-0">
+                      <div className="relative">
+                        <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-white/30 shadow-2xl">
+                          <img
+                            src={getAvatarUrl()}
+                            alt={personalInfo.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xl shadow-lg">
+                          ✨
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 个人介绍文本 */}
+                    <div className="flex-1 text-center lg:text-left">
+                      <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold clay-title mb-4 bg-gradient-to-r from-white via-rose-100 to-white bg-clip-text text-transparent">
+                        {personalInfo.name}
+                      </h1>
+                      <p className="text-2xl md:text-3xl text-rose-300 font-semibold mb-4">
+                        {personalInfo.title}
+                      </p>
+                      <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-6">
+                        <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+                          <span>📍</span>
+                          <span className="text-white">{personalInfo.location}</span>
+                        </div>
+                        <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+                          <span>💼</span>
+                          <span className="text-white">{personalInfo.welcomeMessage ? '8 年 + 经验' : '专业工程师'}</span>
+                        </div>
+                      </div>
+                      <p className="text-xl text-gray-200 leading-relaxed max-w-4xl">
+                        {personalInfo.welcomeMessage || '欢迎来到我的个人主页。这里展示了我的项目经验、活动瞬间、实用工具和知识文档。'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 右侧：照片墙滚动展示 */}
+                  <div className="flex-shrink-0">
+                    <div className="relative w-[320px] h-64 md:w-[480px] md:h-80 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20 bg-white/10 backdrop-blur-sm">
+                      {/* 照片滚动容器 - 每次只显示一张照片 */}
+                      <div
+                        id="photo-scroll-container"
+                        className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide h-full"
+                        onScroll={(e) => {
+                          const scrollLeft = e.currentTarget.scrollLeft;
+                          const width = e.currentTarget.offsetWidth;
+                          const newIndex = Math.round(scrollLeft / width);
+                          if (newIndex !== selectedPhoto) {
+                            setSelectedPhoto(newIndex);
+                          }
+                        }}
                       >
-                        <div className="p-6">
-                          <div className="flex items-center mb-2 text-xs text-gray-500">
-                            <span>{article.publishedAt || article.createdAt}</span>
-                            {article.category && (
-                              <>
-                                <span className="mx-2">•</span>
-                                <span className="text-primary-600">{article.category}</span>
-                              </>
-                            )}
+                        {personalInfo.photos && personalInfo.photos.map((photoUrl, index) => (
+                          <div
+                            key={index}
+                            id={`photo-${index}`}
+                            className="flex-shrink-0 w-full h-full snap-start cursor-pointer hover:opacity-80 transition-opacity"
+                            onClick={() => setSelectedPhoto(index)}
+                          >
+                            <img
+                              src={getImageUrl(photoUrl)}
+                              alt={`照片 ${index + 1}`}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
-                          <h3 className="text-lg font-semibold mb-2 text-gray-900 line-clamp-2">{article.title}</h3>
-                          <p className="text-gray-600 text-sm line-clamp-2">{article.summary || article.excerpt || article.content.substring(0, 100) + '...'}</p>
-                          {article.tags && article.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-2 mt-3">
-                              {article.tags.slice(0, 3).map((tag, idx) => (
-                                <span key={idx} className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded">
-                                  #{tag}
-                                </span>
-                              ))}
-                            </div>
-                          )}
+                        ))}
+                      </div>
+                      {/* 照片指示器 - 底部（固定不滚动） */}
+                      {personalInfo.photos && personalInfo.photos.length > 1 && (
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                          {personalInfo.photos.map((_, index) => (
+                            <div
+                              key={index}
+                              className={`w-1.5 h-1.5 rounded-full transition-all ${
+                                selectedPhoto === index
+                                  ? 'bg-white w-4'
+                                  : 'bg-white/50'
+                              }`}
+                            />
+                          ))}
                         </div>
-                      </Link>
-                    ))}
+                      )}
+                    </div>
                   </div>
-                ) : (
-                  <div className="text-center py-12 bg-gray-50 rounded-lg">
-                    <p className="text-gray-500">暂无博客文章</p>
-                    <p className="text-sm text-gray-400 mt-2">请在管理后台添加文章</p>
-                  </div>
-                )}
+                </div>
               </div>
 
-              {/* News Section */}
-              <div id="news">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    📰 新闻动态
-                  </h2>
-                  {news.length > 0 && (
-                    <Link to="/news" className="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center">
-                      查看全部
-                      <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
-                  )}
-                </div>
-                {news.length > 0 ? (
-                  <NewsList news={news} limit={3} />
-                ) : (
-                  <div className="text-center py-12 bg-gray-50 rounded-lg">
-                    <p className="text-gray-500">暂无新闻动态</p>
-                    <p className="text-sm text-gray-400 mt-2">请在管理后台添加新闻</p>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
-        </section>
-      )}
 
-      {/* Projects Section */}
-      {projects.length > 0 && (
-        <section id="projects" className="py-16 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
-              项目经验
-            </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projects.slice(0, 6).map((project) => (
-                <Link
-                  key={project.id}
-                  to={`/project/${project.id}`}
-                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
-                >
-                  {project.images && project.images[0] && (
-                    <div className="h-48 bg-gray-200">
-                      <img src={project.images[0]} alt={project.title} className="w-full h-full object-cover" />
+
+          {/* 第一行：项目经验 + 活动瞬间 + 专业系统 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            {/* 项目经验 */}
+            <section id="projects" className="clay-card p-8 relative overflow-hidden group min-h-[400px]">
+              <Link to="/dashboard" className="block h-full">
+                {/* 唯美背景图：办公桌面/代码 */}
+                <div className="absolute inset-0 bg-gradient-to-br from-sky-900/30 via-blue-900/20 to-indigo-900/30 z-10"></div>
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-25 group-hover:opacity-35 group-hover:scale-105 transition-all duration-500"></div>
+                <div className="relative z-10 h-full flex flex-col justify-end">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-sky-500 to-sky-700 flex items-center justify-center shadow-lg">
+                      <span className="text-4xl">🚀</span>
                     </div>
-                  )}
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 text-gray-900">{project.title}</h3>
-                    <p className="text-gray-600 mb-3 line-clamp-2">{project.description}</p>
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500 mb-3">
-                      <span className="flex items-center">👤 {project.role}</span>
-                      <span className="flex items-center">⏱️ {project.duration}</span>
-                      {project.year && (
-                        <span className="flex items-center">📅 {project.year}</span>
+                    <div>
+                      <h3 className="text-3xl font-bold clay-title">项目经验</h3>
+                      <p className="text-base clay-text-muted">多维表格仪表盘</p>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </section>
+
+            {/* 活动瞬间 */}
+            <section id="photos" className="clay-card p-8 relative overflow-hidden min-h-[400px]">
+              <Link to="/photos" className="block h-full">
+                {/* 唯美背景图：自然风光/草原 */}
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 via-teal-900/20 to-cyan-900/30 z-10"></div>
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-25"></div>
+                <div className="relative z-10 h-full flex flex-col justify-end">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg">
+                      <span className="text-4xl">📸</span>
+                    </div>
+                    <div>
+                      <h3 className="text-3xl font-bold clay-title">活动瞬间</h3>
+                      <p className="text-base clay-text-muted">记录生活美好时刻</p>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </section>
+
+            {/* 专业系统 */}
+            <section id="professions" className="clay-card p-8 relative overflow-hidden group min-h-[400px]">
+              <Link to="/professions" className="block h-full">
+                {/* 唯美背景图：专业/成就 */}
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/30 via-purple-900/20 to-blue-900/30 z-10"></div>
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-20 group-hover:opacity-30 group-hover:scale-105 transition-all duration-500"></div>
+                <div className="relative z-10 h-full flex flex-col justify-end">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center shadow-lg">
+                      <span className="text-4xl">🎓</span>
+                    </div>
+                    <div>
+                      <h3 className="text-3xl font-bold clay-title">专业系统</h3>
+                      <p className="text-base clay-text-muted">专业技能与资质</p>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </section>
+          </div>
+
+          {/* 第二行：联系我 */}
+          <div className="grid grid-cols-1 gap-8 mb-8">
+            {/* 联系我区域 */}
+            <section id="contact" className="clay-card p-0 min-h-[300px] overflow-hidden">
+              {/* 背景图 */}
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-slate-800/70 to-slate-900/80 z-10"></div>
+              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-20"></div>
+
+              <div className="relative z-10 h-full">
+                {/* 顶部标题栏 */}
+                <div className="flex items-center justify-between px-8 pt-8 pb-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-1 h-10 bg-gradient-to-b from-rose-500 to-pink-500 rounded-full"></div>
+                    <h2 className="text-3xl font-bold clay-title text-white">联系我</h2>
+                  </div>
+                  <p className="text-lg text-gray-300">扫码关注我的社交账号，获取最新动态 ✨</p>
+                </div>
+
+                {/* 内容区域 */}
+                <div className="flex flex-col md:flex-row gap-6 px-8 pb-8 justify-center">
+                  {/* 左侧：二维码图片 - 更大的显示区域 */}
+                  <div className="w-full md:w-[75%]">
+                    <div className="relative h-64 md:h-80 rounded-xl overflow-hidden bg-gradient-to-br from-amber-100 via-yellow-50 to-orange-100">
+                      {contact?.images && contact.images.length > 0 ? (
+                        <div className="flex h-full gap-4 p-4">
+                          {contact.images.map((img: { url: string; label: string }, index: number) => (
+                            img.url && (
+                              <div key={index} className="flex-1 flex flex-col items-center gap-2">
+                                <div className="w-full flex-1 rounded-xl overflow-hidden shadow-xl border border-white/10 hover:scale-105 transition-transform relative flex items-center justify-center p-3 bg-white/5 backdrop-blur-md">
+                                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/15 via-purple-500/10 to-pink-500/15"></div>
+                                  <img
+                                    src={img.url.startsWith('/') ? `http://localhost:3002${img.url}` : img.url}
+                                    alt={`二维码 ${index + 1}`}
+                                    className="w-full h-full object-contain rounded-lg relative z-10"
+                                    style={{
+                                      mixBlendMode: 'multiply',
+                                      backgroundColor: 'rgba(255, 255, 255, 0.5)'
+                                    }}
+                                  />
+                                </div>
+                                <div className="w-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg px-3 py-2 text-center shadow-lg">
+                                  <span className="text-white font-semibold text-base">
+                                    {imageLabels[index] || ''}
+                                  </span>
+                                </div>
+                              </div>
+                            )
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-gray-400">
+                          暂无二维码图片
+                        </div>
                       )}
-                      {project.contractAmount && (
-                        <span className="flex items-center text-green-600 font-semibold">
-                          💰 ¥{project.contractAmount.toLocaleString()}
+                    </div>
+                  </div>
+
+                  {/* 右侧：联系方式 */}
+                  <div className="flex flex-col gap-3 justify-center flex-1">
+                    {/* 社交媒体链接 */}
+                    <div className="grid grid-cols-2 gap-3 mb-2">
+                      <a
+                        href="https://github.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl hover:from-gray-700 hover:to-gray-600 transition-all group"
+                      >
+                        <span className="text-2xl">🐙</span>
+                        <span className="text-sm text-white font-medium">GitHub</span>
+                      </a>
+                      <a
+                        href="https://linkedin.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-700 to-blue-600 rounded-xl hover:from-blue-600 hover:to-blue-500 transition-all group"
+                      >
+                        <span className="text-2xl">💼</span>
+                        <span className="text-sm text-white font-medium">LinkedIn</span>
+                      </a>
+                    </div>
+
+                    {/* 邮箱 */}
+                    {contact?.email && (
+                      <a
+                        href={`mailto:${contact.email}`}
+                        className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl hover:from-slate-700 hover:to-slate-600 transition-all group"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">📧</span>
+                          <span className="text-sm text-gray-300">邮箱</span>
+                        </div>
+                        <span className="text-sm text-white font-medium group-hover:text-rose-400 transition-colors truncate max-w-[180px]">
+                          {contact.email}
                         </span>
-                      )}
-                    </div>
-                    {project.technologies && project.technologies.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies.slice(0, 3).map((tech, idx) => (
-                          <span key={idx} className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">
-                            {tech}
-                          </span>
-                        ))}
+                      </a>
+                    )}
+
+                    {/* 电话 */}
+                    {contact?.phone && (
+                      <a
+                        href={`tel:${contact.phone}`}
+                        className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl hover:from-slate-700 hover:to-slate-600 transition-all group"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">📱</span>
+                          <span className="text-sm text-gray-300">电话</span>
+                        </div>
+                        <span className="text-sm text-white font-medium group-hover:text-rose-400 transition-colors">
+                          {contact.phone}
+                        </span>
+                      </a>
+                    )}
+
+                    {/* 微信 */}
+                    {contact?.wechat && (
+                      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">💬</span>
+                          <span className="text-sm text-gray-300">微信</span>
+                        </div>
+                        <span className="text-sm text-white font-medium text-rose-400">
+                          {contact.wechat}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* 地址 */}
+                    {contact?.location && (
+                      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">📍</span>
+                          <span className="text-sm text-gray-300">地址</span>
+                        </div>
+                        <span className="text-sm text-white font-medium">
+                          {contact.location}
+                        </span>
                       </div>
                     )}
                   </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Photo Gallery Section */}
-      {photos.length > 0 && (
-        <section id="photos" className="pt-24 pb-16 bg-gray-50 scroll-mt-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
-              精彩瞬间
-            </h2>
-            <Masonry
-              breakpointCols={{
-                default: 4,
-                1280: 3,
-                1024: 3,
-                768: 2,
-                640: 1
-              }}
-              className="flex -ml-6 w-auto"
-              columnClassName="pl-6 bg-clip-padding"
-            >
-              {photos.map((photo) => (
-                <div
-                  key={photo.id}
-                  className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mb-6 aspect-square"
-                  onClick={() => setSelectedGalleryPhoto(photo)}
-                >
-                  <LazyImage
-                    src={photo.url}
-                    alt={photo.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    wrapperClassName="w-full h-full"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 flex items-end opacity-0 group-hover:opacity-100">
-                    <div className="p-4 text-white transition-opacity duration-300">
-                      <h3 className="font-semibold mb-1">{photo.title}</h3>
-                      {photo.description && (
-                        <p className="text-sm text-gray-200">{photo.description}</p>
-                      )}
-                      <span className="text-xs bg-white/20 px-2 py-1 rounded mt-2 inline-block">
-                        {photo.category}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </Masonry>
-          </div>
-        </section>
-      )}
-
-      {/* Media Section */}
-      {mediaItems.length > 0 && (
-        <section id="media" className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
-              影音书籍
-            </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {mediaItems.slice(0, 8).map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => setSelectedMedia(item)}
-                >
-                  <div className="h-64 bg-gray-200 flex items-center justify-center overflow-hidden relative group">
-                    {item.coverImage ? (
-                      <>
-                        <LazyImage
-                          src={item.coverImage}
-                          alt={item.title}
-                          className="w-full h-full object-cover"
-                          wrapperClassName="w-full h-full"
-                        />
-                        {/* 播放按钮覆盖层 (仅电影类型显示) */}
-                        {item.type === 'movie' && item.videoUrl && (
-                          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center">
-                            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:scale-110">
-                              <svg className="w-8 h-8 text-purple-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z"/>
-                              </svg>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <span className="text-5xl">{item.type === 'movie' ? '🎬' : '📚'}</span>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className={`text-xs px-2 py-1 rounded ${
-                        item.type === 'movie' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'
-                      }`}>
-                        {item.type === 'movie' ? '电影' : '书籍'}
-                      </span>
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <span key={i} className={`text-sm ${i < item.rating ? 'text-yellow-400' : 'text-gray-300'}`}>
-                            ★
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <h3 className="font-semibold mb-2 line-clamp-1">{item.title}</h3>
-                    <p className="text-gray-600 text-sm line-clamp-2">{item.review}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Media Detail Modal */}
-      {selectedMedia && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
-          onClick={() => setSelectedMedia(null)}
-        >
-          <div
-            className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* 关闭按钮 */}
-            <button
-              onClick={() => setSelectedMedia(null)}
-              className="absolute top-4 right-4 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition"
-            >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-            {/* 视频或封面 */}
-            {selectedMedia.type === 'movie' && selectedMedia.videoUrl ? (
-              <div className="relative pb-[56.25%] bg-black">
-                <video
-                  controls
-                  autoPlay
-                  className="absolute inset-0 w-full h-full"
-                  poster={selectedMedia.coverImage?.replace(/http:\/\/localhost:\d+/, 'https://www.bohenan.com')}
-                >
-                  <source src={selectedMedia.videoUrl.replace(/http:\/\/localhost:\d+/, 'https://www.bohenan.com')} type="video/mp4" />
-                  您的浏览器不支持视频播放
-                </video>
-              </div>
-            ) : (
-              selectedMedia.coverImage && (
-                <div className="w-full">
-                  <img
-                    src={selectedMedia.coverImage}
-                    alt={selectedMedia.title}
-                    className="w-full h-auto"
-                  />
-                </div>
-              )
-            )}
-
-            {/* 详情内容 */}
-            <div className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center mb-2">
-                    <span className={`text-xs px-2 py-1 rounded mr-2 ${
-                      selectedMedia.type === 'movie' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'
-                    }`}>
-                      {selectedMedia.type === 'movie' ? '电影' : '书籍'}
-                    </span>
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <span key={i} className={`text-lg ${i < selectedMedia.rating ? 'text-yellow-400' : 'text-gray-300'}`}>
-                          ★
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedMedia.title}</h2>
                 </div>
               </div>
-
-              <div className="prose max-w-none mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">我的评价</h3>
-                <p className="text-gray-700 whitespace-pre-line">{selectedMedia.review}</p>
-              </div>
-
-              {/* 附件列表（PDF、文档等） */}
-              {selectedMedia.attachments && selectedMedia.attachments.length > 0 && (
-                <div className="border-t pt-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">相关资料</h3>
-                  <div className="space-y-2">
-                    {selectedMedia.attachments.map((attachment, index) => {
-                      const isPDF = attachment.url.toLowerCase().endsWith('.pdf') || attachment.type === 'application/pdf';
-                      const isVideo = attachment.url.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/);
-                      // 处理URL：替换localhost为正确的域名，或添加域名前缀
-                      let fullUrl = attachment.url;
-                      if (fullUrl.includes('localhost')) {
-                        fullUrl = fullUrl.replace(/http:\/\/localhost:\d+/, 'https://www.bohenan.com');
-                      } else if (!fullUrl.startsWith('http')) {
-                        fullUrl = `https://www.bohenan.com${fullUrl}`;
-                      }
-
-                      // 从URL中提取并解码文件名
-                      let displayName = attachment.name;
-                      try {
-                        // 如果name包含编码字符，尝试解码
-                        if (attachment.name.includes('%')) {
-                          displayName = decodeURIComponent(attachment.name);
-                        } else if (fullUrl.includes('%')) {
-                          // 从URL中提取文件名并解码
-                          const urlParts = fullUrl.split('/');
-                          const encodedFilename = urlParts[urlParts.length - 1];
-                          displayName = decodeURIComponent(encodedFilename);
-                        }
-                      } catch (e) {
-                        // 解码失败，使用原始名称
-                        displayName = attachment.name;
-                      }
-
-                      return (
-                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                          <div className="flex items-center flex-1">
-                            <div className={`w-10 h-10 rounded flex items-center justify-center mr-3 ${
-                              isPDF ? 'bg-red-100' : isVideo ? 'bg-purple-100' : 'bg-blue-100'
-                            }`}>
-                              {isPDF ? (
-                                <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                  <path d="M4 18h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z"/>
-                                  <text x="6" y="14" fontSize="8" fill="currentColor">PDF</text>
-                                </svg>
-                              ) : isVideo ? (
-                                <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                                  <path d="M8 5v14l11-7z"/>
-                                </svg>
-                              ) : (
-                                <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                </svg>
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-medium text-gray-900 truncate">{displayName}</p>
-                              {attachment.size && (
-                                <p className="text-sm text-gray-500">{(attachment.size / 1024 / 1024).toFixed(2)} MB</p>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-2 ml-4">
-                            {isPDF && (
-                              <a
-                                href={fullUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition flex items-center"
-                              >
-                                <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                预览
-                              </a>
-                            )}
-                            {isVideo && (
-                              <a
-                                href={fullUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-3 py-1.5 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition flex items-center"
-                              >
-                                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                  <path d="M8 5v14l11-7z"/>
-                                </svg>
-                                播放
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
+            </section>
           </div>
-        </div>
-      )}
 
-      {/* Documents Section */}
-      {documents.length > 0 && (
-        <section id="documents" className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
-              知识文档
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {documents.slice(0, 6).map((doc) => (
-                <div
-                  key={doc.id}
-                  className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => setSelectedDocument(doc)}
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold mb-2 text-gray-900">{doc.title}</h3>
-                      <span className="inline-block text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                        {doc.category}
-                      </span>
-                    </div>
-                    <span className="text-sm text-gray-500">{doc.date}</span>
-                  </div>
-                  <p className="text-gray-600 mb-4 line-clamp-3">{doc.content}</p>
-                  {doc.tags && doc.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {doc.tags.slice(0, 4).map((tag, idx) => (
-                        <span key={idx} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+        </main>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
-            联系我
-          </h2>
-          <ContactForm />
-        </div>
-      </section>
+        {/* Footer */}
+        <Footer />
+      </div>
 
-      {/* Photo Lightbox Modal */}
-      {selectedGalleryPhoto && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4"
-          onClick={() => setSelectedGalleryPhoto(null)}
-        >
-          <button
-            onClick={() => setSelectedGalleryPhoto(null)}
-            className="absolute top-4 right-4 z-10 w-12 h-12 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full shadow-lg flex items-center justify-center transition"
-          >
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-
-          <div
-            className="max-w-7xl max-h-[95vh] w-full flex items-center justify-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img
-              src={selectedGalleryPhoto.url}
-              alt={selectedGalleryPhoto.title}
-              className="max-w-full max-h-[95vh] object-contain"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Document Detail Modal */}
+      {/* 文档详情 Modal */}
       {selectedDocument && (
         <div
           className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
@@ -705,7 +856,6 @@ const HomePage = () => {
             className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* 关闭按钮 */}
             <button
               onClick={() => setSelectedDocument(null)}
               className="absolute top-4 right-4 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition"
@@ -715,7 +865,6 @@ const HomePage = () => {
               </svg>
             </button>
 
-            {/* 详情内容 */}
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -730,127 +879,22 @@ const HomePage = () => {
               </div>
 
               <div className="prose max-w-none mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">内容详情</h3>
                 <p className="text-gray-700 whitespace-pre-line">{selectedDocument.content}</p>
               </div>
 
-              {/* 标签 */}
               {selectedDocument.tags && selectedDocument.tags.length > 0 && (
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">相关标签</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedDocument.tags.map((tag, idx) => (
-                      <span key={idx} className="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* 附件列表 */}
-              {selectedDocument.attachments && selectedDocument.attachments.length > 0 && (
-                <div className="border-t pt-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">相关资料</h3>
-                  <div className="space-y-2">
-                    {selectedDocument.attachments.map((attachment, index) => {
-                      const isPDF = attachment.url.toLowerCase().endsWith('.pdf') || attachment.type === 'application/pdf';
-                      const isVideo = attachment.url.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/);
-                      // 处理URL：替换localhost为正确的域名，或添加域名前缀
-                      let fullUrl = attachment.url;
-                      if (fullUrl.includes('localhost')) {
-                        fullUrl = fullUrl.replace(/http:\/\/localhost:\d+/, 'https://www.bohenan.com');
-                      } else if (!fullUrl.startsWith('http')) {
-                        fullUrl = `https://www.bohenan.com${fullUrl}`;
-                      }
-
-                      // 从URL中提取并解码文件名
-                      let displayName = attachment.name;
-                      try {
-                        // 如果name包含编码字符，尝试解码
-                        if (attachment.name.includes('%')) {
-                          displayName = decodeURIComponent(attachment.name);
-                        } else if (fullUrl.includes('%')) {
-                          // 从URL中提取文件名并解码
-                          const urlParts = fullUrl.split('/');
-                          const encodedFilename = urlParts[urlParts.length - 1];
-                          displayName = decodeURIComponent(encodedFilename);
-                        }
-                      } catch (e) {
-                        // 解码失败，使用原始名称
-                        displayName = attachment.name;
-                      }
-
-                      return (
-                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                          <div className="flex items-center flex-1">
-                            <div className={`w-10 h-10 rounded flex items-center justify-center mr-3 ${
-                              isPDF ? 'bg-red-100' : isVideo ? 'bg-purple-100' : 'bg-blue-100'
-                            }`}>
-                              {isPDF ? (
-                                <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                  <path d="M4 18h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z"/>
-                                  <text x="6" y="14" fontSize="8" fill="currentColor">PDF</text>
-                                </svg>
-                              ) : isVideo ? (
-                                <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                                  <path d="M8 5v14l11-7z"/>
-                                </svg>
-                              ) : (
-                                <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                </svg>
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-medium text-gray-900 truncate">{displayName}</p>
-                              {attachment.size && (
-                                <p className="text-sm text-gray-500">{(attachment.size / 1024 / 1024).toFixed(2)} MB</p>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-2 ml-4">
-                            {isPDF && (
-                              <a
-                                href={fullUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition flex items-center"
-                              >
-                                <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                预览
-                              </a>
-                            )}
-                            {isVideo && (
-                              <a
-                                href={fullUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-3 py-1.5 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition flex items-center"
-                              >
-                                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                  <path d="M8 5v14l11-7z"/>
-                                </svg>
-                                播放
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                <div className="flex flex-wrap gap-2">
+                  {selectedDocument.tags.map((tag, idx) => (
+                    <span key={idx} className="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
+                      #{tag}
+                    </span>
+                  ))}
                 </div>
               )}
             </div>
           </div>
         </div>
       )}
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };

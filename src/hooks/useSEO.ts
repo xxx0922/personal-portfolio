@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { getSeoSettings } from '../services/dataService';
+import { useEffect } from 'react';
 
 export interface SEOProps {
   title?: string;
@@ -23,48 +22,16 @@ export interface SEOProps {
 const DEFAULT_SEO: SEOProps = {
   title: '个人展示网站 - 展示您的精彩人生',
   description: '一个展示个人多面生活的综合性网站，包含工作成就、兴趣爱好、知识分享等内容',
-  keywords: '个人网站, 作品展示, 项目管理, 摄影作品, 知识分享',
+  keywords: '个人网站，作品展示，项目管理，摄影作品，知识分享',
   author: '张三',
   ogType: 'website',
   twitterCard: 'summary_large_image',
 };
 
 export const useSEO = (seoData: SEOProps = {}) => {
-  const [apiSeoSettings, setApiSeoSettings] = useState<any>(null);
-
   useEffect(() => {
-    // 从API加载SEO设置
-    const loadSeoSettings = async () => {
-      const settings = await getSeoSettings();
-      if (settings) {
-        setApiSeoSettings(settings);
-      }
-    };
-    loadSeoSettings();
-  }, []);
-
-  useEffect(() => {
-    // 合并SEO数据: API设置 > 页面传入的数据 > 默认数据
-    let mergedData = { ...DEFAULT_SEO };
-
-    if (apiSeoSettings) {
-      mergedData = {
-        ...mergedData,
-        title: apiSeoSettings.basic?.siteTitle || mergedData.title,
-        description: apiSeoSettings.basic?.siteDescription || mergedData.description,
-        keywords: apiSeoSettings.basic?.keywords?.join(', ') || mergedData.keywords,
-        ogTitle: apiSeoSettings.og?.ogTitle || mergedData.ogTitle,
-        ogDescription: apiSeoSettings.og?.ogDescription || mergedData.ogDescription,
-        ogImage: apiSeoSettings.og?.ogImage || mergedData.ogImage,
-        ogUrl: apiSeoSettings.og?.ogUrl || window.location.origin,
-        googleSiteVerification: apiSeoSettings.verification?.googleSiteVerification,
-        baiduSiteVerification: apiSeoSettings.verification?.baiduSiteVerification,
-        bingSiteVerification: apiSeoSettings.verification?.bingSiteVerification,
-      };
-    }
-
-    // 页面传入的数据优先级最高
-    const data = { ...mergedData, ...seoData };
+    // 合并 SEO 数据：页面传入的数据 > 默认数据
+    const data = { ...DEFAULT_SEO, ...seoData };
 
     // 设置页面标题
     document.title = data.title || DEFAULT_SEO.title || '';
@@ -136,5 +103,5 @@ export const useSEO = (seoData: SEOProps = {}) => {
     }
 
     scriptTag.textContent = JSON.stringify(structuredData);
-  }, [seoData, apiSeoSettings]);
+  }, [seoData]);
 };

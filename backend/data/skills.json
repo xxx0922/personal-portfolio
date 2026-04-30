@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "name": "React",
+    "level": 4,
+    "category": "前端框架"
+  },
+  {
+    "id": "2",
+    "name": "TypeScript",
+    "level": 4,
+    "category": "编程语言"
+  },
+  {
+    "id": "3",
+    "name": "Node.js",
+    "level": 3,
+    "category": "后端开发"
+  },
+  {
+    "id": "4",
+    "name": "Express",
+    "level": 4,
+    "category": "后端框架"
+  },
+  {
+    "id": "5",
+    "name": "Tailwind CSS",
+    "level": 4,
+    "category": "CSS 框架"
+  },
+  {
+    "id": "6",
+    "name": "MySQL",
+    "level": 3,
+    "category": "数据库"
+  },
+  {
+    "id": "7",
+    "name": "Docker",
+    "level": 2,
+    "category": "DevOps"
+  },
+  {
+    "id": "8",
+    "name": "Git",
+    "level": 4,
+    "category": "版本控制"
+  },
+  {
+    "id": "9",
+    "name": "监控系统",
+    "level": 5,
+    "category": "弱电系统"
+  },
+  {
+    "id": "10",
+    "name": "门禁系统",
+    "level": 4,
+    "category": "弱电系统"
+  },
+  {
+    "id": "11",
+    "name": "综合布线",
+    "level": 5,
+    "category": "弱电系统"
+  },
+  {
+    "id": "12",
+    "name": "项目管理",
+    "level": 5,
+    "category": "软技能"
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "email": "bohenan@163.com",
+  "phone": "+86 138-0000-0000",
+  "wechat": "",
+  "qq": "",
+  "telegram": "",
+  "whatsapp": "",
+  "other": "",
+  "location": "中国·北京",
+  "images": [
+    {
+      "url": "/uploads/1775964869079-æé³æµè¯.png",
+      "label": "抖音"
+    },
+    {
+      "url": "/uploads/1776861608752-å¬ä¼å·.png",
+      "label": "公众号"
+    },
+    {
+      "url": "/uploads/1776862108719-å°çº¢ä¹¦.png",
+      "label": "小红书"
+    },
+    {
+      "url": "/uploads/1776861764280-å¬ä¼å·.png",
+      "label": "微信"
+    }
+  ]
+}

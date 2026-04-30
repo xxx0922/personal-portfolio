@@ -3,8 +3,12 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import dotenv from 'dotenv';
 
-// Routes
+// 加载环境变量
+dotenv.config();
+
+// Routes - 核心功能
 import authRoutes from './routes/auth.js';
 import personalInfoRoutes from './routes/personalInfo.js';
 import projectRoutes from './routes/projects.js';
@@ -12,36 +16,51 @@ import skillRoutes from './routes/skills.js';
 import mediaRoutes from './routes/media.js';
 import photoRoutes from './routes/photos.js';
 import documentRoutes from './routes/documents.js';
-import regulationRoutes from './routes/regulations.js';
-import statsRoutes from './routes/stats.js';
 import messageRoutes from './routes/messages.js';
 import uploadRoutes from './routes/upload.js';
 import experienceRoutes from './routes/experiences.js';
 import articleRoutes from './routes/articles.js';
 import newsRoutes from './routes/news.js';
-import footerSettingsRoutes from './routes/footer-settings.js';
-import siteConfigRoutes from './routes/site-config.js';
-import seoSettingsRoutes from './routes/seo-settings.js';
-import navigationRoutes from './routes/navigation.js';
-import friendLinksRoutes from './routes/friend-links.js';
+import productRoutes from './routes/products.js';
+import toolRoutes from './routes/tools.js';
+import professionRoutes from './routes/professions.js';
+import socialLinksRoutes from './routes/socialLinks.js';
+import siteConfigRoutes from './routes/siteConfig.js';
+import contactRoutes from './routes/contact.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// CORS 配置 - 允许前端域名访问
+// CORS 配置 - 从环境变量读取允许的源
 const corsOptions = {
   origin: function (origin, callback) {
+    // 从环境变量读取允许的源
+    const envOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : [];
+
     // 允许的源列表
     const allowedOrigins = [
       'http://localhost:5173',
       'http://localhost:5174',
+      'http://localhost:5175',
+      'http://localhost:5176',
+      'http://localhost:5177',
+      'http://localhost:5178',
+      'http://localhost:5179',
+      'http://localhost:5180',
       'https://www.bohenan.com',
       'https://bohenan.com',
-      'https://velvety-travesseiro-9de532.netlify.app'
+      'https://velvety-travesseiro-9de532.netlify.app',
+      ...envOrigins
     ];
+
+    // 允许所有 localhost 端口（开发环境）
+    if (origin && origin.startsWith('http://localhost:')) {
+      return callback(null, true);
+    }
 
     // 允许没有 origin 的请求（如 Postman）
     if (!origin) return callback(null, true);
@@ -50,7 +69,10 @@ const corsOptions = {
       callback(null, true);
     } else {
       console.warn(`⚠️  CORS blocked origin: ${origin}`);
-      callback(null, true); // 暂时允许所有源，方便调试
+      if (NODE_ENV === 'production') {
+        return callback(new Error('Not allowed by CORS'));
+      }
+      callback(null, true); // 开发环境暂时允许
     }
   },
   credentials: true,
@@ -75,18 +97,17 @@ app.use('/api/skills', skillRoutes);
 app.use('/api/media', mediaRoutes);
 app.use('/api/photos', photoRoutes);
 app.use('/api/documents', documentRoutes);
-app.use('/api/regulations', regulationRoutes);
-app.use('/api/stats', statsRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/experiences', experienceRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/news', newsRoutes);
-app.use('/api/footer-settings', footerSettingsRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/tools', toolRoutes);
+app.use('/api/professions', professionRoutes);
+app.use('/api/social-links', socialLinksRoutes);
 app.use('/api/site-config', siteConfigRoutes);
-app.use('/api/seo-settings', seoSettingsRoutes);
-app.use('/api/navigation', navigationRoutes);
-app.use('/api/friend-links', friendLinksRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -100,6 +121,15 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Backend server is running on http://localhost:${PORT}`);
+  console.log(`\n🚀 Backend server is running on http://localhost:${PORT}`);
   console.log(`📊 API endpoints available at http://localhost:${PORT}/api`);
+  console.log(`🔧 Environment: ${NODE_ENV}`);
+
+  // 检查 JWT_SECRET 是否安全
+  if (process.env.JWT_SECRET === 'your-secret-key-change-in-production' || !process.env.JWT_SECRET) {
+    console.warn('\n⚠️  WARNING: JWT_SECRET is not set or using default value!');
+    console.warn('⚠️  Please set JWT_SECRET in .env file before deploying to production.\n');
+  } else {
+    console.log(`✅ JWT_SECRET configured (${process.env.JWT_SECRET.length} chars)`);
+  }
 });

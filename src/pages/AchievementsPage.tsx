@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getProjects, getProjectStats } from '../services/dataService';
+import { getProjects } from '../services/dataService';
 import type { Project } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import ProtectedContent from '../components/ProtectedContent';
@@ -31,20 +31,41 @@ const AchievementsPage = () => {
   const [filter, setFilter] = useState<'all' | 'public' | 'private'>('all');
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [projectStats, setProjectStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
+  // 静态项目统计数据
+  const projectStats = {
+    yearly: [
+      { year: '2020', projects: 5, completed: 4 },
+      { year: '2021', projects: 8, completed: 6 },
+      { year: '2022', projects: 6, completed: 5 },
+      { year: '2023', projects: 4, completed: 4 },
+      { year: '2024', projects: 3, completed: 2 }
+    ],
+    techStack: [
+      { name: 'React', value: 15 },
+      { name: 'Node.js', value: 10 },
+      { name: 'TypeScript', value: 12 },
+      { name: 'Python', value: 8 },
+      { name: 'AWS', value: 6 },
+      { name: 'Docker', value: 5 }
+    ],
+    performance: [
+      { metric: '代码质量', value: 90 },
+      { metric: '交付及时率', value: 85 },
+      { metric: '客户满意度', value: 95 },
+      { metric: '团队协作', value: 88 },
+      { metric: '创新能力', value: 82 }
+    ]
+  };
 
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [projectsData, statsData] = await Promise.all([
-          getProjects(),
-          getProjectStats()
-        ]);
+        const projectsData = await getProjects();
         setProjects(projectsData);
-        setProjectStats(statsData);
       } catch (error) {
         console.error('Failed to load data:', error);
       } finally {

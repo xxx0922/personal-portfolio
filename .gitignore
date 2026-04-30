@@ -21,13 +21,27 @@ backend/dist
 .env.local
 .env.*.local
 backend/.env
+backend/.env.local
+*.env
 
-# Local data (但保留示例数据)
-backend/data/*.json
+# Keep example files
+!backend/.env.example
+!.env.example
+
+# Local data (提交数据文件到 Git，用于部署)
+!backend/data/*.json
 !backend/data/.gitkeep
 
-# Uploads (保留目录结构)
-backend/uploads/*
+# Uploads (提交上传的文件到 Git，用于部署)
+!backend/uploads/*.jpeg
+!backend/uploads/*.jpg
+!backend/uploads/*.png
+!backend/uploads/*.gif
+!backend/uploads/*.webp
+!backend/uploads/*.json
+!backend/uploads/contact/
+!backend/uploads/products/
+!backend/uploads/thumbnails/
 !backend/uploads/.gitkeep
 
 # Testing
@@ -44,3 +58,16 @@ coverage
 *.sln
 *.sw?
 *.local
+
+# Projects (other project files)
+projects/
+
+# Tests
+tests/
+
+# Claude
+.claude/
+
+# Temporary files
+*.tmp
+*.temp

@@ -1,0 +1,714 @@
+[
+  {
+    "id": "1776252620140",
+    "name": "WaytoAGI社区",
+    "description": "最大的开源社区",
+    "icon": "🔧",
+    "url": "https://www.waytoagi.com/zh",
+    "category": "其他"
+  },
+  {
+    "id": "1776258149271",
+    "name": "聚合网站",
+    "description": "聚合网站",
+    "icon": "🔧聚合网站",
+    "url": "https://www.aigc.cn/#term-243",
+    "category": "其他"
+  },
+  {
+    "id": "1776258655976u5u620ygu",
+    "name": "OpenAI ChatGPT",
+    "description": "OpenAI 开发的领先 AI 对话模型",
+    "icon": "🤖",
+    "url": "https://chatgpt.com",
+    "category": "大模型"
+  },
+  {
+    "id": "1776258655976q515ipizb",
+    "name": "Google Gemini",
+    "description": "Google 推出的多模态 AI 助手",
+    "icon": "✨",
+    "url": "https://gemini.google.com",
+    "category": "大模型"
+  },
+  {
+    "id": "177625865597640y6rm4vt",
+    "name": "Anthropic Claude",
+    "description": "Anthropic 开发的安全 AI 助手",
+    "icon": "☀️",
+    "url": "https://claude.ai",
+    "category": "大模型"
+  },
+  {
+    "id": "177625865597681dq4a8o7",
+    "name": "Microsoft Copilot",
+    "description": "微软 AI 助手，集成 GPT-4",
+    "icon": "🟦",
+    "url": "https://copilot.microsoft.com",
+    "category": "大模型"
+  },
+  {
+    "id": "17762586559767aeakjlpj",
+    "name": "Meta Llama",
+    "description": "Meta 开源的大语言模型系列",
+    "icon": "🦙",
+    "url": "https://ai.meta.com/llama/",
+    "category": "大模型"
+  },
+  {
+    "id": "1776258655976v4fjqhcmh",
+    "name": "Mistral AI",
+    "description": "法国 AI 公司开发的高效模型",
+    "icon": "💨",
+    "url": "https://mistral.ai",
+    "category": "大模型"
+  },
+  {
+    "id": "177625865597632nu5k3mm",
+    "name": "豆包",
+    "description": "字节跳动推出的 AI 助手",
+    "icon": "🪄",
+    "url": "https://www.doubao.com",
+    "category": "大模型"
+  },
+  {
+    "id": "1776258655976o0no65xdy",
+    "name": "文心一言",
+    "description": "百度开发的大语言模型",
+    "icon": "🧠",
+    "url": "https://yiyan.baidu.com",
+    "category": "大模型"
+  },
+  {
+    "id": "1776258655977mj0gpdjnh",
+    "name": "通义千问",
+    "description": "阿里巴巴推出的 AI 大模型",
+    "icon": "💬",
+    "url": "https://tongyi.aliyun.com",
+    "category": "大模型"
+  },
+  {
+    "id": "1776258655977pb2xp52ri",
+    "name": "智谱清言",
+    "description": "智谱 AI 开发的对话助手",
+    "icon": "🔵",
+    "url": "https://chatglm.cn",
+    "category": "大模型"
+  },
+  {
+    "id": "1776258655977js2nzein2",
+    "name": "Kimi",
+    "description": "月之暗面开发的 AI 助手",
+    "icon": "🔍",
+    "url": "https://kimi.moonshot.cn",
+    "category": "大模型"
+  },
+  {
+    "id": "177625865597735h3i27wg",
+    "name": "DeepSeek",
+    "description": "深度求索开发的大模型",
+    "icon": "🌊",
+    "url": "https://www.deepseek.com",
+    "category": "大模型"
+  },
+  {
+    "id": "1776258655977k64wmpqg2",
+    "name": "讯飞星火",
+    "description": "科大讯飞推出的认知大模型",
+    "icon": "🔥",
+    "url": "https://xinghuo.xfyun.cn",
+    "category": "大模型"
+  },
+  {
+    "id": "17762586559775fe2yi8we",
+    "name": "腾讯混元",
+    "description": "腾讯推出的大语言模型",
+    "icon": "🟢",
+    "url": "https://hunyuan.tencent.com",
+    "category": "大模型"
+  },
+  {
+    "id": "1776259204123tt1v732p9",
+    "name": "Suno 苏诺中文版",
+    "description": "Suno AI 音乐生成器中文版",
+    "icon": "🎵",
+    "url": "https://www.suno.cn/home/#/?from=invite&invite_id=9580359",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204123t15vo3bl0",
+    "name": "即梦 AI 音乐生成",
+    "description": "字节跳动即梦 AI 音乐生成平台",
+    "icon": "🎵",
+    "url": "https://jimeng.linglu.pro",
+    "category": "音频"
+  },
+  {
+    "id": "17762592041239ct676hzx",
+    "name": "Mureka AI",
+    "description": "AI 音乐创作平台",
+    "icon": "🎵",
+    "url": "https://www.mureka.ai",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204123tmupitu4w",
+    "name": "抖音音乐",
+    "description": "抖音官方音乐平台",
+    "icon": "🎵",
+    "url": "https://music.douyin.com",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204123rkcoey1tz",
+    "name": "OpenMusic AI",
+    "description": "HuggingFace 开源 AI 音乐生成器",
+    "icon": "🎵",
+    "url": "https://huggingface.co/jadechoghari/openmusic",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204123sx7qjls2h",
+    "name": "音潮",
+    "description": "AI 音乐创作工具",
+    "icon": "🎵",
+    "url": "https://www.yinchaoyongxian.com",
+    "category": "音频"
+  },
+  {
+    "id": "17762592041238orvmr9u1",
+    "name": "网易・天音",
+    "description": "网易云音乐 AI 音乐平台",
+    "icon": "🎵",
+    "url": "https://tianyin.music.163.com",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204123cm9y5t4ru",
+    "name": "苏诺 suno",
+    "description": "Suno AI 原版音乐生成器",
+    "icon": "🎵",
+    "url": "https://suno.com",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204123790qeqw3c",
+    "name": "AIVA",
+    "description": "AI 作曲助手",
+    "icon": "🎵",
+    "url": "https://www.aiva.ai",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204123t42uxpqcc",
+    "name": "MuseNet",
+    "description": "OpenAI 音乐生成模型",
+    "icon": "🎵",
+    "url": "https://openai.com/research/musenet",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204123nckvyy0n4",
+    "name": "Ecrett Music",
+    "description": "免版税 AI 音乐生成器",
+    "icon": "🎵",
+    "url": "https://www.ecrett.com",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204123iayf75grd",
+    "name": "EasyMusic",
+    "description": "简易 AI 音乐生成",
+    "icon": "🎵",
+    "url": "https://easymusic.ai",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204124detonkq1h",
+    "name": "SongGenerator",
+    "description": "在线 AI 歌曲生成器",
+    "icon": "🎵",
+    "url": "https://songgenerator.org",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204124z4ve4lvgr",
+    "name": "AI Make Song",
+    "description": "AI 歌曲制作工具",
+    "icon": "🎵",
+    "url": "https://www.aimakesong.com",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204124w5c6rl376",
+    "name": "Brev AI",
+    "description": "AI 音乐生成平台",
+    "icon": "🎵",
+    "url": "https://brev.ai/zh-CN",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204124aj8xmjp4t",
+    "name": "Remusic",
+    "description": "AI 音乐创作助手",
+    "icon": "🎵",
+    "url": "https://remusic.ai/cn",
+    "category": "音频"
+  },
+  {
+    "id": "17762592041243ui7edgln",
+    "name": "MusicHero",
+    "description": "AI 音乐英雄生成器",
+    "icon": "🎵",
+    "url": "https://musichero.ai",
+    "category": "音频"
+  },
+  {
+    "id": "1776259204124ukwwy059g",
+    "name": "Text-To-Song",
+    "description": "文本转歌曲生成器",
+    "icon": "🎵",
+    "url": "https://texttosong.ai",
+    "category": "音频"
+  },
+  {
+    "id": "1776260322219mgd7bbeer",
+    "name": "堆友 AI 绘画",
+    "description": "阿里推出的 AI 绘画工具",
+    "icon": "🎨",
+    "url": "https://d.design",
+    "category": "图片"
+  },
+  {
+    "id": "1776260322219ulqbx9um3",
+    "name": "搞定 AI - 文生图",
+    "description": "在线文生图 AI 工具",
+    "icon": "🎨",
+    "url": "https://gaoding.com",
+    "category": "图片"
+  },
+  {
+    "id": "17762603222192wszntbug",
+    "name": "LiblibAI - 哩布哩布 AI",
+    "description": "AI 模型分享与创作平台",
+    "icon": "🎨",
+    "url": "https://www.liblibai.com",
+    "category": "图片"
+  },
+  {
+    "id": "1776260322219a3wefjaeq",
+    "name": "阿贝 AI 绘画",
+    "description": "在线 AI 绘画创作工具",
+    "icon": "🎨",
+    "url": "https://www.abeiai.com",
+    "category": "图片"
+  },
+  {
+    "id": "17762603222203fa8gsyw7",
+    "name": "可图 AI 绘画",
+    "description": "快手推出的 AI 绘画平台",
+    "icon": "🎨",
+    "url": "https://kolors.kuaishou.com",
+    "category": "图片"
+  },
+  {
+    "id": "1776260322220h3rib5ccj",
+    "name": "绘蛙 AI - 创意文生图",
+    "description": "创意 AI 文生图工具",
+    "icon": "🎨",
+    "url": "https://www.ihuiwa.com",
+    "category": "图片"
+  },
+  {
+    "id": "1776260322220f4hmwk91c",
+    "name": "MX 绘画中文站",
+    "description": "AI 绘画创作平台",
+    "icon": "🎨",
+    "url": "https://www.mxai.cn",
+    "category": "图片"
+  },
+  {
+    "id": "1776260322220a0oeogxf3",
+    "name": "巨日禄 AI 漫画",
+    "description": "AI 漫画生成工具",
+    "icon": "🎨",
+    "url": "https://ai.jurilu.com",
+    "category": "图片"
+  },
+  {
+    "id": "1776260322220rs77sxell",
+    "name": "图星人 AI 生图",
+    "description": "AI 图像生成平台",
+    "icon": "🎨",
+    "url": "https://www.tuxingren.com",
+    "category": "图片"
+  },
+  {
+    "id": "1776260322220kj8fdepv0",
+    "name": "LinkFox AI",
+    "description": "AI 设计与创作工具",
+    "icon": "🎨",
+    "url": "https://linkfox.com",
+    "category": "图片"
+  },
+  {
+    "id": "17762603222204akadxlrh",
+    "name": "摄图 AI 画图",
+    "description": "摄图网 AI 绘画工具",
+    "icon": "🎨",
+    "url": "https://image.shitu.com",
+    "category": "图片"
+  },
+  {
+    "id": "1776260322220da9igglhh",
+    "name": "即梦 AI 图片生成",
+    "description": "字节即梦 AI 图片生成器",
+    "icon": "🎨",
+    "url": "https://jimeng.jianying.com",
+    "category": "图片"
+  },
+  {
+    "id": "1776260322220vyvflaznu",
+    "name": "Openflow",
+    "description": "AI 工作流与图像生成",
+    "icon": "🎨",
+    "url": "https://www.openflowai.net",
+    "category": "图片"
+  },
+  {
+    "id": "1776260322220hue8re5eu",
+    "name": "造点 AI",
+    "description": "夸克 AI 绘画工具",
+    "icon": "🎨",
+    "url": "https://zaodian.quark.cn",
+    "category": "图片"
+  },
+  {
+    "id": "17762603222204az18bldo",
+    "name": "包图 AI 文生图",
+    "description": "包图网 AI 文生图工具",
+    "icon": "🎨",
+    "url": "https://ibaotu.com",
+    "category": "图片"
+  },
+  {
+    "id": "1776260322220na0u47mzw",
+    "name": "Holopix AI",
+    "description": "3D 全景 AI 创作平台",
+    "icon": "🎨",
+    "url": "https://www.holopix.com",
+    "category": "图片"
+  },
+  {
+    "id": "1776260322220scpvpbgwx",
+    "name": "吐司 AI 绘画",
+    "description": "在线 AI 绘画社区",
+    "icon": "🎨",
+    "url": "https://tusi.art",
+    "category": "图片"
+  },
+  {
+    "id": "1776260322220jvafxow4z",
+    "name": "触手 AI 绘画",
+    "description": "AI 绘画创作社区",
+    "icon": "🎨",
+    "url": "https://www.chushouai.com",
+    "category": "图片"
+  },
+  {
+    "id": "1776261587989ovbgd6gia",
+    "name": "度加剪辑",
+    "description": "百度推出的 AI 视频剪辑工具",
+    "icon": "🎬",
+    "url": "https://aigc.baidu.com/make",
+    "category": "视频"
+  },
+  {
+    "id": "17762615879905emhqavhq",
+    "name": "可灵 AI 电影级视频创作",
+    "description": "快手可灵 AI 视频生成平台",
+    "icon": "🎬",
+    "url": "https://klingai.kuaishou.com",
+    "category": "视频"
+  },
+  {
+    "id": "177626158799098s505pvj",
+    "name": "Liblib AI - 视频",
+    "description": "哩布哩布 AI 视频创作",
+    "icon": "🎬",
+    "url": "https://www.liblib.art",
+    "category": "视频"
+  },
+  {
+    "id": "177626158799040oaddei5",
+    "name": "白日梦 AI 生成视频",
+    "description": "AI 视频生成平台",
+    "icon": "🎬",
+    "url": "https://www.aibrm.com",
+    "category": "视频"
+  },
+  {
+    "id": "1776261587990l47a61kva",
+    "name": "即剪桌面版 (剪映)",
+    "description": "剪映桌面版下载",
+    "icon": "🎬",
+    "url": "https://www.capcut.cn",
+    "category": "视频"
+  },
+  {
+    "id": "1776261587990kk3xgh83y",
+    "name": "LibTV - SeeDance2.0",
+    "description": "AI 舞蹈视频生成",
+    "icon": "🎬",
+    "url": "https://www.liblib.tv",
+    "category": "视频"
+  },
+  {
+    "id": "1776261587991a8aheggza",
+    "name": "有言 - 一键生成视频",
+    "description": "AI 一键生成 3D 视频",
+    "icon": "🎬",
+    "url": "https://www.youyan3d.com",
+    "category": "视频"
+  },
+  {
+    "id": "1776261587991hm4lnj8jt",
+    "name": "闪剪_AI 视频剪辑",
+    "description": "智能 AI 视频剪辑工具",
+    "icon": "🎬",
+    "url": "https://www.shanjian.tv",
+    "category": "视频"
+  },
+  {
+    "id": "1776261587991o0d9e9grl",
+    "name": "A9 AI",
+    "description": "AI 视频创作工具",
+    "icon": "🎬",
+    "url": "https://a9app.cn",
+    "category": "视频"
+  },
+  {
+    "id": "1776261587991ejp5ud9bd",
+    "name": "献丑 AI",
+    "description": "AI 视频生成平台",
+    "icon": "🎬",
+    "url": "https://xianchou.com",
+    "category": "视频"
+  },
+  {
+    "id": "1776261587991g545kygnm",
+    "name": "Flova AI",
+    "description": "AI 视频编辑工具",
+    "icon": "🎬",
+    "url": "https://www.flova.ai/zh-CN",
+    "category": "视频"
+  },
+  {
+    "id": "1776261587991oczu2mxzk",
+    "name": "海螺 AI 视频",
+    "description": "海螺 AI 视频生成",
+    "icon": "🎬",
+    "url": "https://www.hailuoai.com",
+    "category": "视频"
+  },
+  {
+    "id": "1776261587991owatu27pw",
+    "name": "Vidu",
+    "description": "国产 AI 视频生成模型",
+    "icon": "🎬",
+    "url": "https://www.viduai.com",
+    "category": "视频"
+  },
+  {
+    "id": "17762615879914oym0unou",
+    "name": "Wan2.7",
+    "description": "阿里万相 AI 视频生成",
+    "icon": "🎬",
+    "url": "https://tongyi.aliyun.com/wan/",
+    "category": "视频"
+  },
+  {
+    "id": "api-volc-ark",
+    "name": "火山方舟 Coding Plan",
+    "description": "火山引擎大模型开发与推理平台",
+    "icon": "🌋",
+    "url": "https://www.volcengine.com/products/ark",
+    "category": "大模型"
+  },
+  {
+    "id": "api-ali-bailian",
+    "name": "阿里云百炼",
+    "description": "阿里云大模型一站式开发平台",
+    "icon": "☁️",
+    "url": "https://www.aliyun.com/product/bailian",
+    "category": "大模型"
+  },
+  {
+    "id": "api-baidu-qianfan",
+    "name": "千帆大模型平台",
+    "description": "百度智能云大模型平台",
+    "icon": "⛵",
+    "url": "https://qianfan.cloud.baidu.com/",
+    "category": "大模型"
+  },
+  {
+    "id": "api-deepseek-platform",
+    "name": "DeepSeek API",
+    "description": "深度求索大模型 API 平台",
+    "icon": "🔍",
+    "url": "https://platform.deepseek.com/",
+    "category": "大模型"
+  },
+  {
+    "id": "api-moonshot",
+    "name": "KIMI (Moonshot API)",
+    "description": "月之暗面 KIMI 大模型 API",
+    "icon": "🌙",
+    "url": "https://platform.moonshot.cn/",
+    "category": "大模型"
+  },
+  {
+    "id": "api-minimax",
+    "name": "MiniMax API",
+    "description": "MiniMax 大模型 API 平台",
+    "icon": "🎵",
+    "url": "https://www.minimaxi.com/",
+    "category": "大模型"
+  },
+  {
+    "id": "api-zhipu-bigmodel",
+    "name": "智谱 BigModel",
+    "description": "智谱 AI 大模型开放平台",
+    "icon": "🧠",
+    "url": "https://bigmodel.cn/",
+    "category": "大模型"
+  },
+  {
+    "id": "api-iflytek-xinghuo",
+    "name": "星火大模型 API",
+    "description": "科大讯飞星火大模型 API",
+    "icon": "🔥",
+    "url": "https://xinghuo.xfyun.cn/",
+    "category": "大模型"
+  },
+  {
+    "id": "api-tencent-hunyuan",
+    "name": "腾讯混元大模型 API",
+    "description": "腾讯混元大模型开放平台",
+    "icon": "🌀",
+    "url": "https://cloud.tencent.com/product/hunyuan",
+    "category": "大模型"
+  },
+  {
+    "id": "api-xiaomi-mimo",
+    "name": "Xiaomi MiMo",
+    "description": "小米大模型开放平台",
+    "icon": "📱",
+    "url": "https://mimo.mioffice.cn/",
+    "category": "大模型"
+  },
+  {
+    "id": "api-baichuan",
+    "name": "百川智能 API",
+    "description": "百川智能大模型开放平台",
+    "icon": "🌊",
+    "url": "https://platform.baichuan-ai.com/",
+    "category": "大模型"
+  },
+  {
+    "id": "api-huawei-pangu",
+    "name": "华为盘古 NLP 大模型",
+    "description": "华为盘古自然语言处理大模型",
+    "icon": "🏔️",
+    "url": "https://www.huaweicloud.com/product/pangu.html",
+    "category": "大模型"
+  },
+  {
+    "id": "api-vivo-bluelm",
+    "name": "BlueLM 蓝心大模型",
+    "description": "vivo 蓝心大模型开放平台",
+    "icon": "💙",
+    "url": "https://developer.vivo.com.cn/ai",
+    "category": "大模型"
+  },
+  {
+    "id": "api-siliconflow",
+    "name": "硅基流动",
+    "description": "硅基流动大模型服务平台",
+    "icon": "🧱",
+    "url": "https://www.siliconflow.cn/",
+    "category": "大模型"
+  },
+  {
+    "id": "api-google-gemini",
+    "name": "Gemini API",
+    "description": "Google Gemini 大模型 API",
+    "icon": "💎",
+    "url": "https://ai.google.dev/gemini-api",
+    "category": "大模型"
+  },
+  {
+    "id": "api-openai",
+    "name": "OpenAI API",
+    "description": "OpenAI 大模型 API 平台",
+    "icon": "🤖",
+    "url": "https://platform.openai.com/",
+    "category": "大模型"
+  },
+  {
+    "id": "api-xai",
+    "name": "X.AI API",
+    "description": "马斯克 X.AI 大模型平台",
+    "icon": "✖️",
+    "url": "https://x.ai/api",
+    "category": "大模型"
+  },
+  {
+    "id": "api-ollama",
+    "name": "Ollama API",
+    "description": "本地大模型运行平台",
+    "icon": "🦙",
+    "url": "https://ollama.com/",
+    "category": "大模型"
+  },
+  {
+    "id": "tool-miaoda-openclaw",
+    "name": "秒哒×OpenClaw",
+    "description": "秒哒 AI 开发平台与 OpenClaw 协作工具",
+    "icon": "🤖",
+    "url": "https://www.miaoda.com/",
+    "category": "大模型"
+  },
+  {
+    "id": "tool-trae",
+    "name": "TRAE 编程",
+    "description": "AI 辅助编程工具",
+    "icon": "💻",
+    "url": "https://www.trae.ai/",
+    "category": "大模型"
+  },
+  {
+    "id": "tool-nocode",
+    "name": "NoCode",
+    "description": "无代码开发平台",
+    "icon": "🐱",
+    "url": "https://www.nocode.com/",
+    "category": "大模型"
+  },
+  {
+    "id": "tool-tongyi-lingma",
+    "name": "通义灵码",
+    "description": "阿里云 AI 编程助手",
+    "icon": "🤖",
+    "url": "https://tongyi.aliyun.com/lingma",
+    "category": "大模型"
+  },
+  {
+    "id": "1777470314188",
+    "name": "NAS",
+    "description": "NAS",
+    "icon": "🔧",
+    "url": "https://xxx0922-xue.fnos.net/",
+    "category": "其他"
+  }
+]

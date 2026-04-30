@@ -7,32 +7,13 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
+  register: (username: string, email: string, password: string) => Promise<boolean>;
   hasPermission: (permission: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// 模拟用户数据（实际项目中应该从后端获取）
-const mockUsers: { [key: string]: { password: string; user: User } } = {
-  admin: {
-    password: 'admin123',
-    user: {
-      id: '1',
-      username: 'admin',
-      role: 'admin',
-      permissions: ['view_private_projects', 'view_all_content', 'manage_content']
-    }
-  },
-  friend: {
-    password: 'friend123',
-    user: {
-      id: '2',
-      username: 'friend',
-      role: 'friend',
-      permissions: ['view_private_projects', 'view_all_content']
-    }
-  }
-};
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -40,13 +21,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // 检查本地存储的登录状态
   useEffect(() => {
+    const storedToken = localStorage.getItem('authToken');
     const storedUser = localStorage.getItem('authUser');
-    if (storedUser) {
+
+    if (storedToken && storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
         setIsAuthenticated(true);
       } catch (error) {
+        localStorage.removeItem('authToken');
         localStorage.removeItem('authUser');
       }
     }
@@ -54,14 +38,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      // 模拟API调用延迟
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password })
+      });
 
-      const userData = mockUsers[username];
-      if (userData && userData.password === password) {
-        setUser(userData.user);
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('authUser', JSON.stringify(data.user));
+        setUser(data.user);
         setIsAuthenticated(true);
-        localStorage.setItem('authUser', JSON.stringify(userData.user));
         return true;
       }
       return false;
@@ -71,16 +62,44 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const register = async (username: string, email: string, password: string): Promise<boolean> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // 注册成功后自动登录
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('authUser', JSON.stringify(data.user));
+        setUser(data.user);
+        setIsAuthenticated(true);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Register error:', error);
+      return false;
+    }
+  };
+
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
+    localStorage.removeItem('authToken');
     localStorage.removeItem('authUser');
   };
 
   const hasPermission = (permission: string): boolean => {
     if (!user) return false;
     if (user.role === 'admin') return true;
-    return user.permissions.includes(permission);
+    return user.permissions?.includes(permission) || false;
   };
 
   return (
@@ -89,6 +108,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       isAuthenticated,
       login,
       logout,
+      register,
       hasPermission
     }}>
       {children}

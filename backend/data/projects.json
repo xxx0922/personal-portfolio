@@ -1,0 +1,59 @@
+[
+  {
+    "id": "1",
+    "title": "景区监控系统升级项目",
+    "description": "负责对景区监控系统进行全面升级，包括摄像头布局设计、网络布线、监控中心建设等",
+    "role": "项目经理",
+    "duration": "6 个月",
+    "year": "2025",
+    "contractAmount": 1500000,
+    "technologies": ["海康威视监控设备", "华为网络设备", "综合布线系统"],
+    "images": [
+      "/uploads/1764161349180-mmexport1741561817712_compressed.jpeg",
+      "/uploads/1764161353705-IMG_20250309_100614.jpg"
+    ],
+    "achievements": [
+      "完成 200+ 监控点位的安装调试",
+      "实现景区全覆盖无死角监控",
+      "客户满意度达到 98%"
+    ],
+    "attachments": [],
+    "isPrivate": false
+  },
+  {
+    "id": "2",
+    "title": "商业综合体门禁系统工程",
+    "description": "为大型商业综合体设计并实施门禁系统，包括人脸识别、刷卡门禁、考勤系统等功能",
+    "role": "技术负责人",
+    "duration": "4 个月",
+    "year": "2024",
+    "contractAmount": 800000,
+    "technologies": ["人脸识别门禁", "TCP/IP 网络", "数据库管理"],
+    "images": [],
+    "achievements": [
+      "实现 50+ 门禁点位的智能化管控",
+      "系统集成度达到行业领先水平",
+      "项目按时交付并获好评"
+    ],
+    "attachments": [],
+    "isPrivate": false
+  },
+  {
+    "id": "3",
+    "title": "园区网络规划与综合布线",
+    "description": "负责整个园区的网络规划和综合布线系统设计实施，包括机房建设、光纤铺设、网络设备安装等",
+    "role": "弱电工程师",
+    "duration": "8 个月",
+    "year": "2023",
+    "contractAmount": 2000000,
+    "technologies": ["光纤网络", "Cisco 设备", "综合布线标准"],
+    "images": [],
+    "achievements": [
+      "完成 10 万平米园区网络覆盖",
+      "网络带宽达到万兆标准",
+      "通过国家级验收标准"
+    ],
+    "attachments": [],
+    "isPrivate": false
+  }
+]

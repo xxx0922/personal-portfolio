@@ -1,0 +1,1193 @@
+/* 粘土毛玻璃风格主题 - 男性化版本 */
+
+/* ===========================
+   基础颜色变量
+   =========================== */
+:root {
+  /* 背景色 - 深色调 */
+  --bg-dark: #0f131f;
+  --bg-darker: #0a0d14;
+  --bg-card: rgba(30, 35, 50, 0.7);
+  --bg-glass: rgba(255, 255, 255, 0.03);
+
+  /* 主色 - 暖灰色系（偏男性化） */
+  --clay-light: #e8e4dc;
+  --clay-base: #d4cfc4;
+  --clay-medium: #b8b0a0;
+  --clay-dark: #9a9080;
+  --clay-darker: #7a7060;
+
+  /* 强调色 - 蓝色系（更深沉） */
+  --sky-light: #3b597a;
+  --sky-base: #5a7fa8;
+  --sky-dark: #4a6590;
+
+  /* 辅助强调色 */
+  --amber-base: #c4a068;
+  --purple-base: #8a6a9a;
+  --emerald-base: #5a8a7a;
+  --rose-base: #a06068;
+
+  /* 文本色 - 亮色版本（增强对比度） */
+  --text-primary: #ffffff;
+  --text-secondary: #f5f5f5;
+  --text-muted: #e5e5e5;
+
+  /* 标题文字增强 */
+  --title-glow: 0 0 20px rgba(255, 255, 255, 0.5), 0 0 40px rgba(255, 255, 255, 0.3);
+
+  /* 阴影 - 更深沉 */
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.4);
+  --shadow-strong: 0 15px 50px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 30px rgba(90, 127, 168, 0.2);
+}
+
+/* ===========================
+   毛玻璃卡片基础样式 - 男性化版本
+   =========================== */
+.clay-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  box-shadow:
+    var(--shadow-medium),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.clay-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(90, 127, 168, 0.03) 0%,
+    transparent 70%
+  );
+  transform: rotate(45deg);
+  transition: all 0.5s ease;
+  opacity: 0;
+}
+
+.clay-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow:
+    var(--shadow-strong),
+    var(--shadow-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.clay-card:hover::before {
+  opacity: 1;
+  animation: clayShine 2.5s ease-out infinite;
+}
+
+@keyframes clayShine {
+  0% {
+    transform: rotate(45deg) translate(-30%, -30%);
+  }
+  100% {
+    transform: rotate(45deg) translate(30%, 30%);
+  }
+}
+
+/* ===========================
+   内部卡片样式
+   =========================== */
+.clay-card-inner {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.clay-card-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.clay-card-inner:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateX(4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.clay-card-inner:hover::before {
+  left: 100%;
+}
+
+/* ===========================
+   标题样式 - 男性化版本
+   =========================== */
+.clay-title {
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f0f0f0 50%,
+    #e0e0e0 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  position: relative;
+  animation: clayTitleGradient 5s ease infinite;
+  letter-spacing: 0.5px;
+  text-shadow: var(--title-glow);
+}
+
+@keyframes clayTitleGradient {
+  0%, 100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 200% center;
+  }
+}
+
+/* 副标题 */
+.clay-subtitle {
+  color: var(--text-secondary);
+  font-weight: 600;
+  transition: color 0.25s ease;
+  letter-spacing: 0.3px;
+}
+
+.clay-subtitle:hover {
+  color: var(--sky-base);
+}
+
+/* ===========================
+   文本样式
+   =========================== */
+.clay-text {
+  color: var(--text-primary);
+}
+
+.clay-text-muted {
+  color: var(--text-muted);
+}
+
+/* 文本发光效果 - 保留轻微版本 */
+.clay-text-glow {
+  text-shadow:
+    0 0 20px rgba(245, 240, 230, 0.3),
+    0 0 40px rgba(245, 240, 230, 0.1);
+}
+
+/* ===========================
+   标签样式 - 男性化版本
+   =========================== */
+.clay-tag {
+  background: linear-gradient(
+    135deg,
+    rgba(212, 207, 196, 0.15) 0%,
+    rgba(184, 176, 160, 0.08) 100%
+  );
+  border: 1px solid rgba(212, 207, 196, 0.25);
+  color: var(--clay-base);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1.5rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s ease;
+  display: inline-block;
+  letter-spacing: 0.3px;
+}
+
+.clay-tag:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(212, 207, 196, 0.22) 0%,
+    rgba(184, 176, 160, 0.12) 100%
+  );
+  border-color: rgba(212, 207, 196, 0.4);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+
+/* 蓝色标签 */
+.clay-tag-blue {
+  background: linear-gradient(
+    135deg,
+    rgba(90, 127, 168, 0.25) 0%,
+    rgba(74, 101, 144, 0.15) 100%
+  );
+  border: 1px solid rgba(90, 127, 168, 0.4);
+  color: var(--sky-light);
+}
+
+.clay-tag-blue:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(90, 127, 168, 0.35) 0%,
+    rgba(74, 101, 144, 0.25) 100%
+  );
+  border-color: rgba(90, 127, 168, 0.6);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25), 0 0 12px rgba(90, 127, 168, 0.25);
+}
+
+/* ===========================
+   分隔线样式
+   =========================== */
+.clay-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  margin: 1rem 0;
+  position: relative;
+}
+
+.clay-divider::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background: linear-gradient(135deg, var(--clay-base), var(--clay-dark));
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(245, 240, 230, 0.5);
+}
+
+/* ===========================
+   角标装饰
+   =========================== */
+.clay-corner-decoration {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.clay-corner-decoration::before,
+.clay-corner-decoration::after {
+  content: '';
+  position: absolute;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+  border-radius: 50%;
+  animation: clayCornerPulse 3s ease-in-out infinite;
+}
+
+.clay-corner-decoration::before {
+  top: 10px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+}
+
+.clay-corner-decoration::after {
+  top: 25px;
+  right: 25px;
+  width: 5px;
+  height: 5px;
+  animation-delay: 0.5s;
+}
+
+@keyframes clayCornerPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* ===========================
+   图标样式
+   =========================== */
+.clay-icon {
+  position: relative;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.clay-card:hover .clay-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* ===========================
+   按钮样式 - 男性化版本
+   =========================== */
+.clay-button {
+  padding: 0.65rem 1.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(212, 207, 196, 0.12) 0%,
+    rgba(184, 176, 160, 0.08) 100%
+  );
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 207, 196, 0.3);
+  border-radius: 1.5rem;
+  color: var(--clay-base);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.5px;
+}
+
+.clay-button:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(212, 207, 196, 0.2) 0%,
+    rgba(184, 176, 160, 0.12) 100%
+  );
+  border-color: rgba(212, 207, 196, 0.45);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+
+.clay-button-primary {
+  background: linear-gradient(
+    135deg,
+    rgba(90, 127, 168, 0.25) 0%,
+    rgba(74, 101, 144, 0.15) 100%
+  );
+  border: 1px solid rgba(90, 127, 168, 0.4);
+  color: var(--sky-light);
+}
+
+.clay-button-primary:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(90, 127, 168, 0.35) 0%,
+    rgba(74, 101, 144, 0.25) 100%
+  );
+  border-color: rgba(90, 127, 168, 0.55);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.25), 0 0 20px rgba(90, 127, 168, 0.2);
+}
+
+/* ===========================
+   进度条样式
+   =========================== */
+.clay-progress {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.clay-progress-bar {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--clay-dark) 0%,
+    var(--clay-base) 50%,
+    var(--clay-dark) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: 9999px;
+  box-shadow: 0 0 10px rgba(245, 240, 230, 0.5);
+  animation: progressShine 2s linear infinite;
+  transition: width 0.5s ease;
+}
+
+@keyframes progressShine {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: 0% center;
+  }
+}
+
+/* ===========================
+   评分星星样式
+   =========================== */
+.clay-rating {
+  display: flex;
+  gap: 4px;
+}
+
+.clay-rating-star {
+  color: var(--clay-dark);
+  transition: all 0.2s ease;
+}
+
+.clay-rating-star.active {
+  color: var(--clay-base);
+  text-shadow: 0 0 10px rgba(245, 240, 230, 0.5);
+}
+
+.clay-rating-star:hover {
+  transform: scale(1.2);
+}
+
+/* ===========================
+   图片网格样式
+   =========================== */
+.clay-image-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.clay-image-grid-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  aspect-ratio: 1;
+}
+
+.clay-image-grid-item:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+/* ===========================
+   徽章样式
+   =========================== */
+.clay-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.375rem 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(245, 240, 230, 0.15) 0%,
+    rgba(232, 224, 213, 0.1) 100%
+  );
+  border: 1px solid rgba(245, 240, 230, 0.3);
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--clay-base);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.clay-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: badgeShine 3s ease-in-out infinite;
+}
+
+@keyframes badgeShine {
+  0%, 100% {
+    left: -100%;
+  }
+  50%, 100% {
+    left: 100%;
+  }
+}
+
+/* ===========================
+   动画效果
+   =========================== */
+
+/* 卡片淡入动画 */
+.clay-fade-in {
+  animation: clayFadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes clayFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 延迟动画 */
+.clay-delay-100 { animation-delay: 0.1s; }
+.clay-delay-200 { animation-delay: 0.2s; }
+.clay-delay-300 { animation-delay: 0.3s; }
+.clay-delay-400 { animation-delay: 0.4s; }
+.clay-delay-500 { animation-delay: 0.5s; }
+.clay-delay-600 { animation-delay: 0.6s; }
+
+/* 悬浮动画 - 保留 */
+@keyframes clayFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.clay-float {
+  animation: clayFloat 3s ease-in-out infinite;
+}
+
+/* 脉冲发光 - 柔和版本 */
+@keyframes clayPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(245, 240, 230, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(245, 240, 230, 0.35);
+  }
+}
+
+.clay-pulse {
+  animation: clayPulse 2s ease-in-out infinite;
+}
+
+/* 页面加载动画 */
+.clay-page-enter {
+  animation: clayPageEnter 0.8s ease-out forwards;
+}
+
+@keyframes clayPageEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===========================
+   列表项样式
+   =========================== */
+.clay-list-item {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.clay-list-item::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--clay-dark);
+  font-size: 1.2em;
+  transition: all 0.3s ease;
+}
+
+.clay-list-item:hover::before {
+  color: var(--clay-base);
+  transform: scale(1.1);
+}
+
+/* ===========================
+   数字显示样式
+   =========================== */
+.clay-number {
+  font-family: 'Nunito', system-ui, sans-serif;
+  color: var(--clay-base);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+/* ===========================
+   响应式容器
+   =========================== */
+.clay-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .clay-container {
+    padding: 0 1rem;
+  }
+}
+
+/* ===========================
+   渐变背景
+   =========================== */
+.clay-gradient-bg {
+  background: linear-gradient(
+    135deg,
+    rgba(245, 240, 230, 0.05) 0%,
+    rgba(90, 150, 244, 0.05) 100%
+  );
+}
+
+/* ===========================
+   工具类
+   =========================== */
+.clay-text-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--clay-base) 0%,
+    var(--sky-base) 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: clayTitleGradient 4s ease infinite;
+}
+
+/* 圆角工具类 */
+.clay-rounded-sm { border-radius: 0.5rem; }
+.clay-rounded { border-radius: 1rem; }
+.clay-rounded-lg { border-radius: 1.25rem; }
+.clay-rounded-xl { border-radius: 1.5rem; }
+.clay-rounded-full { border-radius: 9999px; }
+
+/* 间距工具类 */
+.clay-space-y-2 > * + * { margin-top: 0.5rem; }
+.clay-space-y-3 > * + * { margin-top: 0.75rem; }
+.clay-space-y-4 > * + * { margin-top: 1rem; }
+.clay-space-y-6 > * + * { margin-top: 1.5rem; }
+
+/* 弹性布局 */
+.clay-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clay-flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ===========================
+   毛玻璃导航栏
+   =========================== */
+.clay-navbar {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(236, 241, 255, 0.9) 100%
+  );
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 2px solid rgba(59, 130, 246, 0.5);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* 导航栏文字颜色 - 深色背景上用深色文字 */
+.clay-navbar .clay-subtitle {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.clay-navbar .clay-title {
+  color: rgba(0, 0, 0, 0.95);
+  background: none;
+  -webkit-text-fill-color: rgba(0, 0, 0, 0.95);
+  text-shadow: none;
+}
+
+/* ===========================
+   毛玻璃页脚
+   =========================== */
+.clay-footer {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ===========================
+   输入框样式
+   =========================== */
+.clay-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.clay-input:focus {
+  outline: none;
+  border-color: rgba(245, 240, 230, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(245, 240, 230, 0.1), 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.clay-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ===========================
+   滚动条美化
+   =========================== */
+.clay-scroll-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.clay-scroll-thin::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 9999px;
+}
+
+.clay-scroll-thin::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--clay-dark), var(--clay-darker));
+  border-radius: 9999px;
+}
+
+.clay-scroll-thin::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--clay-base), var(--clay-dark));
+}
+
+/* ===========================
+   装饰性背景元素
+   =========================== */
+
+/* 流体装饰气泡 */
+.clay-bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.02) 70%,
+    transparent 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  animation: clayBubbleFloat 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.clay-bubble:nth-child(1) {
+  width: 100px;
+  height: 100px;
+  top: 10%;
+  left: 5%;
+  animation-delay: 0s;
+}
+
+.clay-bubble:nth-child(2) {
+  width: 60px;
+  height: 60px;
+  top: 60%;
+  left: 85%;
+  animation-delay: 2s;
+}
+
+.clay-bubble:nth-child(3) {
+  width: 80px;
+  height: 80px;
+  top: 80%;
+  left: 15%;
+  animation-delay: 4s;
+}
+
+@keyframes clayBubbleFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+    opacity: 0.5;
+  }
+}
+
+/* 光晕装饰 */
+.clay-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(90, 150, 244, 0.08) 0%,
+    rgba(90, 150, 244, 0.02) 50%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: clayGlowPulse 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes clayGlowPulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+/* 卡片内容区域优化 */
+.clay-card-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* 图片悬停覆盖层 */
+.clay-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.clay-image-grid-item:hover .clay-image-overlay {
+  opacity: 1;
+}
+
+/* 优化后的卡片最小高度 */
+@media (max-width: 768px) {
+  .clay-card {
+    min-height: auto;
+  }
+}
+
+/* 模块标题区域 */
+.clay-module-header {
+  position: relative;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.clay-module-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--clay-base) 50%,
+    transparent 100%
+  );
+  border-radius: 2px;
+}
+
+/* 空状态样式 */
+.clay-empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+}
+
+.clay-empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* 加载状态 */
+.clay-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.clay-loading-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.clay-loading-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--clay-base);
+  border-radius: 50%;
+  animation: clayLoadingBounce 1.4s ease-in-out infinite;
+}
+
+.clay-loading-dot:nth-child(1) { animation-delay: 0s; }
+.clay-loading-dot:nth-child(2) { animation-delay: 0.2s; }
+.clay-loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes clayLoadingBounce {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===========================
+   开机动画专用样式 - 赛博朋克版本
+   =========================== */
+
+/* 扫描光束动画 */
+@keyframes scanBeam {
+  0%, 100% {
+    background-position: 200% center;
+  }
+  50% {
+    background-position: 0% center;
+  }
+}
+
+/* 进度条发光动画 */
+@keyframes progressGlow {
+  0% {
+    box-shadow:
+      0 0 10px rgba(0, 255, 255, 0.8),
+      0 0 20px rgba(0, 255, 255, 0.5),
+      0 0 30px rgba(138, 43, 226, 0.3);
+  }
+  100% {
+    box-shadow:
+      0 0 20px rgba(0, 255, 255, 1),
+      0 0 40px rgba(0, 255, 255, 0.8),
+      0 0 60px rgba(138, 43, 226, 0.5);
+  }
+}
+
+/* 脉冲动画 */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* ===========================
+   赛博朋克动画关键帧
+   =========================== */
+
+/* 流光渐变动画 - 主标题颜色流动 */
+@keyframes cyberpunkGradient {
+  0%, 100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 300% center;
+  }
+}
+
+/* 故障动画 - 上半部分 */
+@keyframes glitchTop {
+  0% {
+    transform: translate(-3px, 0);
+  }
+  10% {
+    transform: translate(3px, 0);
+  }
+  20% {
+    transform: translate(-3px, 0);
+  }
+  30% {
+    transform: translate(2px, 0);
+  }
+  40% {
+    transform: translate(-2px, 0);
+  }
+  50% {
+    transform: translate(3px, 0);
+  }
+  60% {
+    transform: translate(-3px, 0);
+  }
+  70% {
+    transform: translate(1px, 0);
+  }
+  80% {
+    transform: translate(-1px, 0);
+  }
+  90% {
+    transform: translate(2px, 0);
+  }
+  100% {
+    transform: translate(-2px, 0);
+  }
+}
+
+/* 故障动画 - 下半部分 */
+@keyframes glitchBottom {
+  0% {
+    transform: translate(3px, 0);
+  }
+  10% {
+    transform: translate(-3px, 0);
+  }
+  20% {
+    transform: translate(3px, 0);
+  }
+  30% {
+    transform: translate(-2px, 0);
+  }
+  40% {
+    transform: translate(2px, 0);
+  }
+  50% {
+    transform: translate(-3px, 0);
+  }
+  60% {
+    transform: translate(3px, 0);
+  }
+  70% {
+    transform: translate(-1px, 0);
+  }
+  80% {
+    transform: translate(1px, 0);
+  }
+  90% {
+    transform: translate(-2px, 0);
+  }
+  100% {
+    transform: translate(2px, 0);
+  }
+}
+
+/* 赛博朋克流光动画 - 装饰线条 */
+@keyframes cyberpunkFlow {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 300% center;
+  }
+}
+
+/* 霓虹脉冲动画 - 光晕 */
+@keyframes neonPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+/* 副标题呼吸动画 */
+@keyframes subtitleBreath {
+  0%, 100% {
+    background-position: 0% center;
+    opacity: 0.7;
+  }
+  50% {
+    background-position: 200% center;
+    opacity: 1;
+  }
+}
+
+/* 打字机光标闪烁 */
+@keyframes cursorBlink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+/* 能量流动动画 - 进度条 */
+@keyframes energyFlow {
+  0% {
+    background-position: 0% center;
+    box-shadow:
+      0 0 10px rgba(0, 255, 255, 1),
+      0 0 20px rgba(0, 255, 255, 0.6),
+      0 0 30px rgba(255, 0, 255, 0.4),
+      inset 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+  100% {
+    background-position: 200% center;
+    box-shadow:
+      0 0 20px rgba(0, 255, 255, 1),
+      0 0 40px rgba(0, 255, 255, 0.8),
+      0 0 60px rgba(255, 0, 255, 0.6),
+      inset 0 0 20px rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* 网格滚动动画 - 进度条背景 */
+@keyframes gridScroll {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -11px 0;
+  }
+}

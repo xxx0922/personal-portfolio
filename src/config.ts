@@ -1,5 +1,5 @@
 // API 配置
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
 
 // 构建完整的API URL
 export const getApiUrl = (path: string) => {
@@ -82,4 +82,17 @@ export const apiUrl = {
 
   // 统计
   analytics: () => getApiUrl('/analytics'),
+
+  // 产品中心
+  products: () => getApiUrl('/products'),
+  productById: (id: string) => getApiUrl(`/products/${id}`),
+  productMediaUpload: () => getApiUrl('/products/upload-media'),
+  productFolders: (id: string) => getApiUrl(`/products/${id}/folders`),
+  productSubFolders: (productId: string, folderId: string) => getApiUrl(`/products/${productId}/folders/${folderId}/subfolders`),
+  productAttachments: (productId: string, folderId: string) => getApiUrl(`/products/${productId}/folders/${folderId}/attachments`),
+
+  // 工具中心
+  tools: () => getApiUrl('/tools'),
+  toolById: (id: string) => getApiUrl(`/tools/${id}`),
+  toolCategories: () => getApiUrl('/tools/utils/categories'),
 };

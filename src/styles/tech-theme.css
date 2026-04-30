@@ -1,0 +1,1028 @@
+/* 科技风格全局样式 */
+
+/* 科技卡片基础样式 */
+.tech-card {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 12px;
+  box-shadow:
+    0 0 20px rgba(0, 212, 255, 0.1),
+    inset 0 0 20px rgba(0, 212, 255, 0.05);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  min-height: 480px; /* 统一最小高度 */
+  display: flex;
+  flex-direction: column;
+}
+
+.tech-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(0, 212, 255, 0.1),
+    transparent
+  );
+  transform: rotate(45deg);
+  transition: all 0.6s;
+  opacity: 0;
+}
+
+.tech-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(0, 212, 255, 0.6);
+  box-shadow:
+    0 0 30px rgba(0, 212, 255, 0.3),
+    0 10px 40px rgba(0, 0, 0, 0.3),
+    inset 0 0 30px rgba(0, 212, 255, 0.1);
+}
+
+.tech-card:hover::before {
+  opacity: 1;
+  animation: shine 1.5s ease-in-out infinite;
+}
+
+/* 内部卡片样式 */
+.tech-card-inner {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.tech-card-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.tech-card-inner:hover {
+  border-color: rgba(0, 212, 255, 0.4);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+  transform: translateX(4px);
+}
+
+.tech-card-inner:hover::before {
+  left: 100%;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+/* 科技标题样式 */
+.tech-title {
+  background: linear-gradient(135deg, #00d4ff 0%, #0099ff 50%, #00d4ff 100%);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  font-weight: 700;
+  position: relative;
+  animation: titleGlow 3s ease-in-out infinite, gradientShift 4s ease infinite;
+}
+
+@keyframes titleGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.8));
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+  100% {
+    background-position: 0% center;
+  }
+}
+
+/* 标题淡入动画 */
+.tech-title-fade-in {
+  animation: titleFadeIn 1s ease-out forwards, titleGlow 3s ease-in-out infinite 1s, gradientShift 4s ease infinite 1s;
+  opacity: 0;
+}
+
+@keyframes titleFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 副标题样式 */
+.tech-subtitle {
+  color: #94a3b8;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.tech-subtitle:hover {
+  color: #00d4ff;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+/* 科技文本样式 */
+.tech-text {
+  color: #cbd5e1;
+}
+
+/* 文本发光效果 */
+.tech-text-glow {
+  text-shadow:
+    0 0 10px rgba(0, 212, 255, 0.5),
+    0 0 20px rgba(0, 212, 255, 0.3),
+    0 0 30px rgba(0, 212, 255, 0.2);
+}
+
+/* 文本描边纹路效果 */
+.tech-text-outline {
+  text-shadow:
+    -1px -1px 0 rgba(0, 212, 255, 0.3),
+    1px -1px 0 rgba(0, 212, 255, 0.3),
+    -1px 1px 0 rgba(0, 212, 255, 0.3),
+    1px 1px 0 rgba(0, 212, 255, 0.3),
+    0 0 5px rgba(0, 212, 255, 0.2),
+    0 0 10px rgba(0, 212, 255, 0.1);
+  position: relative;
+}
+
+/* 文本扫描线效果 */
+.tech-text-scanline {
+  position: relative;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 212, 255, 0.05) 50%,
+    transparent 100%
+  );
+  background-size: 100% 2px;
+  animation: textScanline 2s linear infinite;
+}
+
+@keyframes textScanline {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 100%;
+  }
+}
+
+/* 文本数据流效果 */
+.tech-text-dataflow {
+  background: linear-gradient(
+    90deg,
+    #cbd5e1 0%,
+    #00d4ff 50%,
+    #cbd5e1 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textDataflow 3s linear infinite;
+}
+
+@keyframes textDataflow {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* 科技标签样式 */
+.tech-tag {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 153, 255, 0.2));
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  color: #00d4ff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+  transition: all 0.3s;
+}
+
+.tech-tag:hover {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(0, 153, 255, 0.3));
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+  transform: scale(1.05);
+}
+
+/* 科技图片样式 */
+.tech-image {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.tech-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 212, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(0, 212, 255, 0.1) 100%
+  );
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 8px;
+  pointer-events: none;
+  transition: all 0.3s;
+}
+
+.tech-image:hover::after {
+  box-shadow: inset 0 0 20px rgba(0, 212, 255, 0.3);
+  border-color: rgba(0, 212, 255, 0.6);
+}
+
+.tech-image img {
+  transition: transform 0.3s;
+}
+
+.tech-image:hover img {
+  transform: scale(1.05);
+}
+
+/* 发光星星 */
+.tech-star {
+  color: #00d4ff;
+  filter: drop-shadow(0 0 3px rgba(0, 212, 255, 0.8));
+  transition: all 0.3s;
+}
+
+.tech-star:hover {
+  filter: drop-shadow(0 0 6px rgba(0, 212, 255, 1));
+  transform: scale(1.2);
+}
+
+/* 轨迹线动画 */
+.tech-path {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+  opacity: 0.3;
+  animation: movePath 3s linear infinite;
+}
+
+@keyframes movePath {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* 悬浮动画 */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.tech-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* 脉冲光效 */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(0, 212, 255, 0.4);
+  }
+}
+
+.tech-pulse {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* 扫描线效果 */
+.tech-scan {
+  position: relative;
+  overflow: hidden;
+}
+
+.tech-scan::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 212, 255, 0.3),
+    transparent
+  );
+  animation: scan 3s ease-in-out infinite;
+}
+
+@keyframes scan {
+  0% {
+    top: -100%;
+  }
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+/* 数据流效果 */
+.tech-data-flow {
+  position: relative;
+  overflow: hidden;
+}
+
+.tech-data-flow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 212, 255, 0.2),
+    transparent
+  );
+  animation: dataFlow 2s linear infinite;
+}
+
+@keyframes dataFlow {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* 项目卡片特殊样式 */
+.tech-project-card {
+  position: relative;
+}
+
+.tech-project-card::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tech-project-card:hover::after {
+  opacity: 1;
+  animation: movePath 2s linear infinite;
+}
+
+/* 图片网格样式 */
+.tech-image-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.tech-image-grid-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  transition: all 0.3s;
+}
+
+.tech-image-grid-item:hover {
+  border-color: rgba(0, 212, 255, 0.5);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+  transform: scale(1.05);
+}
+
+/* 评分星星样式 */
+.tech-rating {
+  display: flex;
+  gap: 2px;
+}
+
+.tech-rating-star {
+  color: #00d4ff;
+  filter: drop-shadow(0 0 2px rgba(0, 212, 255, 0.6));
+  transition: all 0.2s;
+}
+
+.tech-rating-star.inactive {
+  color: #334155;
+  filter: none;
+}
+
+/* 文档标签样式 */
+.tech-doc-tag {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(0, 153, 255, 0.3));
+  border: 1px solid rgba(0, 212, 255, 0.5);
+  color: #00d4ff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.tech-doc-tag:hover {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.4), rgba(0, 153, 255, 0.4));
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+
+/* 滚动视差效果 */
+.parallax-slow {
+  transition: transform 0.1s ease-out;
+}
+
+.parallax-fast {
+  transition: transform 0.1s ease-out;
+}
+
+/* 卡片淡入动画 */
+.card-fade-in {
+  animation: cardFadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes cardFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 延迟动画 */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+
+/* 页面加载动画 */
+.page-enter {
+  animation: pageEnter 0.8s ease-out forwards;
+}
+
+@keyframes pageEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 光迹效果 */
+.light-trail {
+  position: absolute;
+  width: 2px;
+  height: 100px;
+  background: linear-gradient(to bottom, rgba(0, 212, 255, 0.8), transparent);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+  animation: trailFade 1s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes trailFade {
+  0% {
+    opacity: 1;
+    height: 100px;
+  }
+  100% {
+    opacity: 0;
+    height: 0;
+  }
+}
+
+/* 科技感图标和装饰元素 */
+.tech-icon {
+  position: relative;
+  display: inline-block;
+}
+
+.tech-icon::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  border-radius: 50%;
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* 科技感分隔线 */
+.tech-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.5), transparent);
+  position: relative;
+  margin: 1rem 0;
+}
+
+.tech-divider::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: #00d4ff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+}
+
+/* 科技感角标 */
+.tech-corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(0, 212, 255, 0.5);
+}
+
+.tech-corner-tl {
+  top: 8px;
+  left: 8px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.tech-corner-tr {
+  top: 8px;
+  right: 8px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.tech-corner-bl {
+  bottom: 8px;
+  left: 8px;
+  border-right: none;
+  border-top: none;
+}
+
+.tech-corner-br {
+  bottom: 8px;
+  right: 8px;
+  border-left: none;
+  border-top: none;
+}
+
+/* 科技感进度条 */
+.tech-progress {
+  height: 4px;
+  background: rgba(0, 212, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.tech-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #00d4ff, #0099ff);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+  position: relative;
+  transition: width 0.3s ease;
+}
+
+.tech-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: progressShine 1.5s ease-in-out infinite;
+}
+
+@keyframes progressShine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* 科技感徽章 */
+.tech-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 153, 255, 0.2));
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #00d4ff;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.tech-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: badgeShine 3s ease-in-out infinite;
+}
+
+@keyframes badgeShine {
+  0% {
+    left: -100%;
+  }
+  50%, 100% {
+    left: 100%;
+  }
+}
+
+/* 科技感数字显示 */
+.tech-number {
+  font-family: 'Orbitron', 'Courier New', monospace;
+  color: #00d4ff;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+  font-weight: 700;
+}
+
+/* 科技感列表项 */
+.tech-list-item {
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 12px;
+}
+
+.tech-list-item::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: #00d4ff;
+  font-size: 1.2em;
+  animation: arrowPulse 2s ease-in-out infinite;
+}
+
+@keyframes arrowPulse {
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(4px);
+    opacity: 1;
+  }
+}
+
+/* 科技感网格背景 */
+.tech-grid-bg {
+  background-image: 
+    linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* 科技感扫描线 */
+.tech-scanline {
+  position: relative;
+  overflow: hidden;
+}
+
+.tech-scanline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.8), transparent);
+  animation: scanlineMove 3s linear infinite;
+}
+
+@keyframes scanlineMove {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(500px);
+  }
+}
+
+/* 角落装饰元素 - 增强版 */
+.tech-corner-decoration {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tech-corner-decoration::before,
+.tech-corner-decoration::after {
+  content: '';
+  position: absolute;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.6), rgba(0, 153, 255, 0.3));
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.8);
+  animation: cornerPulse 2s ease-in-out infinite;
+}
+
+.tech-corner-decoration::before {
+  top: 0;
+  right: 0;
+  width: 3px;
+  height: 40px;
+}
+
+.tech-corner-decoration::after {
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 3px;
+}
+
+@keyframes cornerPulse {
+  0%, 100% {
+    opacity: 0.6;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 25px rgba(0, 212, 255, 1);
+  }
+}
+
+/* 六边形边框效果 */
+.tech-border-hexagon {
+  position: relative;
+}
+
+.tech-border-hexagon::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(60deg,
+    transparent 0%,
+    rgba(0, 212, 255, 0.3) 25%,
+    transparent 50%,
+    rgba(0, 212, 255, 0.3) 75%,
+    transparent 100%
+  );
+  background-size: 200% 200%;
+  border-radius: 12px;
+  z-index: -1;
+  animation: hexagonFlow 4s linear infinite;
+}
+
+@keyframes hexagonFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* 电路板边框效果 */
+.tech-border-circuit {
+  position: relative;
+}
+
+.tech-border-circuit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background:
+    linear-gradient(90deg, rgba(0, 212, 255, 0.4) 0%, transparent 50%, rgba(0, 212, 255, 0.4) 100%) top left / 100% 2px no-repeat,
+    linear-gradient(90deg, rgba(0, 212, 255, 0.4) 0%, transparent 50%, rgba(0, 212, 255, 0.4) 100%) bottom left / 100% 2px no-repeat,
+    linear-gradient(0deg, rgba(0, 212, 255, 0.4) 0%, transparent 50%, rgba(0, 212, 255, 0.4) 100%) top left / 2px 100% no-repeat,
+    linear-gradient(0deg, rgba(0, 212, 255, 0.4) 0%, transparent 50%, rgba(0, 212, 255, 0.4) 100%) top right / 2px 100% no-repeat;
+  pointer-events: none;
+  animation: circuitPulse 3s ease-in-out infinite;
+}
+
+@keyframes circuitPulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* 能量护盾边框 */
+.tech-border-shield {
+  position: relative;
+  overflow: visible;
+}
+
+.tech-border-shield::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(45deg,
+    rgba(0, 212, 255, 0) 0%,
+    rgba(0, 212, 255, 0.3) 25%,
+    rgba(0, 212, 255, 0) 50%,
+    rgba(0, 212, 255, 0.3) 75%,
+    rgba(0, 212, 255, 0) 100%
+  );
+  background-size: 400% 400%;
+  border-radius: 14px;
+  z-index: -1;
+  animation: shieldFlow 6s ease-in-out infinite;
+  filter: blur(2px);
+}
+
+@keyframes shieldFlow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* 霓虹脉冲边框 */
+.tech-border-neon {
+  position: relative;
+  box-shadow:
+    0 0 10px rgba(0, 212, 255, 0.3),
+    inset 0 0 10px rgba(0, 212, 255, 0.1);
+  animation: neonPulse 2s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 10px rgba(0, 212, 255, 0.3),
+      inset 0 0 10px rgba(0, 212, 255, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 25px rgba(0, 212, 255, 0.6),
+      inset 0 0 20px rgba(0, 212, 255, 0.2);
+  }
+}
+
+/* 数据流边框 */
+.tech-border-dataflow {
+  position: relative;
+}
+
+.tech-border-dataflow::before,
+.tech-border-dataflow::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.tech-border-dataflow::before {
+  top: 0;
+  left: 0;
+  border: 2px solid transparent;
+  border-top-color: rgba(0, 212, 255, 0.6);
+  border-right-color: rgba(0, 212, 255, 0.6);
+  animation: dataflowRotate 4s linear infinite;
+}
+
+.tech-border-dataflow::after {
+  bottom: 0;
+  right: 0;
+  border: 2px solid transparent;
+  border-bottom-color: rgba(0, 153, 255, 0.6);
+  border-left-color: rgba(0, 153, 255, 0.6);
+  animation: dataflowRotate 4s linear infinite reverse;
+}
+
+@keyframes dataflowRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* 量子边框效果 */
+.tech-border-quantum {
+  position: relative;
+  border: 2px solid rgba(0, 212, 255, 0.3);
+}
+
+.tech-border-quantum::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 212, 255, 0) 0%,
+    rgba(0, 212, 255, 0.8) 50%,
+    rgba(0, 212, 255, 0) 100%
+  );
+  border-radius: 12px;
+  animation: quantumScan 3s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes quantumScan {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
