@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002';
 
 // 获取完整的图片 URL（添加后端服务器地址）
 const getImageUrl = (url: string) => {
@@ -11,9 +12,7 @@ const getImageUrl = (url: string) => {
     return url;
   }
   // 如果是相对路径（如 /uploads/xxx），添加后端服务器地址
-  // 注意：这里使用 localhost:3002 而不是 API_URL，因为 uploads 是静态文件目录
-  const backendUrl = 'http://localhost:3002';
-  return `${backendUrl}${url}`;
+  return `${BACKEND_URL}${url}`;
 };
 
 interface ImageUploaderProps {
@@ -82,8 +81,6 @@ const ImageUploader = ({
 
       const endpoint = multiple ? '/upload/multiple' : '/upload/single';
 
-      console.log('Uploading to:', `${API_BASE_URL}${endpoint}`);
-
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'POST',
         headers: {
@@ -92,15 +89,12 @@ const ImageUploader = ({
         body: formData,
       });
 
-      console.log('Response status:', response.status);
-
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || `上传失败，状态码：${response.status}`);
       }
 
       const result = await response.json();
-      console.log('Upload result:', result);
 
       if (multiple) {
         // 多图上传

@@ -48,7 +48,8 @@ const Footer = () => {
           <path d="M23.759 11.99c0-3.459-3.394-6.266-7.568-6.266-4.174 0-7.568 2.807-7.568 6.266s3.394 6.267 7.568 6.267a9.28 9.28 0 0 0 2.428-.326.652.652 0 0 1 .547.068l1.626.944a.279.279 0 0 0 .143.047c.139 0 .248-.118.248-.252 0-.062-.026-.122-.041-.182l-.334-1.264a.506.506 0 0 1 .182-.569c1.568-1.154 2.569-2.856 2.569-4.733zm-10.42-1.084c-.438 0-.793-.36-.793-.804 0-.444.355-.804.793-.804.438 0 .793.36.793.804 0 .444-.355.804-.793.804zm4.948 0c-.438 0-.793-.36-.793-.804 0-.444.355-.804.793-.804.438 0 .793.36.793.804 0 .444-.355.804-.793.804z"/>
         </svg>
       ),
-      onClick: () => alert(`微信号: ${settings.social.wechat}`),
+      onClick: () => {},
+      onClickLabel: `微信号: ${settings.social.wechat}`,
     },
     {
       name: '抖音',
@@ -106,12 +107,14 @@ const Footer = () => {
               © {currentYear} {settings?.about?.copyright || '个人网站'}. All rights reserved.
             </p>
             <p className="clay-text-muted text-sm mt-2">
-              <span
-                onClick={() => window.open('https://beian.miit.gov.cn/', '_blank', 'noopener,noreferrer')}
-                className="hover:text-clay-base transition-colors cursor-pointer"
+              <a
+                href="https://beian.miit.gov.cn/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-clay-base transition-colors"
               >
                 苏ICP备2025221859号
-              </span>
+              </a>
             </p>
           </div>
 
@@ -122,22 +125,24 @@ const Footer = () => {
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   {link.href.startsWith('/#') ? (
-                    <span
+                    <button
+                      type="button"
                       onClick={(e) => {
                         e.preventDefault();
                         handleScrollToSection(link.href);
                       }}
-                      className="clay-text-muted hover:text-clay-base transition-colors cursor-pointer"
+                      className="clay-text-muted hover:text-clay-base transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded px-1"
                     >
                       {link.name}
-                    </span>
+                    </button>
                   ) : (
-                    <span
+                    <button
+                      type="button"
                       onClick={() => window.location.href = link.href}
-                      className="clay-text-muted hover:text-clay-base transition-colors cursor-pointer"
+                      className="clay-text-muted hover:text-clay-base transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded px-1"
                     >
                       {link.name}
-                    </span>
+                    </button>
                   )}
                 </li>
               ))}
@@ -173,19 +178,31 @@ const Footer = () => {
             <div className="mt-6">
               <h4 className="clay-title font-semibold mb-3">关注我</h4>
               <div className="flex space-x-4">
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.name}
-                    href={social.href}
-                    target={social.href ? '_blank' : undefined}
-                    rel={social.href ? 'noopener noreferrer' : undefined}
-                    onClick={social.onClick}
-                    className="clay-text-muted hover:text-clay-base transition-colors"
-                    title={social.name}
-                  >
-                    {social.icon}
-                  </a>
-                ))}
+                {socialLinks.map((social) =>
+                  social.href ? (
+                    <a
+                      key={social.name}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="clay-text-muted hover:text-clay-base transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded p-1"
+                      aria-label={social.name}
+                    >
+                      {social.icon}
+                    </a>
+                  ) : (
+                    <button
+                      key={social.name}
+                      type="button"
+                      onClick={social.onClick}
+                      className="clay-text-muted hover:text-clay-base transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded p-1"
+                      title={social.onClickLabel || social.name}
+                      aria-label={social.onClickLabel || social.name}
+                    >
+                      {social.icon}
+                    </button>
+                  )
+                )}
               </div>
             </div>
           </div>
@@ -196,32 +213,36 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center text-sm clay-text-muted">
             <p>Designed & Built by {settings?.branding?.designedBy || '个人'}</p>
             <div className="flex space-x-4 mt-4 md:mt-0">
-              <span
-                onClick={() => window.location.href = '/admin/login'}
-                className="hover:text-clay-base transition-colors cursor-pointer"
+              <Link
+                to="/admin/login"
+                className="hover:text-clay-base transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded px-1"
               >
                 管理后台
-              </span>
-              <span>|</span>
-              <span
+              </Link>
+              <span aria-hidden="true">|</span>
+              <button
+                type="button"
                 onClick={() => {
                   const url = settings?.links?.privacyPolicy || '#';
                   if (url !== '#') window.location.href = url;
                 }}
-                className="hover:text-clay-base transition-colors cursor-pointer"
+                disabled={settings?.links?.privacyPolicy === '#'}
+                className="hover:text-clay-base transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded px-1 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 隐私政策
-              </span>
-              <span>|</span>
-              <span
+              </button>
+              <span aria-hidden="true">|</span>
+              <button
+                type="button"
                 onClick={() => {
                   const url = settings?.links?.termsOfService || '#';
                   if (url !== '#') window.location.href = url;
                 }}
-                className="hover:text-clay-base transition-colors cursor-pointer"
+                disabled={settings?.links?.termsOfService === '#'}
+                className="hover:text-clay-base transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded px-1 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 使用条款
-              </span>
+              </button>
             </div>
           </div>
         </div>
@@ -230,7 +251,7 @@ const Footer = () => {
       {/* 回到顶部按钮 */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-8 right-8 clay-button clay-button-primary rounded-full shadow-lg hover:scale-110 transition-all z-50"
+        className="fixed bottom-8 right-8 clay-button clay-button-primary rounded-full shadow-lg hover:scale-110 transition-transform z-50"
         aria-label="回到顶部"
       >
         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

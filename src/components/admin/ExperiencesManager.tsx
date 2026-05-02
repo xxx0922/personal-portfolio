@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Experience } from '../../types';
 import ImageUploader from '../ImageUploader';
+import { useToast } from '../../hooks/useToast';
 
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
@@ -8,6 +9,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api'
 const ExperiencesManager = () => {
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [editingExperience, setEditingExperience] = useState<Experience | null>(null);
   const [formData, setFormData] = useState({
@@ -72,7 +74,7 @@ const ExperiencesManager = () => {
       }
     } catch (error) {
       console.error('Failed to save experience:', error);
-      alert('保存失败');
+      showToast('保存失败', 'error');
     }
   };
 

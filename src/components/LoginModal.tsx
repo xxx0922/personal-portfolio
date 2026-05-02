@@ -45,6 +45,7 @@ const LoginModal = ({ isOpen, onClose, message }: LoginModalProps) => {
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+            aria-label="关闭登录弹窗"
           >
             ×
           </button>

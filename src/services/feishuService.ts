@@ -2,11 +2,13 @@
  * 飞书API模拟服务 - 模拟飞书开放平台API
  */
 
+const FRONTEND_URL = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173';
+
 // 模拟飞书应用配置
 const feishuConfig = {
   appId: 'cli_a1b2c3d4e5f6',
   appSecret: 'A1B2C3D4E5F6G7H8I9J0',
-  redirectUri: 'http://localhost:5173/quadrant',
+  redirectUri: `${FRONTEND_URL}/quadrant`,
   apiBaseUrl: 'https://open.feishu.cn/open-apis'
 };
 

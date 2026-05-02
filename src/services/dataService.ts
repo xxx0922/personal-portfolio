@@ -19,11 +19,18 @@ const USE_BACKEND_API = true; // 使用后端 API
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
 
+// 带超时的 fetch 封装
+const fetchWithTimeout = (url: string, options: RequestInit = {}, timeout = 5000): Promise<Response> => {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(id));
+};
+
 // ============ 个人信息相关 ============
 export const getPersonalInfo = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/personal-info`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/personal-info`);
       if (!response.ok) throw new Error('Failed to fetch personal info');
       return await response.json();
     } catch (error) {
@@ -39,7 +46,7 @@ export const getPersonalInfo = async () => {
 export const getSkills = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/skills`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/skills`);
       if (!response.ok) throw new Error('Failed to fetch skills');
       const data = await response.json();
       return data.length > 0 ? data : mockSkills; // 如果后端无数据，使用 mockData
@@ -56,7 +63,7 @@ export const getSkills = async () => {
 export const getProjects = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/projects`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/projects`);
       if (!response.ok) throw new Error('Failed to fetch projects');
       const data = await response.json();
       return data.length > 0 ? data : mockProjects;
@@ -72,7 +79,7 @@ export const getProjects = async () => {
 export const getProjectById = async (id: string) => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/projects/${id}`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/projects/${id}`);
       if (!response.ok) throw new Error('Failed to fetch project');
       return await response.json();
     } catch (error) {
@@ -89,7 +96,7 @@ export const getProjectById = async (id: string) => {
 export const getMediaItems = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/media`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/media`);
       if (!response.ok) throw new Error('Failed to fetch media');
       const data = await response.json();
       return data.length > 0 ? data : mockMediaItems;
@@ -105,7 +112,7 @@ export const getMediaItems = async () => {
 export const getPhotos = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/photos`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/photos`);
       if (!response.ok) throw new Error('Failed to fetch photos');
       const data = await response.json();
       return data.length > 0 ? data : mockPhotos;
@@ -122,7 +129,7 @@ export const getPhotos = async () => {
 export const getDocuments = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/documents`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/documents`);
       if (!response.ok) throw new Error('Failed to fetch documents');
       const data = await response.json();
       return data.length > 0 ? data : mockDocuments;
@@ -139,7 +146,7 @@ export const getDocuments = async () => {
 export const getExperiences = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/experiences`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/experiences`);
       if (!response.ok) throw new Error('Failed to fetch experiences');
       return await response.json();
     } catch (error) {
@@ -154,7 +161,7 @@ export const getExperiences = async () => {
 export const getExperienceById = async (id: string) => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/experiences/${id}`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/experiences/${id}`);
       if (!response.ok) throw new Error('Failed to fetch experience');
       return await response.json();
     } catch (error) {
@@ -170,7 +177,7 @@ export const getExperienceById = async (id: string) => {
 export const getArticles = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/articles`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/articles`);
       if (!response.ok) throw new Error('Failed to fetch articles');
       const data = await response.json();
       return data.length > 0 ? data : [];
@@ -186,7 +193,7 @@ export const getArticles = async () => {
 export const getArticleById = async (id: string) => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/articles/${id}`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/articles/${id}`);
       if (!response.ok) throw new Error('Failed to fetch article');
       return await response.json();
     } catch (error) {
@@ -201,7 +208,7 @@ export const getArticleById = async (id: string) => {
 export const getArticlesByCategory = async (category: string) => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/articles/category/${category}`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/articles/category/${category}`);
       if (!response.ok) throw new Error('Failed to fetch articles');
       return await response.json();
     } catch (error) {
@@ -216,7 +223,7 @@ export const getArticlesByCategory = async (category: string) => {
 export const getArticlesByTag = async (tag: string) => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/articles/tag/${tag}`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/articles/tag/${tag}`);
       if (!response.ok) throw new Error('Failed to fetch articles');
       return await response.json();
     } catch (error) {
@@ -232,7 +239,7 @@ export const getArticlesByTag = async (tag: string) => {
 export const getNews = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/news`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/news`);
       if (!response.ok) throw new Error('Failed to fetch news');
       return await response.json();
     } catch (error) {
@@ -247,7 +254,7 @@ export const getNews = async () => {
 export const getNewsById = async (id: string) => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/news/${id}`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/news/${id}`);
       if (!response.ok) throw new Error('Failed to fetch news');
       return await response.json();
     } catch (error) {
@@ -262,7 +269,7 @@ export const getNewsById = async (id: string) => {
 export const getNewsByType = async (type: string) => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/news/type/${type}`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/news/type/${type}`);
       if (!response.ok) throw new Error('Failed to fetch news');
       return await response.json();
     } catch (error) {
@@ -278,7 +285,7 @@ export const getNewsByType = async (type: string) => {
 export const getProducts = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/products`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/products`);
       if (!response.ok) throw new Error('Failed to fetch products');
       return await response.json();
     } catch (error) {
@@ -293,7 +300,7 @@ export const getProducts = async () => {
 export const getProductById = async (id: string) => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/products/${id}`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/products/${id}`);
       if (!response.ok) throw new Error('Failed to fetch product');
       return await response.json();
     } catch (error) {
@@ -309,7 +316,7 @@ export const getProductById = async (id: string) => {
 export const getTools = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/tools`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/tools`);
       if (!response.ok) throw new Error('Failed to fetch tools');
       return await response.json();
     } catch (error) {
@@ -324,7 +331,7 @@ export const getTools = async () => {
 export const getToolById = async (id: string) => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/tools/${id}`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/tools/${id}`);
       if (!response.ok) throw new Error('Failed to fetch tool');
       return await response.json();
     } catch (error) {
@@ -339,7 +346,7 @@ export const getToolById = async (id: string) => {
 export const getToolCategories = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/tools/utils/categories`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/tools/utils/categories`);
       if (!response.ok) throw new Error('Failed to fetch categories');
       return await response.json();
     } catch (error) {
@@ -355,7 +362,7 @@ export const getToolCategories = async () => {
 export const getProfessions = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/professions`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/professions`);
       if (!response.ok) throw new Error('Failed to fetch professions');
       return await response.json();
     } catch (error) {
@@ -371,7 +378,7 @@ export const getProfessions = async () => {
 export const getContact = async () => {
   if (USE_BACKEND_API) {
     try {
-      const response = await fetch(`${API_BASE_URL}/contact`);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/contact`);
       if (!response.ok) throw new Error('Failed to fetch contact info');
       return await response.json();
     } catch (error) {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import ImageUploader from '../ImageUploader';
+import { useToast } from '../../hooks/useToast';
 
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
@@ -7,6 +8,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api'
 const SeoSettingsManager = () => {
   const [settings, setSettings] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const { showToast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
     basic: {
@@ -83,10 +85,11 @@ const SeoSettingsManager = () => {
       if (response.ok) {
         await loadSettings();
         setIsEditing(false);
-        alert('保存成功！');
-      }
+        showToast('保存成功！', 'success');
+    }
     } catch (error) {
-      alert('保存失败');
+      showToast('保存失败', 'error');
+    }
     } finally {
       setIsSaving(false);
     }

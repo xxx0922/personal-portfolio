@@ -22,7 +22,8 @@ const AboutPage = () => {
     if (personalInfo.avatar.startsWith('http://') || personalInfo.avatar.startsWith('https://')) {
       return personalInfo.avatar;
     }
-    return `http://localhost:3002${personalInfo.avatar}`;
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002';
+    return `${BACKEND_URL}${personalInfo.avatar}`;
   };
 
   useEffect(() => {
@@ -88,8 +89,8 @@ const AboutPage = () => {
               className="w-32 h-32 rounded-full border-4 border-white shadow-xl mx-auto mb-6"
               effect="opacity"
             />
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">{personalInfo.name}</h1>
-            <p className="text-xl md:text-2xl text-primary-100 mb-6">{personalInfo.title}</p>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-balance">{personalInfo.name}</h1>
+            <p className="text-xl md:text-2xl text-primary-100 mb-6 text-pretty">{personalInfo.title}</p>
             <div className="flex flex-wrap justify-center gap-4 mb-6">
               <a
                 href={`mailto:${contact?.email}`}

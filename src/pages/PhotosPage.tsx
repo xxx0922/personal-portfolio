@@ -392,6 +392,7 @@ const PhotosPage = () => {
           <button
             onClick={() => setSelectedPhoto(null)}
             className="absolute top-6 right-6 z-10 w-14 h-14 bg-red-500 hover:bg-red-600 rounded-full shadow-xl flex items-center justify-center transition transform hover:scale-110"
+            aria-label="关闭"
             title="关闭 (Esc)"
           >
             <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -408,6 +409,7 @@ const PhotosPage = () => {
               setSelectedPhoto(filteredPhotos[prevIndex]);
             }}
             className="absolute left-6 z-10 w-14 h-14 bg-white bg-opacity-30 hover:bg-opacity-50 rounded-full shadow-xl flex items-center justify-center transition transform hover:scale-110"
+            aria-label="上一张"
             title="上一张 (←)"
           >
             <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -424,6 +426,7 @@ const PhotosPage = () => {
               setSelectedPhoto(filteredPhotos[nextIndex]);
             }}
             className="absolute right-6 z-10 w-14 h-14 bg-white bg-opacity-30 hover:bg-opacity-50 rounded-full shadow-xl flex items-center justify-center transition transform hover:scale-110"
+            aria-label="下一张"
             title="下一张 (→)"
           >
             <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">

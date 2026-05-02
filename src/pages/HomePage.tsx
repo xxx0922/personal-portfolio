@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getPersonalInfo, getProjects, getPhotos, getDocuments, getArticles, getProfessions, getContact, getSkills } from '../services/dataService';
 import type { PersonalInfo, Project, Photo, Document, Article, Profession, Contact, Skill } from '../types';
@@ -8,6 +8,9 @@ import Footer from '../components/Footer';
 import LoadingSpinner from '../components/LoadingSpinner';
 import BackgroundMusic from '../components/BackgroundMusic';
 import { useSEO } from '../hooks/useSEO';
+
+// 后端基础 URL（uploads 静态文件服务）
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002';
 
 
 const HomePage = () => {
@@ -24,12 +27,8 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [imageLabels, setImageLabels] = useState<string[]>([]);
 
-  // 初始化图片标签
-  useEffect(() => {
-    if (contact?.images) {
-      setImageLabels(contact.images.map(img => img.label || ''));
-    }
-  }, [contact]);
+  // 图片标签直接从 contact 派生
+  const computedImageLabels = contact?.images?.map((img: any) => img.label || '') || [];
 
   // 处理标签变化
   const handleLabelChange = (index: number, value: string) => {
@@ -46,16 +45,15 @@ const HomePage = () => {
     if (url.startsWith('http://') || url.startsWith('https://')) {
       return url;
     }
-    // 注意：这里使用 localhost:3002 而不是 API_URL，因为 uploads 是静态文件目录
-    const backendUrl = 'http://localhost:3002';
-    return `${backendUrl}${url}`;
+    // 注意：使用环境变量配置的后端 URL，uploads 是静态文件目录
+    return `${BACKEND_URL}${url}`;
   };
 
   // 获取头像 URL（处理相对路径）
-  const getAvatarUrl = useCallback(() => {
+  const getAvatarUrl = () => {
     if (!personalInfo?.avatar) return '';
     return getImageUrl(personalInfo.avatar);
-  }, [personalInfo?.avatar]);
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -518,21 +516,11 @@ const HomePage = () => {
 
         <main className="pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-[1920px] mx-auto">
 
-          {/* 左右两侧装饰性背景 - 星空光晕 */}
-          <div className="fixed left-0 top-1/2 -translate-y-1/2 w-80 h-[600px] bg-gradient-to-r from-blue-600/30 via-blue-400/15 to-transparent rounded-r-full blur-3xl pointer-events-none"></div>
-          <div className="fixed right-0 top-1/2 -translate-y-1/2 w-80 h-[600px] bg-gradient-to-l from-purple-600/30 via-purple-400/15 to-transparent rounded-l-full blur-3xl pointer-events-none"></div>
-          <div className="fixed left-10 top-1/4 w-40 h-40 bg-cyan-500/30 rounded-full blur-2xl pointer-events-none animate-pulse"></div>
-          <div className="fixed right-10 bottom-1/4 w-40 h-40 bg-pink-500/30 rounded-full blur-2xl pointer-events-none animate-pulse"></div>
-          <div className="fixed left-1/4 top-1/3 w-24 h-24 bg-indigo-400/25 rounded-full blur-xl pointer-events-none animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-          <div className="fixed right-1/4 top-1/3 w-24 h-24 bg-rose-400/25 rounded-full blur-xl pointer-events-none animate-pulse" style={{ animationDelay: '1s' }}></div>
-
           {/* 个人介绍区域 - 全屏展示 */}
           <div className="mb-10">
             <div className="clay-card p-8 md:p-12 relative overflow-hidden">
               {/* 装饰性背景 */}
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10"></div>
-              <div className="absolute -right-32 -top-32 w-96 h-96 rounded-full bg-gradient-to-br from-indigo-500/20 to-transparent blur-3xl"></div>
-              <div className="absolute -left-32 -bottom-32 w-96 h-96 rounded-full bg-gradient-to-tr from-pink-500/20 to-transparent blur-3xl"></div>
+              <div className="absolute inset-0 bg-[#2a3550]/60"></div>
 
               <div className="relative z-10">
                 <div className="flex flex-col lg:flex-row items-center gap-8">
@@ -548,7 +536,7 @@ const HomePage = () => {
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xl shadow-lg">
+                        <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center text-white text-xl shadow-lg">
                           ✨
                         </div>
                       </div>
@@ -572,14 +560,14 @@ const HomePage = () => {
                           <span className="text-white">{personalInfo.welcomeMessage ? '8 年 + 经验' : '专业工程师'}</span>
                         </div>
                       </div>
-                      <p className="text-xl text-gray-200 leading-relaxed max-w-4xl">
+                      <p className="text-xl text-gray-200 leading-relaxed max-w-4xl text-pretty">
                         {personalInfo.welcomeMessage || '欢迎来到我的个人主页。这里展示了我的项目经验、活动瞬间、实用工具和知识文档。'}
                       </p>
                     </div>
                   </div>
 
                   {/* 右侧：照片墙滚动展示 */}
-                  <div className="flex-shrink-0">
+                  <div className="flex-shrink-0" style={{ contain: 'layout paint' }}>
                     <div className="relative w-[320px] h-64 md:w-[480px] md:h-80 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20 bg-white/10 backdrop-blur-sm">
                       {/* 照片滚动容器 - 每次只显示一张照片 */}
                       <div
@@ -615,10 +603,10 @@ const HomePage = () => {
                           {personalInfo.photos.map((_, index) => (
                             <div
                               key={index}
-                              className={`w-1.5 h-1.5 rounded-full transition-all ${
+                              className={`w-1.5 h-1.5 rounded-full transition-transform ${
                                 selectedPhoto === index
-                                  ? 'bg-white w-4'
-                                  : 'bg-white/50'
+                                  ? 'bg-white scale-x-[2.67]'
+                                  : 'bg-white/50 scale-x-100'
                               }`}
                             />
                           ))}
@@ -640,7 +628,7 @@ const HomePage = () => {
               <Link to="/dashboard" className="block h-full">
                 {/* 唯美背景图：办公桌面/代码 */}
                 <div className="absolute inset-0 bg-gradient-to-br from-sky-900/30 via-blue-900/20 to-indigo-900/30 z-10"></div>
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-25 group-hover:opacity-35 group-hover:scale-105 transition-all duration-500"></div>
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-25 group-hover:opacity-35 group-hover:scale-105 transition-transform duration-500"></div>
                 <div className="relative z-10 h-full flex flex-col justify-end">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-sky-500 to-sky-700 flex items-center justify-center shadow-lg">
@@ -680,7 +668,7 @@ const HomePage = () => {
               <Link to="/professions" className="block h-full">
                 {/* 唯美背景图：专业/成就 */}
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/30 via-purple-900/20 to-blue-900/30 z-10"></div>
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-20 group-hover:opacity-30 group-hover:scale-105 transition-all duration-500"></div>
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-20 group-hover:opacity-30 group-hover:scale-105 transition-transform duration-500"></div>
                 <div className="relative z-10 h-full flex flex-col justify-end">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center shadow-lg">
@@ -727,7 +715,7 @@ const HomePage = () => {
                                 <div className="w-full flex-1 rounded-xl overflow-hidden shadow-xl border border-white/10 hover:scale-105 transition-transform relative flex items-center justify-center p-3 bg-white/5 backdrop-blur-md">
                                   <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/15 via-purple-500/10 to-pink-500/15"></div>
                                   <img
-                                    src={img.url.startsWith('/') ? `http://localhost:3002${img.url}` : img.url}
+                                    src={getImageUrl(img.url)}
                                     alt={`二维码 ${index + 1}`}
                                     className="w-full h-full object-contain rounded-lg relative z-10"
                                     style={{
@@ -738,7 +726,7 @@ const HomePage = () => {
                                 </div>
                                 <div className="w-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg px-3 py-2 text-center shadow-lg">
                                   <span className="text-white font-semibold text-base">
-                                    {imageLabels[index] || ''}
+                                    {computedImageLabels[index] || ''}
                                   </span>
                                 </div>
                               </div>
@@ -859,6 +847,7 @@ const HomePage = () => {
             <button
               onClick={() => setSelectedDocument(null)}
               className="absolute top-4 right-4 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition"
+              aria-label="关闭文档预览"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

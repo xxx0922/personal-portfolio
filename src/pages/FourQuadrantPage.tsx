@@ -11,6 +11,7 @@ import { useSEO } from '../hooks/useSEO';
 const FourQuadrantPage = () => {
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [feishuLoading, setFeishuLoading] = useState(false);
   const [tasks, setTasks] = useState({
     work: [] as Task[],
@@ -25,6 +26,11 @@ const FourQuadrantPage = () => {
     const loadData = async () => {
       try {
         const infoData = await getPersonalInfo();
+        if (!infoData) {
+          setError('无法加载个人信息，请检查后端服务是否启动');
+          setLoading(false);
+          return;
+        }
         setPersonalInfo(infoData);
         
         // 从四象限数据服务获取真实数据
@@ -55,18 +61,15 @@ const FourQuadrantPage = () => {
       
       // 获取飞书任务
       const feishuTasks = await getTasks();
-      console.log('Feishu tasks:', feishuTasks);
       
       // 获取飞书消息
       const feishuMessages = await getMessages();
-      console.log('Feishu messages:', feishuMessages);
       
       // 解析飞书消息中的语音指令
       for (const message of feishuMessages) {
         if (message.content.includes('放进') || message.content.includes('提醒我')) {
           try {
             const parsedCommand = await parseVoiceCommand(message.content);
-            console.log('Parsed command:', parsedCommand);
             
             // 根据解析结果添加任务
             await addTask(parsedCommand.category, {
@@ -82,7 +85,7 @@ const FourQuadrantPage = () => {
           }
         }
       }
-      
+
       // 重新加载任务数据
       const updatedTasks = await getAllQuadrantTasks();
       setTasks({ work: updatedTasks.work || [], life: updatedTasks.life || [], study: updatedTasks.study || [], other: updatedTasks.other || [] });
@@ -142,7 +145,6 @@ const FourQuadrantPage = () => {
       
       // 解析语音指令
       const parsedCommand = await parseVoiceCommand(voiceCommand);
-      console.log('Parsed voice command:', parsedCommand);
       
       // 添加任务
       await addTask(parsedCommand.category, {
@@ -168,10 +170,27 @@ const FourQuadrantPage = () => {
     }
   };
 
-  if (loading || !personalInfo) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner size="lg" text="加载中..." />
+      </div>
+    );
+  }
+
+  if (error || !personalInfo) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center p-8">
+          <p className="text-xl font-semibold text-gray-700 mb-2">加载失败</p>
+          <p className="text-gray-500">{error || '无法获取数据，请检查后端服务'}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+          >
+            重试
+          </button>
+        </div>
       </div>
     );
   }
@@ -307,7 +326,7 @@ const FourQuadrantPage = () => {
                             延期
                           </button>
                         </div>
-                      </div>
+                    </div>
                     ))}
                   </div>
                 ) : (
@@ -357,7 +376,7 @@ const FourQuadrantPage = () => {
                             延期
                           </button>
                         </div>
-                      </div>
+                    </div>
                     ))}
                   </div>
                 ) : (
@@ -407,7 +426,7 @@ const FourQuadrantPage = () => {
                             延期
                           </button>
                         </div>
-                      </div>
+                    </div>
                     ))}
                   </div>
                 ) : (
@@ -457,7 +476,7 @@ const FourQuadrantPage = () => {
                             延期
                           </button>
                         </div>
-                      </div>
+                    </div>
                     ))}
                   </div>
                 ) : (

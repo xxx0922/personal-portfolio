@@ -3,6 +3,7 @@ import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import type { Article } from '../../types';
 import ImageUploader from '../ImageUploader';
+import { useToast } from '../../hooks/useToast';
 
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
@@ -10,6 +11,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api'
 const ArticlesManager = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [editingArticle, setEditingArticle] = useState<Article | null>(null);
   const [formData, setFormData] = useState({
@@ -68,11 +70,11 @@ const ArticlesManager = () => {
       if (response.ok) {
         await loadArticles();
         resetForm();
-        alert('保存成功！');
-      }
+        showToast('保存成功！', 'success');
+    }
     } catch (error) {
       console.error('Failed to save article:', error);
-      alert('保存失败');
+      showToast('保存失败', 'error');
     }
   };
 

@@ -252,6 +252,7 @@ const LifestylePage = () => {
               <h2 className="text-2xl font-bold">{selectedMedia.title}</h2>
               <button
                 onClick={() => setSelectedMedia(null)}
+                aria-label="关闭"
                 className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
               >
                 ×

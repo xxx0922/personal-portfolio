@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { News } from '../../types';
 import ImageUploader from '../ImageUploader';
+import { useToast } from '../../hooks/useToast';
 
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
@@ -8,6 +9,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api'
 const NewsManager = () => {
   const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [editingNews, setEditingNews] = useState<News | null>(null);
   const [formData, setFormData] = useState({
@@ -58,11 +60,11 @@ const NewsManager = () => {
       if (response.ok) {
         await loadNews();
         resetForm();
-        alert('保存成功！');
-      }
+        showToast('保存成功！', 'success');
+    }
     } catch (error) {
       console.error('Failed to save news:', error);
-      alert('保存失败');
+      showToast('保存失败', 'error');
     }
   };
 

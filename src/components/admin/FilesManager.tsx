@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useToast } from '../../hooks/useToast';
 
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
@@ -14,6 +15,7 @@ interface FileItem {
 export default function FilesManager() {
   const [files, setFiles] = useState<FileItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
   const [filter, setFilter] = useState<'all' | 'images' | 'files'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [totalSize, setTotalSize] = useState(0);
@@ -54,10 +56,10 @@ export default function FilesManager() {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
-      alert('文件删除成功');
+      showToast('文件删除成功', 'success');
       loadFiles();
     } catch (error) {
-      alert('删除失败');
+      showToast('删除失败', 'error');
     }
   };
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useToast } from '../../hooks/useToast';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
 
@@ -13,6 +14,7 @@ interface ContactImage {
 export default function ContactImagesManager() {
   const [images, setImages] = useState<ContactImage[]>([]);
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
   const [uploading, setUploading] = useState<number | null>(null);
 
   useEffect(() => {
@@ -55,11 +57,12 @@ export default function ContactImagesManager() {
         loadImages();
       } else {
         const error = await response.json();
-        alert(`上传失败：${error.error}`);
-      }
+        showToast(`上传失败：${error.error}`, 'error');
+    }
     } catch (error) {
       console.error('Upload error:', error);
-      alert('上传失败，请重试');
+      showToast('上传失败，请重试', 'error');
+    }
     } finally {
       setUploading(null);
     }
@@ -80,11 +83,11 @@ export default function ContactImagesManager() {
       if (response.ok) {
         loadImages();
       } else {
-        alert('删除失败');
-      }
+        showToast('删除失败', 'error');
+    }
     } catch (error) {
       console.error('Delete error:', error);
-      alert('删除失败，请重试');
+      showToast('删除失败，请重试', 'error');
     }
   };
 

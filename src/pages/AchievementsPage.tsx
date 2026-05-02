@@ -364,6 +364,7 @@ const AchievementsPage = () => {
               <h2 className="text-2xl font-bold">{selectedProject.title}</h2>
               <button
                 onClick={() => setSelectedProject(null)}
+                aria-label="关闭"
                 className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
               >
                 ×

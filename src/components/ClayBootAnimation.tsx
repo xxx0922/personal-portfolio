@@ -116,7 +116,7 @@ const ClayBootAnimation = ({ onComplete, siteName = '个人网站' }: ClayBootAn
         setPhase('explode');
         setExplodeFlash(1);
         // 播放宇宙大爆炸音效
-        boomSoundRef.current?.play().catch(err => console.log('Audio play prevented:', err));
+        boomSoundRef.current?.play().catch(() => {});
         particles.forEach((p) => {
           p.phase = 'exploding';
           p.vx = p.explosionVel.vx * 1.5; // 更强的爆炸速度
@@ -291,7 +291,6 @@ const ClayBootAnimation = ({ onComplete, siteName = '个人网站' }: ClayBootAn
     render();
 
     return () => {
-      console.log('Cleaning up animation...');
       window.removeEventListener('resize', resizeCanvas);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -302,7 +301,6 @@ const ClayBootAnimation = ({ onComplete, siteName = '个人网站' }: ClayBootAn
 
   // 跳过动画处理 - 使用 useCallback 确保稳定性
   const handleSkip = useCallback(() => {
-    console.log('Skipping animation...');
     if (skipCallbackRef.current) return; // 防止重复调用
     skipCallbackRef.current = true;
     setIsSkipped(true);
@@ -319,7 +317,7 @@ const ClayBootAnimation = ({ onComplete, siteName = '个人网站' }: ClayBootAn
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-[#1a1f2e] flex items-center justify-center overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[#1a1f2e] flex items-center justify-center overflow-hidden">
       {/* 流体粒子 Canvas */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 

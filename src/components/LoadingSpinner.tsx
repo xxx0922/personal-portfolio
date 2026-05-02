@@ -25,9 +25,10 @@ const LoadingSpinner = ({
   };
 
   const spinner = (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center" role="status" aria-live="polite" aria-busy="true">
       <div
         className={`${sizeClasses[size]} border-4 ${colorClasses[color]} border-t-transparent rounded-full animate-spin`}
+        aria-hidden="true"
       />
       {text && (
         <p className={`mt-4 text-sm ${color === 'white' ? 'text-white' : 'text-gray-600'}`}>

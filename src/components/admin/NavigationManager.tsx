@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useToast } from '../../hooks/useToast';
 
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
@@ -15,6 +16,7 @@ interface NavigationItem {
 const NavigationManager = () => {
   const [items, setItems] = useState<NavigationItem[]>([]);
   const [isAdding, setIsAdding] = useState(false);
+  const { showToast } = useToast();
   const [editingItem, setEditingItem] = useState<NavigationItem | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -50,10 +52,11 @@ const NavigationManager = () => {
 
       if (response.ok) {
         await loadNavigation();
-        alert('保存成功！');
+        showToast('保存成功！', 'success');
       }
     } catch (error) {
-      alert('保存失败');
+      showToast('保存失败', 'error');
+    }
     } finally {
       setIsSaving(false);
     }
@@ -125,7 +128,7 @@ const NavigationManager = () => {
     if (!editingItem) return;
 
     if (!editingItem.label || !editingItem.path) {
-      alert('请填写标签和路径');
+      showToast('请填写标签和路径', 'info');
       return;
     }
 
@@ -202,6 +205,7 @@ const NavigationManager = () => {
                         onClick={() => handleMoveUp(index)}
                         disabled={index === 0}
                         className="text-gray-400 hover:text-gray-600 disabled:opacity-30"
+                        aria-label="上移"
                       >
                         ▲
                       </button>
@@ -209,6 +213,7 @@ const NavigationManager = () => {
                         onClick={() => handleMoveDown(index)}
                         disabled={index === items.length - 1}
                         className="text-gray-400 hover:text-gray-600 disabled:opacity-30"
+                        aria-label="下移"
                       >
                         ▼
                       </button>

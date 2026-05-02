@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast, Toast } from '../hooks/useToast';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { toast, showToast, setToast } = useToast();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -59,7 +61,7 @@ const RegisterPage = () => {
       const success = await register(formData.username, formData.email, formData.password);
 
       if (success) {
-        alert('注册成功！');
+        showToast('注册成功！', 'success');
         navigate('/admin');
       } else {
         setError('注册失败，用户名可能已存在');
@@ -73,6 +75,7 @@ const RegisterPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
+      <Toast toast={toast} onClose={() => setToast(null)} />
       {/* 背景 */}
       <div className="fixed inset-0 z-0">
         <div

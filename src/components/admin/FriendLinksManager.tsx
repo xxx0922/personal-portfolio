@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import ImageUploader from '../ImageUploader';
+import { useToast } from '../../hooks/useToast';
 
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
@@ -17,6 +18,7 @@ interface FriendLink {
 const FriendLinksManager = () => {
   const [links, setLinks] = useState<FriendLink[]>([]);
   const [isAdding, setIsAdding] = useState(false);
+  const { showToast } = useToast();
   const [editingLink, setEditingLink] = useState<FriendLink | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -52,10 +54,11 @@ const FriendLinksManager = () => {
 
       if (response.ok) {
         await loadFriendLinks();
-        alert('保存成功！');
+        showToast('保存成功！', 'success');
       }
     } catch (error) {
-      alert('保存失败');
+      showToast('保存失败', 'error');
+    }
     } finally {
       setIsSaving(false);
     }
@@ -122,7 +125,7 @@ const FriendLinksManager = () => {
     if (!editingLink) return;
 
     if (!editingLink.name || !editingLink.url) {
-      alert('请填写网站名称和URL');
+      showToast('请填写网站名称和URL', 'info');
       return;
     }
 
@@ -130,7 +133,7 @@ const FriendLinksManager = () => {
     try {
       new URL(editingLink.url);
     } catch {
-      alert('请输入有效的URL（如 https://example.com）');
+      showToast('请输入有效的URL（如 https://example.com）', 'info');
       return;
     }
 
@@ -216,6 +219,7 @@ const FriendLinksManager = () => {
                     onClick={() => handleMoveUp(index)}
                     disabled={index === 0}
                     className="text-gray-400 hover:text-gray-600 disabled:opacity-30 text-xs"
+                    aria-label="上移"
                   >
                     ▲
                   </button>
@@ -223,6 +227,7 @@ const FriendLinksManager = () => {
                     onClick={() => handleMoveDown(index)}
                     disabled={index === links.length - 1}
                     className="text-gray-400 hover:text-gray-600 disabled:opacity-30 text-xs"
+                    aria-label="下移"
                   >
                     ▼
                   </button>

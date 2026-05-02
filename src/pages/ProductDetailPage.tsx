@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import type { ProductCategory, MediaResource } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -106,7 +107,7 @@ export default function ProductDetailPage() {
           {product.coverImage ? (
             <div className="mb-8 rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src={product.coverImage.startsWith('http') ? product.coverImage : `http://localhost:3002${product.coverImage}`}
+                src={product.coverImage.startsWith('http') ? product.coverImage : `${BACKEND_URL}${product.coverImage}`}
                 alt={product.name}
                 className="w-full h-96 object-cover"
               />
@@ -189,7 +190,7 @@ export default function ProductDetailPage() {
                   >
                     {media.type === 'image' ? (
                       <img
-                        src={media.url.startsWith('http') ? media.url : `http://localhost:3002${media.url}`}
+                        src={media.url.startsWith('http') ? media.url : `${BACKEND_URL}${media.url}`}
                         alt={media.title || '媒体资源'}
                         className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                       />
@@ -197,7 +198,7 @@ export default function ProductDetailPage() {
                       <div className="relative w-full h-48">
                         {media.thumbnailUrl ? (
                           <img
-                            src={media.thumbnailUrl.startsWith('http') ? media.thumbnailUrl : `http://localhost:3002${media.thumbnailUrl}`}
+                            src={media.thumbnailUrl.startsWith('http') ? media.thumbnailUrl : `${BACKEND_URL}${media.thumbnailUrl}`}
                             alt={media.title || '视频封面'}
                             className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                           />
@@ -258,7 +259,7 @@ export default function ProductDetailPage() {
                         {folder.attachments.map((attachment) => (
                           <a
                             key={attachment.id}
-                            href={attachment.url.startsWith('http') ? attachment.url : `http://localhost:3002${attachment.url}`}
+                            href={attachment.url.startsWith('http') ? attachment.url : `${BACKEND_URL}${attachment.url}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
@@ -306,7 +307,7 @@ export default function ProductDetailPage() {
                                 {subFolder.attachments.map((attachment) => (
                                   <a
                                     key={attachment.id}
-                                    href={attachment.url.startsWith('http') ? attachment.url : `http://localhost:3002${attachment.url}`}
+                                    href={attachment.url.startsWith('http') ? attachment.url : `${BACKEND_URL}${attachment.url}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-sm"
@@ -362,13 +363,13 @@ export default function ProductDetailPage() {
             </button>
             {selectedMedia.type === 'image' ? (
               <img
-                src={selectedMedia.url.startsWith('http') ? selectedMedia.url : `http://localhost:3002${selectedMedia.url}`}
+                src={selectedMedia.url.startsWith('http') ? selectedMedia.url : `${BACKEND_URL}${selectedMedia.url}`}
                 alt={selectedMedia.title || '媒体资源'}
                 className="max-w-full max-h-[80vh] object-contain rounded-lg"
               />
             ) : (
               <video
-                src={selectedMedia.url.startsWith('http') ? selectedMedia.url : `http://localhost:3002${selectedMedia.url}`}
+                src={selectedMedia.url.startsWith('http') ? selectedMedia.url : `${BACKEND_URL}${selectedMedia.url}`}
                 controls
                 autoPlay
                 className="max-w-full max-h-[80vh] rounded-lg"

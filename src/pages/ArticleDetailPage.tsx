@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import LoadingSpinner from '../components/LoadingSpinner';
 import LazyImage from '../components/LazyImage';
 import { useSEO } from '../hooks/useSEO';
+import { useToast, Toast } from '../hooks/useToast';
 
 const ArticleDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,6 +15,7 @@ const ArticleDetailPage = () => {
   const [article, setArticle] = useState<Article | null>(null);
   const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const { toast, showToast, setToast } = useToast();
 
   useEffect(() => {
     const loadArticle = async () => {
@@ -88,12 +90,12 @@ const ArticleDetailPage = () => {
       case 'wechat':
         // 微信分享需要复制链接
         navigator.clipboard.writeText(url).then(() => {
-          alert('链接已复制到剪贴板，请在微信中粘贴分享');
+          showToast('链接已复制到剪贴板，请在微信中粘贴分享', 'success');
         });
         break;
       case 'copy':
         navigator.clipboard.writeText(url).then(() => {
-          alert('链接已复制到剪贴板');
+          showToast('链接已复制到剪贴板', 'success');
         });
         break;
     }
@@ -101,6 +103,7 @@ const ArticleDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Toast toast={toast} onClose={() => setToast(null)} />
       <Navbar />
 
       {/* Breadcrumb */}

@@ -190,6 +190,7 @@ const KnowledgePage = () => {
               <h2 className="text-2xl font-bold">{selectedDoc.title}</h2>
               <button
                 onClick={() => setSelectedDoc(null)}
+                aria-label="关闭"
                 className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
               >
                 ×

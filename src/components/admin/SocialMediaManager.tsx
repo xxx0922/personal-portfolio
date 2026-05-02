@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useToast } from '../../hooks/useToast';
 
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
@@ -15,6 +16,7 @@ interface SocialLink {
 export default function SocialMediaManager() {
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [isAdding, setIsAdding] = useState(false);
+  const { showToast } = useToast();
   const [editingLink, setEditingLink] = useState<SocialLink | null>(null);
 
   const platformOptions = [
@@ -73,7 +75,7 @@ export default function SocialMediaManager() {
         body: JSON.stringify(link)
       });
 
-      alert('保存成功');
+      showToast('保存成功', 'success');
       loadSocialLinks();
       setIsAdding(false);
       setEditingLink(null);

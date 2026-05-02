@@ -11,6 +11,8 @@ import SocialMediaManager from '../components/admin/SocialMediaManager';
 
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
+// 后端基础 URL（uploads 静态文件服务）
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002';
 
 interface AdminStats {
   projectCount: number;
@@ -43,6 +45,16 @@ export default function AdminPage() {
     contactImageCount: 0
   });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  useEffect(() => {
+    return () => setToast(null);
+  }, []);
 
   // 获取头像 URL（处理相对路径）
   const getAvatarUrl = (avatarPath: string) => {
@@ -50,7 +62,7 @@ export default function AdminPage() {
     if (avatarPath.startsWith('http://') || avatarPath.startsWith('https://')) {
       return avatarPath;
     }
-    return `http://localhost:3002${avatarPath}`;
+    return `${BACKEND_URL}${avatarPath}`;
   };
 
   useEffect(() => {
@@ -93,7 +105,7 @@ export default function AdminPage() {
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: 'xue', password: 'Xue0922@' })
+        body: JSON.stringify({ username: import.meta.env.VITE_ADMIN_USERNAME || 'xue', password: import.meta.env.VITE_ADMIN_PASSWORD || 'Xue0922@' })
       });
 
       const data = await response.json();
@@ -101,7 +113,6 @@ export default function AdminPage() {
       if (data.token) {
         localStorage.setItem('adminToken', data.token);
         localStorage.setItem('adminUser', JSON.stringify(data.user));
-        console.log('✅ 自动登录成功');
         setIsAuthenticated(true);
         loadStats();
       } else {
@@ -203,6 +214,28 @@ export default function AdminPage() {
       </nav>
 
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        {/* Toast 通知 */}
+        {toast && (
+          <div className={`fixed top-20 right-4 z-50 px-6 py-4 rounded-xl shadow-2xl text-white font-medium transition-all duration-300 max-w-md ${
+            toast.type === 'success' ? 'bg-emerald-500' :
+            toast.type === 'error' ? 'bg-red-500' :
+            'bg-sky-500'
+          }`} role="alert" aria-live="assertive">
+            <div className="flex items-center gap-3">
+              <span className="text-lg" aria-hidden="true">
+                {toast.type === 'success' ? '✅' : toast.type === 'error' ? '❌' : 'ℹ️'}
+              </span>
+              <span>{toast.message}</span>
+              <button
+                onClick={() => setToast(null)}
+                className="ml-4 text-white/80 hover:text-white focus:outline-none"
+                aria-label="关闭通知"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
         {/* 快捷操作栏 */}
         <div className="bg-gradient-to-r from-blue-500 to-blue-600 shadow rounded-lg mb-6 p-4">
           <div className="flex items-center justify-between">
@@ -227,7 +260,7 @@ export default function AdminPage() {
         {/* 标签导航 */}
         <div className="bg-white shadow rounded-lg mb-6">
           <div className="border-b border-gray-200">
-            <nav className="flex -mb-px">
+            <nav className="flex -mb-px overflow-x-auto scrollbar-hide">
               {[
                 { id: 'overview', label: '概览' },
                 { id: 'experiences', label: '工作经历' },
@@ -328,7 +361,7 @@ function StatCard({ title, value, icon, color = 'blue' }: { title: string; value
       <div className="flex items-center justify-between">
         <div>
           <p className="text-gray-600 text-sm">{title}</p>
-          <p className={`text-3xl font-bold mt-2 ${className.split(' ')[2]}`}>{value}</p>
+          <p className={`text-3xl font-bold mt-2 tabular-nums ${className.split(' ')[2]}`}>{value}</p>
         </div>
         <div className="text-4xl">{icon}</div>
       </div>
@@ -367,7 +400,7 @@ function ProjectsManager() {
       });
       loadProjects();
     } catch (error) {
-      alert('删除失败');
+      showToast('删除失败', 'error');
     }
   };
 
@@ -399,7 +432,7 @@ function ProjectsManager() {
       link.download = `项目汇总_${new Date().toISOString().slice(0, 10)}.csv`;
       link.click();
     } catch (error) {
-      alert('导出失败');
+      showToast('导出失败', 'error');
     }
   };
 
@@ -516,7 +549,7 @@ function ProjectForm({ project, onClose, onSave }: any) {
 
       onSave();
     } catch (error) {
-      alert('保存失败');
+      showToast('保存失败', 'error');
     }
   };
 
@@ -721,7 +754,7 @@ function SkillsManager() {
       });
       loadSkills();
     } catch (error) {
-      alert('删除失败');
+      showToast('删除失败', 'error');
     }
   };
 
@@ -853,7 +886,7 @@ function SkillForm({ skill, onClose, onSave }: any) {
 
       onSave();
     } catch (error) {
-      alert('保存失败');
+      showToast('保存失败', 'error');
     }
   };
 
@@ -961,7 +994,7 @@ function MediaManager() {
       });
       loadMedia();
     } catch (error) {
-      alert('删除失败');
+      showToast('删除失败', 'error');
     }
   };
 
@@ -1130,7 +1163,7 @@ function MediaForm({ media, onClose, onSave }: any) {
 
       onSave();
     } catch (error) {
-      alert('保存失败');
+      showToast('保存失败', 'error');
     }
   };
 
@@ -1358,7 +1391,7 @@ function PhotosManager() {
       return url;
     }
     // 注意：这里使用 localhost:3002 而不是 API_URL，因为 uploads 是静态文件目录
-    const backendUrl = 'http://localhost:3002';
+    const backendUrl = BACKEND_URL;
     return `${backendUrl}${url}`;
   };
 
@@ -1373,7 +1406,7 @@ function PhotosManager() {
       });
       loadPhotos();
     } catch (error) {
-      alert('删除失败');
+      showToast('删除失败', 'error');
     }
   };
 
@@ -1605,13 +1638,12 @@ function PhotoForm({ photo, onClose, onSave, allPhotos = [] }: any) {
 
       onSave();
     } catch (error) {
-      alert('保存失败');
+      showToast('保存失败', 'error');
     }
   };
 
   // 处理图片上传成功
   const handleImageUpload = (url: string) => {
-    console.log('PhotoForm: Image uploaded successfully, url=', url);
     setFormData({ ...formData, url });
     setImageKey(prev => prev + 1); // 强制刷新图片
   };
@@ -1623,7 +1655,7 @@ function PhotoForm({ photo, onClose, onSave, allPhotos = [] }: any) {
       return url;
     }
     // 注意：这里使用 localhost:3002 而不是 API_URL，因为 uploads 是静态文件目录
-    const backendUrl = 'http://localhost:3002';
+    const backendUrl = BACKEND_URL;
     const fullUrl = `${backendUrl}${url}`;
     return fullUrl;
   };
@@ -1821,7 +1853,7 @@ function BatchPhotoUploadForm({ onClose, onSave, allPhotos = [] }: any) {
       return url;
     }
     // 注意：这里使用 localhost:3002 而不是 API_URL，因为 uploads 是静态文件目录
-    const backendUrl = 'http://localhost:3002';
+    const backendUrl = BACKEND_URL;
     return `${backendUrl}${url}`;
   };
 
@@ -1841,15 +1873,15 @@ function BatchPhotoUploadForm({ onClose, onSave, allPhotos = [] }: any) {
   // 批量上传并保存
   const handleBatchSave = async () => {
     if (selectedFiles.length === 0) {
-      alert('请先选择照片');
+      showToast('请先选择照片', 'info');
       return;
     }
     if (!category) {
-      alert('请选择分类');
+      showToast('请选择分类', 'info');
       return;
     }
     if (!folder) {
-      alert('请选择或输入文件夹名称');
+      showToast('请选择或输入文件夹名称', 'info');
       return;
     }
 
@@ -1902,11 +1934,11 @@ function BatchPhotoUploadForm({ onClose, onSave, allPhotos = [] }: any) {
       }
 
       const saveResult = await saveResponse.json();
-      alert(`成功添加 ${saveResult.count} 张照片`);
+      showToast(`成功添加 ${saveResult.count} 张照片`, 'success');
       onSave();
     } catch (error) {
       console.error('Batch upload error:', error);
-      alert('批量保存失败');
+      showToast('批量保存失败', 'error');
     } finally {
       setUploading(false);
     }
@@ -2091,7 +2123,7 @@ function DocumentsManager() {
       });
       loadDocuments();
     } catch (error) {
-      alert('删除失败');
+      showToast('删除失败', 'error');
     }
   };
 
@@ -2264,7 +2296,7 @@ function DocumentForm({ document, onClose, onSave }: any) {
 
       onSave();
     } catch (error) {
-      alert('保存失败');
+      showToast('保存失败', 'error');
     }
   };
 
@@ -2435,7 +2467,7 @@ function PersonalInfoManager() {
     if (avatarPath.startsWith('http://') || avatarPath.startsWith('https://')) {
       return avatarPath;
     }
-    return `http://localhost:3002${avatarPath}`;
+    return `${BACKEND_URL}${avatarPath}`;
   };
 
   useEffect(() => {
@@ -2466,9 +2498,9 @@ function PersonalInfoManager() {
       });
       setPersonalInfo(updatedInfo);
       setIsEditing(false);
-      alert('保存成功！');
+      showToast('保存成功！', 'success');
     } catch (error) {
-      alert('保存失败');
+      showToast('保存失败', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -2723,7 +2755,7 @@ function PersonalInfoForm({ personalInfo, onSave, onCancel, isSaving }: any) {
                 if (url.startsWith('http://') || url.startsWith('https://')) {
                   return url;
                 }
-                const backendUrl = 'http://localhost:3002';
+                const backendUrl = BACKEND_URL;
                 return `${backendUrl}${url}`;
               };
               return (
@@ -2800,7 +2832,7 @@ function MessagesManager() {
       });
       loadMessages();
     } catch (error) {
-      alert('标记失败');
+      showToast('标记失败', 'error');
     }
   };
 
@@ -2815,7 +2847,7 @@ function MessagesManager() {
       });
       loadMessages();
     } catch (error) {
-      alert('删除失败');
+      showToast('删除失败', 'error');
     }
   };
 
@@ -2992,7 +3024,7 @@ function MusicManager() {
     if (file) {
       // 检查文件类型
       if (!file.type.startsWith('audio/')) {
-        alert('请上传音频文件（MP3、WAV等）');
+        showToast('请上传音频文件（MP3、WAV等）', 'info');
         return;
       }
       setCurrentFile(file);
@@ -3002,7 +3034,7 @@ function MusicManager() {
   const handleUpload = async () => {
     if (!currentFile) return;
     if (!songName.trim()) {
-      alert('请输入歌曲名称');
+      showToast('请输入歌曲名称', 'info');
       return;
     }
 
@@ -3027,14 +3059,14 @@ function MusicManager() {
         setSettings({ ...settings, musicList: [...settings.musicList, newSong] });
         setCurrentFile(null);
         setSongName('');
-        alert('音频上传成功！请点击"保存设置"按钮保存更改');
+        showToast('音频上传成功！请点击"保存设置"按钮保存更改', 'success');
       } else {
         const errorData = await response.json();
-        alert('上传失败: ' + (errorData.error || '未知错误'));
+        showToast('上传失败: ' + (errorData.error || '未知错误'), 'error');
       }
     } catch (error) {
       console.error('Upload error:', error);
-      alert('上传失败: ' + error.message);
+      showToast('上传失败: ' + error.message, 'error');
     } finally {
       setIsUploading(false);
     }
@@ -3053,13 +3085,13 @@ function MusicManager() {
       });
 
       if (response.ok) {
-        alert('保存成功！');
+        showToast('保存成功！', 'success');
         loadSettings();
       } else {
-        alert('保存失败');
+        showToast('保存失败', 'error');
       }
     } catch (error) {
-      alert('保存失败');
+      showToast('保存失败', 'error');
     }
   };
 
@@ -3068,7 +3100,7 @@ function MusicManager() {
 
     const updatedList = settings.musicList.filter((_, i) => i !== index);
     setSettings({ ...settings, musicList: updatedList });
-    alert('已删除音乐，请点击"保存设置"按钮保存更改');
+    showToast('已删除音乐，请点击"保存设置"按钮保存更改', 'info');
   };
 
   return (
@@ -3341,14 +3373,12 @@ function ProductForm({ product, onClose, onSave }: any) {
     try {
       const token = localStorage.getItem('adminToken');
       if (!token) {
-        alert('请先登录');
+        showToast('请先登录', 'info');
         return;
       }
 
       const formData = new FormData();
       formData.append('file', file);
-
-      console.log('开始上传文件:', file.name, file.size, file.type);
 
       const response = await fetch(`${API_BASE_URL}/products/upload-media`, {
         method: 'POST',
@@ -3358,8 +3388,6 @@ function ProductForm({ product, onClose, onSave }: any) {
         body: formData
       });
 
-      console.log('响应状态:', response.status);
-
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error('上传错误:', errorData);
@@ -3367,7 +3395,6 @@ function ProductForm({ product, onClose, onSave }: any) {
       }
 
       const result = await response.json();
-      console.log('上传结果:', result);
       const isVideo = result.data.type === 'video';
 
       setMediaFormData(prev => ({
@@ -3377,7 +3404,7 @@ function ProductForm({ product, onClose, onSave }: any) {
       }));
     } catch (error) {
       console.error('Upload error:', error);
-      alert(`上传失败：${error instanceof Error ? error.message : '请重试'}`);
+      showToast(`上传失败：${error instanceof Error ? error.message : '请重试'}`, 'error');
     } finally {
       setUploadingMedia(false);
       if (fileInputRef.current) {
@@ -3395,14 +3422,12 @@ function ProductForm({ product, onClose, onSave }: any) {
     try {
       const token = localStorage.getItem('adminToken');
       if (!token) {
-        alert('请先登录');
+        showToast('请先登录', 'info');
         return;
       }
 
       const formData = new FormData();
       formData.append('file', file);
-
-      console.log('开始上传封面图:', file.name, file.size, file.type);
 
       const response = await fetch(`${API_BASE_URL}/products/upload-media`, {
         method: 'POST',
@@ -3412,8 +3437,6 @@ function ProductForm({ product, onClose, onSave }: any) {
         body: formData
       });
 
-      console.log('响应状态:', response.status);
-
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error('上传错误:', errorData);
@@ -3421,7 +3444,6 @@ function ProductForm({ product, onClose, onSave }: any) {
       }
 
       const result = await response.json();
-      console.log('上传结果:', result);
 
       setMediaFormData(prev => ({
         ...prev,
@@ -3429,7 +3451,7 @@ function ProductForm({ product, onClose, onSave }: any) {
       }));
     } catch (error) {
       console.error('Upload error:', error);
-      alert(`上传失败：${error instanceof Error ? error.message : '请重试'}`);
+      showToast(`上传失败：${error instanceof Error ? error.message : '请重试'}`, 'error');
     } finally {
       setUploadingThumbnail(false);
       if (thumbnailInputRef.current) {
@@ -3618,7 +3640,7 @@ function ProductForm({ product, onClose, onSave }: any) {
       });
 
       if (response.ok) {
-        alert('删除成功');
+        showToast('删除成功', 'success');
         // 从本地状态中移除
         const newFolders = [...formData.folders];
         const folderIdx = newFolders.findIndex(f => f.id === folder.id);
@@ -3635,11 +3657,11 @@ function ProductForm({ product, onClose, onSave }: any) {
         }
         setFormData({ ...formData, folders: newFolders });
       } else {
-        alert('删除失败');
+        showToast('删除失败', 'error');
       }
     } catch (error) {
       console.error('Delete error:', error);
-      alert('删除失败');
+      showToast('删除失败', 'error');
     }
   };
 
@@ -3961,7 +3983,7 @@ function ProductForm({ product, onClose, onSave }: any) {
                     <div className="relative h-40 bg-gradient-to-br from-purple-100 to-pink-100">
                       {media.type === 'image' ? (
                         media.url ? (
-                          <img src={media.url.startsWith('http') ? media.url : `http://localhost:3002${media.url}`} alt={media.title || '预览'} className="w-full h-full object-cover" />
+                          <img src={media.url.startsWith('http') ? media.url : `${BACKEND_URL}${media.url}`} alt={media.title || '预览'} className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
                             <svg className="w-12 h-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -3972,7 +3994,7 @@ function ProductForm({ product, onClose, onSave }: any) {
                       ) : (
                         <div className="relative w-full h-full">
                           {media.thumbnailUrl ? (
-                            <img src={media.thumbnailUrl.startsWith('http') ? media.thumbnailUrl : `http://localhost:3002${media.thumbnailUrl}`} alt={media.title || '视频封面'} className="w-full h-full object-cover" />
+                            <img src={media.thumbnailUrl.startsWith('http') ? media.thumbnailUrl : `${BACKEND_URL}${media.thumbnailUrl}`} alt={media.title || '视频封面'} className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full bg-gradient-to-br from-purple-500/50 to-pink-500/50 flex items-center justify-center">
                               <svg className="w-16 h-16 text-white/80" fill="currentColor" viewBox="0 0 24 24">
@@ -4145,7 +4167,7 @@ function ProductForm({ product, onClose, onSave }: any) {
                     </div>
                     <button
                       type="button"
-                      onClick={() => alert('上传功能需要后端 API 支持')}
+                      onClick={() => showToast('上传功能需要后端 API 支持', 'info')}
                       className="flex items-center gap-2 bg-purple-500 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-purple-600 transition-colors shadow-sm"
                     >
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -4349,9 +4371,9 @@ function ProductForm({ product, onClose, onSave }: any) {
                       <label className="block text-sm font-medium text-gray-700 mb-2">预览</label>
                       <div className="rounded-lg overflow-hidden border border-gray-200 max-h-64 bg-gray-50 relative">
                         {mediaFormData.type === 'image' ? (
-                          <img src={mediaFormData.url.startsWith('http') ? mediaFormData.url : `http://localhost:3002${mediaFormData.url}`} alt="预览" className="w-full h-full object-cover" />
+                          <img src={mediaFormData.url.startsWith('http') ? mediaFormData.url : `${BACKEND_URL}${mediaFormData.url}`} alt="预览" className="w-full h-full object-cover" />
                         ) : (
-                          <video src={mediaFormData.url.startsWith('http') ? mediaFormData.url : `http://localhost:3002${mediaFormData.url}`} controls className="w-full h-full" />
+                          <video src={mediaFormData.url.startsWith('http') ? mediaFormData.url : `${BACKEND_URL}${mediaFormData.url}`} controls className="w-full h-full" />
                         )}
                         <button
                           type="button"
@@ -4423,7 +4445,7 @@ function ProductForm({ product, onClose, onSave }: any) {
                       </div>
                       {mediaFormData.thumbnailUrl && (
                         <div className="mt-3 rounded-lg overflow-hidden border border-gray-200 max-h-32">
-                          <img src={mediaFormData.thumbnailUrl.startsWith('http') ? mediaFormData.thumbnailUrl : `http://localhost:3002${mediaFormData.thumbnailUrl}`} alt="封面预览" className="w-full h-full object-cover" />
+                          <img src={mediaFormData.thumbnailUrl.startsWith('http') ? mediaFormData.thumbnailUrl : `${BACKEND_URL}${mediaFormData.thumbnailUrl}`} alt="封面预览" className="w-full h-full object-cover" />
                         </div>
                       )}
                     </div>
@@ -4526,7 +4548,7 @@ function ProfessionsManager() {
       });
       loadProfessions();
     } catch (error) {
-      alert('删除失败');
+      showToast('删除失败', 'error');
     }
   };
 
@@ -4551,7 +4573,7 @@ function ProfessionsManager() {
       setIsAdding(false);
       setEditingProfession(null);
     } catch (error) {
-      alert('保存失败');
+      showToast('保存失败', 'error');
     }
   };
 
@@ -4836,7 +4858,6 @@ function ProductsManager() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log('Loaded products:', data);
       setProducts(data);
     } catch (error) {
       console.error('Failed to load products:', error);
@@ -4863,7 +4884,7 @@ function ProductsManager() {
       await loadProducts();
     } catch (error: any) {
       console.error('删除失败:', error);
-      alert(`删除失败：${error.message || '请检查是否已登录'}`);
+      showToast(`删除失败：${error.message || '请检查是否已登录'}`, 'error');
     }
   };
 
@@ -4873,7 +4894,7 @@ function ProductsManager() {
 
       // 检查是否已登录
       if (!token) {
-        alert('请先登录！即将跳转到登录页面...');
+        showToast('请先登录！即将跳转到登录页面...', 'info');
         navigate('/admin/login');
         return;
       }
@@ -4882,10 +4903,6 @@ function ProductsManager() {
         ? `${API_BASE_URL}/products/${product.id}`
         : `${API_BASE_URL}/products`;
       const method = product.id ? 'PUT' : 'POST';
-
-      console.log('保存产品:', product);
-      console.log('请求 URL:', url);
-      console.log('请求方法:', method);
 
       const response = await fetch(url, {
         method,
@@ -4896,15 +4913,13 @@ function ProductsManager() {
         body: JSON.stringify(product)
       });
 
-      console.log('响应状态:', response.status);
-
       if (!response.ok) {
         const errorData = await response.json();
         console.error('错误响应:', errorData);
 
         // 特殊错误处理
         if (errorData.error === 'Invalid or expired token') {
-          alert('登录已过期，请重新登录！');
+          showToast('登录已过期，请重新登录！', 'error');
           localStorage.removeItem('adminToken');
           localStorage.removeItem('adminUser');
           navigate('/admin/login');
@@ -4915,15 +4930,14 @@ function ProductsManager() {
       }
 
       const result = await response.json();
-      console.log('保存成功:', result);
 
       await loadProducts();
       setIsAdding(false);
       setEditingProduct(null);
-      alert('✅ 保存成功！');
+      showToast('✅ 保存成功！', 'success');
     } catch (error: any) {
       console.error('保存失败:', error);
-      alert(`❌ 保存失败：${error.message || '请检查是否已登录'}`);
+      showToast(`❌ 保存失败：${error.message || '请检查是否已登录'}`, 'error');
     }
   };
 
@@ -5033,7 +5047,7 @@ function ToolsManager() {
     try {
       const token = localStorage.getItem('adminToken');
       if (!token) {
-        alert('请先登录管理后台');
+        showToast('请先登录管理后台', 'info');
         return;
       }
 
@@ -5046,11 +5060,11 @@ function ToolsManager() {
         loadTools();
       } else {
         const data = await response.json();
-        alert(`删除失败：${data.error || '未知错误'}`);
+        showToast(`删除失败：${data.error || '未知错误'}`, 'error');
       }
     } catch (error) {
       console.error('Delete error:', error);
-      alert('删除失败，请检查网络连接');
+      showToast('删除失败，请检查网络连接', 'error');
     }
   };
 
@@ -5076,7 +5090,7 @@ function ToolsManager() {
       setIsAdding(false);
       setEditingTool(null);
     } catch (error) {
-      alert('保存失败');
+      showToast('保存失败', 'error');
     }
   };
 
@@ -5326,9 +5340,9 @@ function ContactManager() {
       });
       setContact(updatedContact);
       setIsEditing(false);
-      alert('保存成功！');
+      showToast('保存成功！', 'success');
     } catch (error) {
-      alert('保存失败');
+      showToast('保存失败', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -5386,7 +5400,7 @@ function ContactManager() {
                   img.url && (
                     <div key={index} className="aspect-square rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
                       <img
-                        src={img.url.startsWith('/') ? `http://localhost:3002${img.url}` : img.url}
+                        src={img.url.startsWith('/') ? `${BACKEND_URL}${img.url}` : img.url}
                         alt={`联系图片 ${index + 1}`}
                         className="w-full h-full object-cover"
                       />
@@ -5432,7 +5446,7 @@ function ContactForm({ contact, onSave, onCancel, isSaving }: any) {
     if (url.startsWith('http://') || url.startsWith('https://')) {
       return url;
     }
-    return `http://localhost:3002${url}`;
+    return `${BACKEND_URL}${url}`;
   };
 
   // 处理图片上传
@@ -5462,11 +5476,11 @@ function ContactForm({ contact, onSave, onCancel, isSaving }: any) {
         }
         setFormData({ ...formData, images: newImages });
       } else {
-        alert('上传失败');
+        showToast('上传失败', 'error');
       }
     } catch (error) {
       console.error('Upload error:', error);
-      alert('上传失败');
+      showToast('上传失败', 'error');
     } finally {
       setUploadingIndex(null);
     }

@@ -55,7 +55,7 @@ const BootAnimation = ({ onComplete }: BootAnimationProps) => {
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center">
+    <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
       {/* 开机动画视频 */}
       <video
         autoPlay

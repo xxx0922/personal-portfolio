@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002';
 
 interface FileUploaderProps {
   onUploadSuccess: (file: { name: string; url: string; size: number; type: string }) => void;
@@ -66,7 +67,7 @@ const FileUploader = ({
 
       onUploadSuccess({
         name: file.name,
-        url: `http://localhost:3002${result.data.url}`,
+        url: `${BACKEND_URL}${result.data.url}`,
         size: file.size,
         type: file.type,
       });

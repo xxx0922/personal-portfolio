@@ -33,6 +33,7 @@ export default function BackgroundMusic() {
           }}
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
+          aria-label={isPlaying ? '暂停音乐' : '播放背景音乐'}
           className={`relative w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 ${
             isPlaying
               ? 'bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 text-white animate-spin-slow'
@@ -102,6 +103,7 @@ export default function BackgroundMusic() {
               <button
                 onClick={() => setShowControls(false)}
                 className="text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="关闭音乐控制"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -165,6 +167,7 @@ export default function BackgroundMusic() {
               <button
                 onClick={toggleMute}
                 className="flex-shrink-0 text-purple-600 hover:text-purple-800 transition-colors"
+                aria-label={isMuted ? '取消静音' : '静音'}
                 title={isMuted ? '取消静音' : '静音'}
               >
                 {isMuted ? (

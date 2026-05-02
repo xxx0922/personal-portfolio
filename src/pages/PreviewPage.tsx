@@ -211,7 +211,7 @@ const PreviewPage = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="http://localhost:5173"
+              href={window.location.origin}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors"
@@ -219,7 +219,7 @@ const PreviewPage = () => {
               🌐 访问首页
             </a>
             <a
-              href="http://localhost:5173/admin/login"
+              href={`${window.location.origin}/admin/login`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white text-purple-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors"

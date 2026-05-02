@@ -74,39 +74,17 @@ const Navigation = () => {
     <nav className="clay-navbar fixed top-0 left-0 right-0 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
-          {/* Logo + 照片墙 */}
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-2xl">FS</span>
-              </div>
-              <Link
-                to="/"
-                className="text-4xl font-bold clay-title hover:opacity-80 transition-all duration-300"
-              >
-                丰生水起
-              </Link>
+          {/* Logo */}
+          <div className="flex items-center space-x-4">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg">
+              <span className="text-white font-bold text-2xl">FS</span>
             </div>
-
-            {/* 滚动照片墙 */}
-            {photos.length > 0 && (
-              <div className="hidden md:flex items-center overflow-hidden w-72 h-16 rounded-xl bg-white/10 backdrop-blur-sm">
-                <div className="flex animate-scroll-photos">
-                  {[...photos, ...photos].slice(0, 8).map((photo, index) => (
-                    <div
-                      key={`${photo.id}-${index}`}
-                      className="flex-shrink-0 w-14 h-14 mx-1 rounded-lg overflow-hidden border border-white/20 hover:border-white/40 transition-all"
-                    >
-                      <img
-                        src={photo.url}
-                        alt={photo.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <Link
+              to="/"
+              className="text-4xl font-bold clay-title hover:opacity-80 transition-all duration-300"
+            >
+              丰生水起
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -120,7 +98,7 @@ const Navigation = () => {
                 <span className="text-4xl">{item.icon}</span>
                 <span className="text-3xl">{item.label}</span>
                 {/* 下划线效果 */}
-                <span className="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-clay-base to-sky-400 group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-clay-base to-sky-400 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
               </Link>
             ))}
           </div>
@@ -181,7 +159,8 @@ const Navigation = () => {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-primary-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
-              aria-expanded="false"
+              aria-label="打开主菜单"
+              aria-expanded={isMobileMenuOpen}
             >
               <span className="sr-only">打开主菜单</span>
               {!isMobileMenuOpen ? (

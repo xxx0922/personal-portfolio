@@ -29,11 +29,9 @@ export default function AdminLoginPage() {
       })
         .then(res => res.ok ? res.json() : Promise.reject())
         .then(() => {
-          console.log('Token 有效，直接进入管理后台');
           navigate('/admin');
         })
         .catch(() => {
-          console.log('Token 无效，请重新登录');
           localStorage.removeItem('adminToken');
           localStorage.removeItem('adminUser');
         });
@@ -54,11 +52,10 @@ export default function AdminLoginPage() {
       if (data.token) {
         localStorage.setItem('adminToken', data.token);
         localStorage.setItem('adminUser', JSON.stringify(data.user));
-        console.log('✅ 自动登录成功');
         navigate('/admin');
       }
     } catch (e) {
-      console.log('自动登录失败，请手动登录');
+      // 自动登录失败，用户可手动登录
     }
   };
 

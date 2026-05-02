@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useMusic } from '../contexts/MusicContext';
 
 interface NavbarProps {
   personalInfo?: {
@@ -18,11 +19,20 @@ interface NavigationItem {
   icon?: string;
 }
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002';
+
 const Navbar = ({ personalInfo }: NavbarProps) => {
   const navigate = useNavigate();
+  const { togglePlay, isPlaying } = useMusic();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [navItems, setNavItems] = useState<NavigationItem[]>([]);
+  // 静态导航菜单 - 直接作为默认 state
+  const [navItems, setNavItems] = useState<NavigationItem[]>([
+    { id: '1', label: '首页', path: '/', order: 0, visible: true, isExternal: false, icon: '🏠' },
+    { id: '2', label: '产品', path: '/products', order: 1, visible: true, isExternal: false, icon: '📁' },
+    { id: '3', label: '工具', path: '/tools', order: 2, visible: true, isExternal: false, icon: '🔧' },
+    { id: '4', label: '后台', path: '/admin', order: 3, visible: true, isExternal: false, icon: '⚙️' }
+  ]);
 
   // 获取头像 URL（处理相对路径）
   const getAvatarUrl = () => {
@@ -30,7 +40,7 @@ const Navbar = ({ personalInfo }: NavbarProps) => {
     if (personalInfo.avatar.startsWith('http://') || personalInfo.avatar.startsWith('https://')) {
       return personalInfo.avatar;
     }
-    return `http://localhost:3002${personalInfo.avatar}`;
+    return `${BACKEND_URL}${personalInfo.avatar}`;
   };
 
   useEffect(() => {
@@ -40,16 +50,6 @@ const Navbar = ({ personalInfo }: NavbarProps) => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // 使用静态导航菜单
-  useEffect(() => {
-    setNavItems([
-      { id: '1', label: '首页', path: '/', order: 0, visible: true, isExternal: false, icon: '🏠' },
-      { id: '2', label: '产品', path: '/products', order: 1, visible: true, isExternal: false, icon: '📁' },
-      { id: '3', label: '工具', path: '/tools', order: 2, visible: true, isExternal: false, icon: '🔧' },
-      { id: '4', label: '后台', path: '/admin', order: 3, visible: true, isExternal: false, icon: '⚙️' }
-    ]);
   }, []);
 
   const scrollToSection = (path: string) => {
@@ -104,9 +104,10 @@ const Navbar = ({ personalInfo }: NavbarProps) => {
 
   return (
     <nav
-      className={`clay-navbar fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`clay-navbar fixed top-0 left-0 right-0 z-50 transition-shadow duration-300 ${
         isScrolled ? 'shadow-lg' : ''
       }`}
+      style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
@@ -136,7 +137,7 @@ const Navbar = ({ personalInfo }: NavbarProps) => {
               >
                 {item.icon && <span className="text-4xl">{item.icon}</span>}
                 <span className="text-3xl whitespace-nowrap">{item.label}</span>
-                <span className="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-clay-base to-sky-400 group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-clay-base to-sky-400 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
               </a>
             ))}
           </div>

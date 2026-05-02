@@ -74,8 +74,7 @@ export const MusicProvider = ({ children }: { children: ReactNode }) => {
       audioRef.current.src = currentTrack.url;
       if (!isMuted) {
         audioRef.current.volume = volume;
-        audioRef.current.play().catch(err => {
-          console.log('Auto-play prevented:', err);
+        audioRef.current.play().catch(() => {
           setIsPlaying(false);
         });
       }
@@ -114,7 +113,7 @@ export const MusicProvider = ({ children }: { children: ReactNode }) => {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
-      audioRef.current.play().catch(err => console.log('Play failed:', err));
+      audioRef.current.play().catch(() => {});
       setIsPlaying(true);
     }
   };
