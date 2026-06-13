@@ -103,17 +103,6 @@ export default function AdminLoginPage() {
           <p className="text-gray-600">{isRegistering ? '注册管理员账户' : '请登录以继续'}</p>
         </div>
 
-        {/* 默认账户提示 */}
-        {!isRegistering && (
-          <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-sm font-semibold text-blue-800 mb-2">💡 默认管理员账户：</p>
-            <div className="text-sm text-blue-700 space-y-1">
-              <p>用户名：<code className="bg-white px-2 py-0.5 rounded">xue</code></p>
-              <p>密码：<code className="bg-white px-2 py-0.5 rounded">Xue0922@</code></p>
-            </div>
-          </div>
-        )}
-
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">

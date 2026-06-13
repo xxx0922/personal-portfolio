@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 const Footer = () => {
@@ -213,13 +212,6 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center text-sm clay-text-muted">
             <p>Designed & Built by {settings?.branding?.designedBy || '个人'}</p>
             <div className="flex space-x-4 mt-4 md:mt-0">
-              <Link
-                to="/admin/login"
-                className="hover:text-clay-base transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded px-1"
-              >
-                管理后台
-              </Link>
-              <span aria-hidden="true">|</span>
               <button
                 type="button"
                 onClick={() => {

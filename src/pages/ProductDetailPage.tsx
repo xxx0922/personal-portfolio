@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Skeleton, { SkeletonText, SkeletonImage } from '../components/Skeleton';
 import type { ProductCategory, MediaResource } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
@@ -44,8 +45,62 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-clay-muted">加载中...</div>
+      <div className="min-h-screen">
+        {/* 背景 */}
+        <div className="fixed inset-0 z-0">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('/背景星空.png')`,
+            }}
+          ></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/90 via-slate-900/80 to-slate-900/90"></div>
+        </div>
+
+        {/* 内容 */}
+        <div className="relative z-10">
+          <Navbar personalInfo={{ name: '丰生水起', avatar: '' }} />
+
+          <main className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+            {/* 返回按钮骨架屏 */}
+            <div className="mb-8">
+              <Skeleton variant="rounded" width={120} height={36} className="bg-gray-700/30" />
+            </div>
+
+            {/* 封面图片骨架屏 */}
+            <SkeletonImage aspectRatio="video" className="mb-8" />
+
+            {/* 产品信息骨架屏 */}
+            <div className="clay-card p-8 mb-8">
+              <div className="flex items-center gap-4 mb-6">
+                <Skeleton variant="rounded" width={80} height={80} className="bg-gray-700/30" />
+                <div className="flex-1">
+                  <Skeleton variant="text" width="40%" height={32} className="bg-gray-600/50 mb-2" />
+                  <Skeleton variant="text" width="60%" height={20} className="bg-gray-700/40" />
+                </div>
+              </div>
+
+              {/* 状态标签骨架屏 */}
+              <div className="flex items-center gap-4 mb-6">
+                <Skeleton variant="rounded" width={80} height={28} className="bg-gray-700/30" />
+                <Skeleton variant="rounded" width={100} height={28} className="bg-gray-700/30" />
+              </div>
+
+              {/* 详细介绍骨架屏 */}
+              <SkeletonText lines={4} />
+            </div>
+
+            {/* 媒体资源骨架屏 */}
+            <div className="clay-card p-8 mb-8">
+              <Skeleton variant="text" width={120} height={24} className="bg-gray-600/50 mb-6" />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[1, 2, 3, 4].map(i => (
+                  <SkeletonImage key={i} aspectRatio="square" />
+                ))}
+              </div>
+            </div>
+          </main>
+        </div>
       </div>
     );
   }
@@ -94,7 +149,7 @@ export default function ProductDetailPage() {
           <div className="mb-8">
             <Link
               to="/products"
-              className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -127,7 +182,7 @@ export default function ProductDetailPage() {
               <div>
                 <h1 className="text-4xl font-bold clay-title mb-2">{product.name}</h1>
                 {product.shortDescription && (
-                  <p className="text-lg text-white/70">{product.shortDescription}</p>
+                  <p className="text-lg text-gray-300">{product.shortDescription}</p>
                 )}
               </div>
             </div>
@@ -154,6 +209,23 @@ export default function ProductDetailPage() {
                 </span>
               )}
             </div>
+
+            {/* 外部链接按钮 */}
+            {product.externalUrl && (
+              <div className="mt-4">
+                <a
+                  href={product.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-lg font-semibold transition-all shadow-lg shadow-sky-500/30 hover:shadow-sky-500/50 hover:scale-105"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  访问项目
+                </a>
+              </div>
+            )}
           </div>
 
           {/* 详细描述 */}
@@ -223,7 +295,7 @@ export default function ProductDetailPage() {
                         <p className="text-white font-medium truncate">{media.title}</p>
                       )}
                       {media.description && (
-                        <p className="text-white/70 text-sm truncate">{media.description}</p>
+                        <p className="text-gray-300 text-sm truncate">{media.description}</p>
                       )}
                     </div>
                     <div className="absolute top-2 right-2 px-2 py-1 bg-black/60 rounded text-xs text-white">
@@ -250,7 +322,7 @@ export default function ProductDetailPage() {
                     <div className="flex items-center gap-3 mb-4">
                       <span className="text-2xl">📁</span>
                       <h3 className="text-xl font-bold clay-title">{folder.name}</h3>
-                      <span className="text-sm text-white/50">({folder.count} 个文件)</span>
+                      <span className="text-sm text-gray-400">({folder.count} 个文件)</span>
                     </div>
 
                     {/* 文件夹直接附件 */}
@@ -275,15 +347,15 @@ export default function ProductDetailPage() {
                               <div>
                                 <p className="font-medium text-white">{attachment.name}</p>
                                 {attachment.description && (
-                                  <p className="text-sm text-white/50">{attachment.description}</p>
+                                  <p className="text-sm text-gray-400">{attachment.description}</p>
                                 )}
                               </div>
                             </div>
                             <div className="flex items-center gap-4">
-                              <span className="text-sm text-white/50">
+                              <span className="text-sm text-gray-400">
                                 {(attachment.size / 1024 / 1024).toFixed(2)} MB
                               </span>
-                              <svg className="w-5 h-5 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                               </svg>
                             </div>
@@ -300,7 +372,7 @@ export default function ProductDetailPage() {
                             <div className="flex items-center gap-3 mb-2">
                               <span className="text-xl">📄</span>
                               <h4 className="text-lg font-medium text-white">{subFolder.name}</h4>
-                              <span className="text-xs text-white/50">({subFolder.count} 个文件)</span>
+                              <span className="text-xs text-gray-400">({subFolder.count} 个文件)</span>
                             </div>
                             {subFolder.attachments && subFolder.attachments.length > 0 && (
                               <div className="space-y-2">
@@ -321,10 +393,10 @@ export default function ProductDetailPage() {
                                       <span className="text-white">{attachment.name}</span>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                      <span className="text-xs text-white/50">
+                                      <span className="text-xs text-gray-400">
                                         {(attachment.size / 1024 / 1024).toFixed(2)} MB
                                       </span>
-                                      <svg className="w-4 h-4 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                       </svg>
                                     </div>

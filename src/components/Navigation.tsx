@@ -19,8 +19,7 @@ const Navigation = () => {
   const navItems = [
     { path: '/boot', label: '首页', icon: '🏠' },
     { path: '/products', label: '产品', icon: '📁' },
-    { path: '/tools', label: '工具', icon: '🔧' },
-    { path: '/admin', label: '后台', icon: '⚙️' }
+    { path: '/tools', label: '工具', icon: '🔧' }
   ];
 
   // 加载照片墙数据

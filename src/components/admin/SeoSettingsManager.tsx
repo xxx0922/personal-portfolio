@@ -86,10 +86,9 @@ const SeoSettingsManager = () => {
         await loadSettings();
         setIsEditing(false);
         showToast('保存成功！', 'success');
-    }
+      }
     } catch (error) {
       showToast('保存失败', 'error');
-    }
     } finally {
       setIsSaving(false);
     }

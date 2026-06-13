@@ -1,7 +1,38 @@
 {
   "music": {
     "enabled": true,
-    "musicList": [],
+    "musicList": [
+      {
+        "url": "/uploads/1780754240422-126.éè£³æ².mp3",
+        "name": "11"
+      },
+      {
+        "url": "/uploads/1780754257101-146.ç¸æï¼ãè¥¿æ¸¸è®°åä¼-ãçå°¾æ²ï¼ââç®«ï¼Cover-æ¯é¿æï¼.mp3",
+        "name": "相思"
+      }
+    ],
     "volume": 0.3
-  }
+  },
+  "general": {
+    "siteName": "",
+    "siteSlogan": "",
+    "siteLogo": "",
+    "favicon": ""
+  },
+  "homepage": {
+    "heroTitle": "",
+    "heroDescription": "",
+    "showHeroSection": true,
+    "showStatsSection": true
+  },
+  "theme": {
+    "primaryColor": "",
+    "secondaryColor": "",
+    "accentColor": ""
+  },
+  "contact": {
+    "showContactForm": true,
+    "contactEmail": ""
+  },
+  "dashboardUrl": "https://www.bohenan.com/traffic/"
 }

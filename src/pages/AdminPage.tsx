@@ -8,6 +8,12 @@ import FileUploader from '../components/FileUploader';
 import FilesManager from '../components/admin/FilesManager';
 import TagsManager from '../components/admin/TagsManager';
 import SocialMediaManager from '../components/admin/SocialMediaManager';
+import SiteConfigManager from '../components/admin/SiteConfigManager';
+import SeoSettingsManager from '../components/admin/SeoSettingsManager';
+import NavigationManager from '../components/admin/NavigationManager';
+import FriendLinksManager from '../components/admin/FriendLinksManager';
+import FooterSettingsManager from '../components/admin/FooterSettingsManager';
+import ContactImagesManager from '../components/admin/ContactImagesManager';
 
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
@@ -279,6 +285,12 @@ export default function AdminPage() {
                 { id: 'music', label: '背景音乐' },
                 { id: 'personal', label: '个人信息' },
                 { id: 'contact', label: '联系我管理' },
+                { id: 'siteConfig', label: '🌐 网站配置' },
+                { id: 'seo', label: '🔍 SEO 设置' },
+                { id: 'navigation', label: '📋 导航管理' },
+                { id: 'friendLinks', label: '🔗 友情链接' },
+                { id: 'footer', label: '📌 页脚设置' },
+                { id: 'contactImages', label: '🖼 联系图片' },
               ].map(tab => (
                 <button
                   key={tab.id}
@@ -333,6 +345,12 @@ export default function AdminPage() {
           {activeTab === 'music' && <MusicManager />}
           {activeTab === 'personal' && <PersonalInfoManager />}
           {activeTab === 'contact' && <ContactManager />}
+          {activeTab === 'siteConfig' && <SiteConfigManager />}
+          {activeTab === 'seo' && <SeoSettingsManager />}
+          {activeTab === 'navigation' && <NavigationManager />}
+          {activeTab === 'friendLinks' && <FriendLinksManager />}
+          {activeTab === 'footer' && <FooterSettingsManager />}
+          {activeTab === 'contactImages' && <ContactImagesManager />}
         </div>
       </div>
     </div>
@@ -2983,8 +3001,10 @@ function MusicManager() {
     volume: 0.3
   });
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [songName, setSongName] = useState('');
+  const [lastAddedIndex, setLastAddedIndex] = useState<number | null>(null);
 
   useEffect(() => {
     loadSettings();
@@ -3022,12 +3042,12 @@ function MusicManager() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // 检查文件类型
       if (!file.type.startsWith('audio/')) {
         showToast('请上传音频文件（MP3、WAV等）', 'info');
         return;
       }
       setCurrentFile(file);
+      setUploadProgress(0);
     }
   };
 
@@ -3039,34 +3059,90 @@ function MusicManager() {
     }
 
     setIsUploading(true);
+    setUploadProgress(0);
     const formData = new FormData();
     formData.append('file', currentFile);
 
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`${API_BASE_URL}/upload/file`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        body: formData
+
+      // Use XMLHttpRequest for progress tracking
+      const uploadResult = await new Promise<{ url: string; name: string }>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `${API_BASE_URL}/upload/file`);
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            setUploadProgress((e.loaded / e.total) * 100);
+          }
+        };
+
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const data = JSON.parse(xhr.responseText);
+              resolve(data.data);
+            } catch {
+              reject(new Error('Failed to parse response'));
+            }
+          } else {
+            try {
+              const errorData = JSON.parse(xhr.responseText);
+              reject(new Error(errorData.error || 'Upload failed'));
+            } catch {
+              reject(new Error('Upload failed'));
+            }
+          }
+        };
+
+        xhr.onerror = () => reject(new Error('Network error'));
+        xhr.send(formData);
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        // 添加到播放列表而不是替换
-        const newSong = { url: data.data.url, name: songName.trim() };
-        setSettings({ ...settings, musicList: [...settings.musicList, newSong] });
-        setCurrentFile(null);
-        setSongName('');
-        showToast('音频上传成功！请点击"保存设置"按钮保存更改', 'success');
-      } else {
-        const errorData = await response.json();
-        showToast('上传失败: ' + (errorData.error || '未知错误'), 'error');
+      setUploadProgress(100);
+      const newSong = { url: uploadResult.url, name: songName.trim() };
+      const newIndex = settings.musicList.length;
+      const updatedSettings = { ...settings, musicList: [...settings.musicList, newSong] };
+      setSettings(updatedSettings);
+      setLastAddedIndex(newIndex);
+      setCurrentFile(null);
+      setSongName('');
+
+      // 🔑 自动保存到后端，避免用户忘记点"保存设置"
+      try {
+        const token = localStorage.getItem('adminToken');
+        if (!token) {
+          showToast('⚠️ 上传成功但未登录，无法保存。请重新登录管理后台', 'error');
+          return;
+        }
+        const saveResp = await fetch(`${API_BASE_URL}/site-config/music`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(updatedSettings)
+        });
+        if (saveResp.ok) {
+          showToast(`✅ 上传并保存成功！前端已同步 (共 ${newIndex + 1} 首)`, 'success');
+        } else if (saveResp.status === 401 || saveResp.status === 403) {
+          showToast('⚠️ 上传成功但登录已过期，请重新登录后台后再保存', 'error');
+        } else {
+          const errText = await saveResp.text();
+          showToast(`⚠️ 上传成功但保存失败 (${saveResp.status}): ${errText.slice(0, 80)}`, 'error');
+        }
+      } catch (e) {
+        showToast(`⚠️ 上传成功但保存请求失败: ${(e as Error).message}`, 'error');
       }
+
+      // Clear highlight after 3 seconds
+      setTimeout(() => setLastAddedIndex(null), 3000);
+
     } catch (error) {
       console.error('Upload error:', error);
-      showToast('上传失败: ' + error.message, 'error');
+      setUploadProgress(-1); // error state
+      showToast('❌ 上传失败: ' + (error as Error).message, 'error');
     } finally {
       setIsUploading(false);
     }
@@ -3075,6 +3151,10 @@ function MusicManager() {
   const handleSave = async () => {
     try {
       const token = localStorage.getItem('adminToken');
+      if (!token) {
+        showToast('❌ 未登录或登录已过期，请重新登录后台', 'error');
+        return;
+      }
       const response = await fetch(`${API_BASE_URL}/site-config/music`, {
         method: 'PUT',
         headers: {
@@ -3085,13 +3165,16 @@ function MusicManager() {
       });
 
       if (response.ok) {
-        showToast('保存成功！', 'success');
+        showToast('✅ 保存成功！前端已同步', 'success');
         loadSettings();
+      } else if (response.status === 401 || response.status === 403) {
+        showToast('❌ 登录已过期，请重新登录管理后台', 'error');
       } else {
-        showToast('保存失败', 'error');
+        const errText = await response.text();
+        showToast(`保存失败 (${response.status}): ${errText.slice(0, 80)}`, 'error');
       }
     } catch (error) {
-      showToast('保存失败', 'error');
+      showToast('保存失败: ' + (error as Error).message, 'error');
     }
   };
 
@@ -3134,7 +3217,12 @@ function MusicManager() {
           {settings.musicList.length > 0 && (
             <div className="mb-6 space-y-3">
               {settings.musicList.map((song, index) => (
-                <div key={index} className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div key={index} className={`p-4 rounded-lg border transition-all duration-300 ${lastAddedIndex === index ? 'bg-green-50 border-green-400 shadow-lg scale-[1.01]' : 'bg-blue-50 border-blue-200'}`}>
+                  {lastAddedIndex === index && (
+                    <div className="inline-flex items-center px-2 py-0.5 bg-green-500 text-white text-xs font-semibold rounded-full mb-2 animate-pulse">
+                      ✨ 刚添加
+                    </div>
+                  )}
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-3 flex-1">
                       <span className="text-lg font-semibold text-gray-700">#{index + 1}</span>
@@ -3188,15 +3276,58 @@ function MusicManager() {
             </div>
 
             {currentFile && (
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
-                <span className="text-sm text-gray-700">{currentFile.name}</span>
-                <button
-                  onClick={handleUpload}
-                  disabled={isUploading || !songName.trim()}
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400 text-sm"
-                >
-                  {isUploading ? '上传中...' : '添加到播放列表'}
-                </button>
+              <div className="p-4 bg-gray-50 rounded-lg border">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex-1 min-w-0 mr-4">
+                    <p className="text-sm font-medium text-gray-900 truncate">{currentFile.name}</p>
+                    <p className="text-xs text-gray-500">{(currentFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                  </div>
+                  {!isUploading && uploadProgress >= 0 && (
+                    <button
+                      onClick={handleUpload}
+                      disabled={!songName.trim()}
+                      className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-5 py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-400 text-sm font-medium shadow-sm transition-all"
+                    >
+                      ⬆️ 添加
+                    </button>
+                  )}
+                </div>
+
+                {/* Upload progress bar */}
+                {isUploading && (
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-sm font-medium text-blue-600">⏳ 正在上传...</span>
+                      <span className="text-sm font-semibold text-blue-700">{Math.round(uploadProgress)}%</span>
+                    </div>
+                    <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-300 ease-out"
+                        style={{ width: `${uploadProgress}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Upload success */}
+                {uploadProgress >= 100 && !isUploading && (
+                  <div className="flex items-center space-x-2 text-green-600">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-sm font-medium">✅ 上传完成！已添加到播放列表</span>
+                  </div>
+                )}
+
+                {/* Upload error */}
+                {uploadProgress < 0 && (
+                  <div className="flex items-center space-x-2 text-red-600">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-sm font-medium">上传失败，请重试</span>
+                  </div>
+                )}
               </div>
             )}
           </div>

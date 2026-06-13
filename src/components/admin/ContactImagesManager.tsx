@@ -58,11 +58,10 @@ export default function ContactImagesManager() {
       } else {
         const error = await response.json();
         showToast(`上传失败：${error.error}`, 'error');
-    }
+      }
     } catch (error) {
       console.error('Upload error:', error);
       showToast('上传失败，请重试', 'error');
-    }
     } finally {
       setUploading(null);
     }

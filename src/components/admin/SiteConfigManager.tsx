@@ -31,7 +31,8 @@ const SiteConfigManager = () => {
     contact: {
       showContactForm: true,
       contactEmail: ''
-    }
+    },
+    dashboardUrl: ''
   });
 
   useEffect(() => {
@@ -43,7 +44,14 @@ const SiteConfigManager = () => {
       const response = await fetch(`${API_BASE_URL}/site-config`);
       const data = await response.json();
       setConfig(data);
-      setFormData(data);
+      // merge：保留默认结构，用后端数据覆盖已存在的字段
+      setFormData(prev => ({
+        general: { ...prev.general, ...(data.general || {}) },
+        homepage: { ...prev.homepage, ...(data.homepage || {}) },
+        theme: { ...prev.theme, ...(data.theme || {}) },
+        contact: { ...prev.contact, ...(data.contact || {}) },
+        dashboardUrl: data.dashboardUrl || ''
+      }));
     } catch (error) {
       console.error('Failed to load site config:', error);
     }
@@ -66,10 +74,9 @@ const SiteConfigManager = () => {
         await loadConfig();
         setIsEditing(false);
         showToast('保存成功！', 'success');
-    }
+      }
     } catch (error) {
       showToast('保存失败', 'error');
-    }
     } finally {
       setIsSaving(false);
     }
@@ -106,23 +113,23 @@ const SiteConfigManager = () => {
             <div className="space-y-3">
               <div>
                 <label className="text-sm font-medium text-gray-700">网站名称：</label>
-                <p className="text-gray-900">{config.general.siteName}</p>
+                <p className="text-gray-900">{config.general?.siteName}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700">网站标语：</label>
-                <p className="text-gray-900">{config.general.siteSlogan}</p>
+                <p className="text-gray-900">{config.general?.siteSlogan}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700">Logo：</label>
-                {config.general.siteLogo ? (
-                  <img src={config.general.siteLogo} alt="Logo" className="h-16 mt-2" />
+                {config.general?.siteLogo ? (
+                  <img src={config.general?.siteLogo} alt="Logo" className="h-16 mt-2" />
                 ) : (
                   <p className="text-gray-500">未设置</p>
                 )}
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700">Favicon：</label>
-                <p className="text-gray-900">{config.general.favicon}</p>
+                <p className="text-gray-900">{config.general?.favicon}</p>
               </div>
             </div>
           </div>
@@ -133,19 +140,19 @@ const SiteConfigManager = () => {
             <div className="space-y-3">
               <div>
                 <label className="text-sm font-medium text-gray-700">Hero区标题：</label>
-                <p className="text-gray-900">{config.homepage.heroTitle}</p>
+                <p className="text-gray-900">{config.homepage?.heroTitle}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700">Hero区描述：</label>
-                <p className="text-gray-900">{config.homepage.heroDescription}</p>
+                <p className="text-gray-900">{config.homepage?.heroDescription}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700">显示Hero区：</label>
-                <p className="text-gray-900">{config.homepage.showHeroSection ? '是' : '否'}</p>
+                <p className="text-gray-900">{config.homepage?.showHeroSection ? '是' : '否'}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700">显示统计区：</label>
-                <p className="text-gray-900">{config.homepage.showStatsSection ? '是' : '否'}</p>
+                <p className="text-gray-900">{config.homepage?.showStatsSection ? '是' : '否'}</p>
               </div>
             </div>
           </div>
@@ -157,22 +164,22 @@ const SiteConfigManager = () => {
               <div className="flex items-center">
                 <label className="text-sm font-medium text-gray-700 w-32">主色调：</label>
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded border-2 border-gray-300" style={{backgroundColor: config.theme.primaryColor}}></div>
-                  <span className="text-gray-900">{config.theme.primaryColor}</span>
+                  <div className="w-10 h-10 rounded border-2 border-gray-300" style={{backgroundColor: config.theme?.primaryColor}}></div>
+                  <span className="text-gray-900">{config.theme?.primaryColor}</span>
                 </div>
               </div>
               <div className="flex items-center">
                 <label className="text-sm font-medium text-gray-700 w-32">次要颜色：</label>
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded border-2 border-gray-300" style={{backgroundColor: config.theme.secondaryColor}}></div>
-                  <span className="text-gray-900">{config.theme.secondaryColor}</span>
+                  <div className="w-10 h-10 rounded border-2 border-gray-300" style={{backgroundColor: config.theme?.secondaryColor}}></div>
+                  <span className="text-gray-900">{config.theme?.secondaryColor}</span>
                 </div>
               </div>
               <div className="flex items-center">
                 <label className="text-sm font-medium text-gray-700 w-32">强调色：</label>
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded border-2 border-gray-300" style={{backgroundColor: config.theme.accentColor}}></div>
-                  <span className="text-gray-900">{config.theme.accentColor}</span>
+                  <div className="w-10 h-10 rounded border-2 border-gray-300" style={{backgroundColor: config.theme?.accentColor}}></div>
+                  <span className="text-gray-900">{config.theme?.accentColor}</span>
                 </div>
               </div>
             </div>
@@ -184,11 +191,36 @@ const SiteConfigManager = () => {
             <div className="space-y-3">
               <div>
                 <label className="text-sm font-medium text-gray-700">显示联系表单：</label>
-                <p className="text-gray-900">{config.contact.showContactForm ? '是' : '否'}</p>
+                <p className="text-gray-900">{config.contact?.showContactForm ? '是' : '否'}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700">联系邮箱：</label>
-                <p className="text-gray-900">{config.contact.contactEmail}</p>
+                <p className="text-gray-900">{config.contact?.contactEmail || '未设置'}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* 项目经验链接 */}
+          <div className="border rounded-lg p-6 bg-gray-50">
+            <h3 className="text-lg font-semibold mb-4">🚀 项目经验链接</h3>
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm font-medium text-gray-700">仪表盘 URL：</label>
+                {config.dashboardUrl ? (
+                  <a
+                    href={config.dashboardUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-blue-600 hover:underline break-all mt-1"
+                  >
+                    {config.dashboardUrl}
+                  </a>
+                ) : (
+                  <p className="text-gray-500 italic">未配置</p>
+                )}
+                <p className="text-xs text-gray-500 mt-2">
+                  首页"项目经验"卡片点击后跳转的页面（飞书多维表格、Notion、Airtable 等）
+                </p>
               </div>
             </div>
           </div>
@@ -379,6 +411,36 @@ const SiteConfigManager = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white"
                 />
               </div>
+            </div>
+          </div>
+
+          {/* 项目经验链接表单 */}
+          <div className="border rounded-lg p-6 bg-gray-50">
+            <h3 className="text-lg font-semibold mb-4">🚀 项目经验链接</h3>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                仪表盘 / 多维表格 URL
+              </label>
+              <input
+                type="url"
+                value={formData.dashboardUrl}
+                onChange={(e) => setFormData({...formData, dashboardUrl: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white"
+                placeholder="https://my.feishu.cn/base/xxxxxxx?from=from_copylink"
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                首页"项目经验"卡片点击后跳转的页面。支持飞书多维表格、Notion、Airtable 等任何可嵌入的链接
+              </p>
+              {formData.dashboardUrl && (
+                <a
+                  href={formData.dashboardUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 mt-2 text-xs text-blue-600 hover:underline"
+                >
+                  🔗 在新窗口预览
+                </a>
+              )}
             </div>
           </div>
 

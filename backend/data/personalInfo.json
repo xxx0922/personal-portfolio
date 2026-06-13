@@ -1,23 +1,19 @@
 {
   "name": "丰生水起",
   "title": "弱电工程师 & 项目经理",
-  "location": "中国·上海",
-  "bio": "拥有 8 年弱电系统工程经验的专业工程师，专注于监控系统、门禁系统、综合布线等弱电工程的设计与实施。",
-  "welcomeMessage": "欢迎来到我的个人主页。这里展示了我的项目经验、活动瞬间、实用工具和知识文档。",
+  "location": "中国·无锡",
+  "bio": "211 通信工程科班出身，18年通信 + 弱电行业深耕，实战经验扎实；业余专注 AI 技术学习钻研，致力传统行业与人工智能融合创新。",
+  "welcomeMessage": "深耕通信与弱电行业多年，闲暇之余潜心研习 AI 技术，愿以经验结合新知，交流学习、共同成长，欢迎各位朋友来访交流！",
   "avatar": "http://localhost:3002/uploads/1777472521875-75dwqx.png",
   "photos": [
-    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&h=600&fit=crop",
-    "/uploads/1774671547947-mw6dbj.png",
-    "/uploads/1774834166469-yxs2bg.png",
-    "/uploads/1774834181391-umj80q.jpg",
-    "/uploads/1774834186776-9upb5e.jpg",
-    "/uploads/1774834189767-fmyhh9.jpg",
-    "/uploads/1774834193035-pkhsfn.jpg",
-    "/uploads/1774834201891-vec31q.jpg",
-    "/uploads/1774848566547-3ogl9m.jpg",
-    "/uploads/1774848586986-2nt12p.jpg",
-    "/uploads/1774848601736-aion1y.jpg"
+    "/uploads/1779458430129-y6raxv.webp",
+    "/uploads/1779458454345-r975oi.png",
+    "/uploads/1779458465639-e5bqoz.jpg",
+    "/uploads/1779458480565-s6n0qa.jpg",
+    "/uploads/1779458489943-9wmnir.jpeg",
+    "/uploads/1779458496583-hfplc2.jpg",
+    "/uploads/1779458506520-xl68uj.jpg",
+    "/uploads/1779460614669-6wb5p6.jpg",
+    "/uploads/1779460635246-h8lycv.jpg"
   ]
 }

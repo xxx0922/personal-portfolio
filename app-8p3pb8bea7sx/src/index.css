@@ -1,0 +1,123 @@
+/* stylelint-disable */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here.
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    --background: 210 20% 98%;
+    --foreground: 215 25% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+    --primary: 215 85% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 15% 92%;
+    --secondary-foreground: 215 25% 15%;
+    --muted: 210 15% 95%;
+    --muted-foreground: 215 15% 45%;
+    --accent: 210 15% 90%;
+    --accent-foreground: 215 25% 15%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 20% 88%;
+    --input: 215 20% 88%;
+    --ring: 215 85% 50%;
+    --chart-1: 215 85% 50%;
+    --chart-2: 195 75% 45%;
+    --chart-3: 235 70% 55%;
+    --chart-4: 180 60% 50%;
+    --chart-5: 200 65% 48%;
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --warning: 45 93% 47%;
+    --warning-foreground: 0 0% 100%;
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 100%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 25% 15%;
+    --sidebar-primary: 215 85% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 15% 95%;
+    --sidebar-accent-foreground: 215 25% 15%;
+    --sidebar-border: 215 20% 88%;
+    --sidebar-ring: 215 85% 50%;
+    
+    /* 灵山景区品牌色调 */
+    --lingshan-green: 158 64% 42%;
+    --lingshan-green-foreground: 0 0% 100%;
+    --lingshan-blue: 210 100% 45%;
+    --lingshan-blue-foreground: 0 0% 100%;
+    --lingshan-gold: 45 100% 51%;
+    --lingshan-gold-foreground: 215 25% 15%;
+    --data-highlight: 215 100% 50%;
+    --data-highlight-foreground: 0 0% 100%;
+  }
+
+  .dark {
+    --background: 215 30% 8%;
+    --foreground: 210 20% 95%;
+    --card: 215 28% 12%;
+    --card-foreground: 210 20% 95%;
+    --popover: 215 28% 12%;
+    --popover-foreground: 210 20% 95%;
+    --primary: 215 85% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 20% 18%;
+    --secondary-foreground: 210 20% 95%;
+    --muted: 215 20% 16%;
+    --muted-foreground: 215 15% 60%;
+    --accent: 215 20% 20%;
+    --accent-foreground: 210 20% 95%;
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 20% 20%;
+    --input: 215 20% 20%;
+    --ring: 215 85% 55%;
+    --chart-1: 215 85% 55%;
+    --chart-2: 195 75% 50%;
+    --chart-3: 235 70% 60%;
+    --chart-4: 180 60% 55%;
+    --chart-5: 200 65% 53%;
+    --success: 142 76% 40%;
+    --success-foreground: 0 0% 100%;
+    --warning: 45 93% 52%;
+    --warning-foreground: 0 0% 100%;
+    --danger: 0 72% 50%;
+    --danger-foreground: 0 0% 100%;
+    --sidebar-background: 215 28% 10%;
+    --sidebar-foreground: 210 20% 95%;
+    --sidebar-primary: 215 85% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 20% 18%;
+    --sidebar-accent-foreground: 210 20% 95%;
+    --sidebar-border: 215 20% 20%;
+    --sidebar-ring: 215 85% 55%;
+    
+    /* 灵山景区品牌色调 - 暗黑模式 */
+    --lingshan-green: 158 64% 48%;
+    --lingshan-green-foreground: 0 0% 100%;
+    --lingshan-blue: 210 100% 55%;
+    --lingshan-blue-foreground: 0 0% 100%;
+    --lingshan-gold: 45 100% 58%;
+    --lingshan-gold-foreground: 215 25% 15%;
+    --data-highlight: 215 100% 60%;
+    --data-highlight-foreground: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

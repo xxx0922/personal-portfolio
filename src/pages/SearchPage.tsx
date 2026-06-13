@@ -196,7 +196,7 @@ const SearchPage = () => {
                     >
                       <div className="h-48 bg-gray-200 flex items-center justify-center">
                         {item.coverImage ? (
-                          <img src={item.coverImage} alt={item.title} className="w-full h-full object-cover" />
+                          <img src={item.coverImage} alt={item.title} className="w-full h-full object-cover" loading="lazy" />
                         ) : (
                           <span className="text-4xl">{item.type === 'movie' ? '🎬' : '📚'}</span>
                         )}
