@@ -20,6 +20,12 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api'
 // 后端基础 URL（uploads 静态文件服务）
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002';
 
+type AdminToastType = 'success' | 'error' | 'info';
+
+const showToast = (message: string, type: AdminToastType = 'info') => {
+  window.dispatchEvent(new CustomEvent('admin-toast', { detail: { message, type } }));
+};
+
 interface AdminStats {
   projectCount: number;
   experienceCount: number;
@@ -53,13 +59,21 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
-  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+  const handleToast = (message: string, type: AdminToastType = 'info') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
   };
 
   useEffect(() => {
-    return () => setToast(null);
+    const listener = (event: Event) => {
+      const customEvent = event as CustomEvent<{ message: string; type: AdminToastType }>;
+      handleToast(customEvent.detail.message, customEvent.detail.type);
+    };
+    window.addEventListener('admin-toast', listener);
+    return () => {
+      window.removeEventListener('admin-toast', listener);
+      setToast(null);
+    };
   }, []);
 
   // 获取头像 URL（处理相对路径）

@@ -21,7 +21,7 @@ const colors: Record<ToastType, string> = {
 
 export function useToast(duration = 3000) {
   const [toast, setToast] = useState<ToastState | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const showToast = useCallback((message: string, type: ToastType = 'info') => {
     setToast({ message, type });

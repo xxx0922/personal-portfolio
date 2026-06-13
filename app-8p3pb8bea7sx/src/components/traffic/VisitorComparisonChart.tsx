@@ -181,7 +181,6 @@ export function VisitorComparisonChart({ historicalData, currentCount }: Visitor
             show: true,
             position: 'top',
             color: RED,
-            fontWeight: 'bold',
             fontSize: 15,
             fontWeight: 'bold',
             formatter: (p: any) =>
