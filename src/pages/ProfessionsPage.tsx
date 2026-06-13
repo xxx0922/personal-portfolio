@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Skeleton, { SkeletonProfessionalCard, SkeletonText } from '../components/Skeleton';
 
 interface Profession {
   id: string;
@@ -73,10 +74,45 @@ const ProfessionsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white/80 text-lg">加载中...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+        {/* 动态背景装饰 */}
+        <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-cyan-500/20 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+        </div>
+
+        {/* 星空背景 */}
+        <div className="fixed inset-0 z-0">
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-30"
+            style={{
+              backgroundImage: `url('/背景星空.png')`,
+            }}
+          ></div>
+        </div>
+
+        {/* 内容 */}
+        <div className="relative z-10">
+          {/* 顶部导航栏简化版 */}
+          <div className="pt-8 px-4 sm:px-6 lg:px-8">
+            <Skeleton variant="rounded" width={120} height={36} className="bg-gray-700/30" />
+          </div>
+
+          <main className="pt-8 pb-12 px-4 sm:px-6 lg:px-8">
+            {/* 页面标题骨架屏 */}
+            <div className="text-center mb-16">
+              <Skeleton variant="rounded" width={64} height={64} className="bg-gray-700/30 mx-auto mb-4" />
+              <Skeleton variant="text" width="200px" height={40} className="bg-gray-600/50 mx-auto mb-4" />
+              <Skeleton variant="text" width="300px" height={20} className="bg-gray-700/40 mx-auto" />
+            </div>
+
+            {/* 专业卡片骨架屏 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <SkeletonProfessionalCard />
+              <SkeletonProfessionalCard />
+            </div>
+          </main>
         </div>
       </div>
     );
@@ -108,7 +144,7 @@ const ProfessionsPage = () => {
           <button
             onClick={() => navigate('/')}
             aria-label="返回首页"
-            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors mb-8"
+            className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -128,7 +164,7 @@ const ProfessionsPage = () => {
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight">
               专业领域
             </h1>
-            <p className="text-xl text-white/60 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
               专业技能与资质认证，展现专业实力
             </p>
           </div>
@@ -137,7 +173,7 @@ const ProfessionsPage = () => {
           {professions.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-6xl mb-4">📚</div>
-              <p className="text-white/60 text-lg">暂无专业数据</p>
+              <p className="text-gray-300 text-lg">暂无专业数据</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -160,7 +196,7 @@ const ProfessionsPage = () => {
                     <h3 className="text-2xl font-bold text-white mb-3 text-center">{profession.name}</h3>
 
                     {/* 描述 */}
-                    <p className="text-white/60 mb-8 leading-relaxed text-center">{profession.description}</p>
+                    <p className="text-gray-300 mb-8 leading-relaxed text-center">{profession.description}</p>
 
                     {/* 技能列表 */}
                     {profession.skills && profession.skills.length > 0 && (
@@ -206,7 +242,7 @@ const ProfessionsPage = () => {
                           {profession.certifications.map((cert) => (
                             <div key={cert.id} className="flex items-center gap-2 text-sm bg-white/5 rounded-lg px-3 py-2">
                               <span className="text-purple-400">▹</span>
-                              <span className="text-white/70 flex-1">{cert.name}</span>
+                              <span className="text-gray-400 flex-1">{cert.name}</span>
                               <span className="text-white/40 text-xs">{cert.date}</span>
                             </div>
                           ))}

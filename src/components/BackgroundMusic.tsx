@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useMusic } from '../contexts/MusicContext';
 
 export default function BackgroundMusic() {
@@ -10,7 +10,9 @@ export default function BackgroundMusic() {
     tracks,
     togglePlay,
     toggleMute,
-    setVolume
+    setVolume,
+    playNext,
+    playPrevious
   } = useMusic();
 
   const [showControls, setShowControls] = useState(false);
@@ -20,9 +22,64 @@ export default function BackgroundMusic() {
   const displayIndex = currentIndex >= 0 ? currentIndex : 0;
 
   const hasTracks = tracks && tracks.length > 0;
+  const hasMultipleTracks = tracks && tracks.length > 1;
 
   return (
     <>
+      {/* 🌊 全屏流动河流 - 贯穿整个页面底部 */}
+      {isPlaying && (
+        <div className="fixed bottom-0 left-0 right-0 h-28 z-30 pointer-events-none">
+          {/* 流动波浪层 */}
+          <svg
+            className="absolute inset-x-0 bottom-0 w-[200%] h-full animate-wave-fast"
+            viewBox="0 0 1200 112"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            {/* 最深层：慢速深蓝色河流 */}
+            <path
+              d="M0,80 C200,50 400,110 600,80 C800,50 1000,110 1200,80 L1200,112 L0,112 Z"
+              fill="rgba(59, 130, 246, 0.15)"
+            />
+          </svg>
+
+          <svg
+            className="absolute inset-x-0 bottom-0 w-[200%] h-full animate-wave-mid"
+            viewBox="0 0 1200 112"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            {/* 中层：粉色波浪 */}
+            <path
+              d="M0,70 C150,40 350,100 550,70 C750,40 950,100 1200,70 L1200,112 L0,112 Z"
+              fill="rgba(236, 72, 153, 0.2)"
+            />
+          </svg>
+
+          <svg
+            className="absolute inset-x-0 bottom-0 w-[200%] h-full animate-wave-slow"
+            viewBox="0 0 1200 112"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            {/* 顶层：亮紫色波浪 */}
+            <path
+              d="M0,75 C100,55 250,95 400,75 C600,55 800,95 1000,75 C1100,60 1200,85 1200,75 L1200,112 L0,112 Z"
+              fill="rgba(168, 85, 247, 0.25)"
+            />
+          </svg>
+
+          {/* 河面波光：漂浮的光点 */}
+          <span className="absolute bottom-8 left-[8%] w-2 h-2 bg-white/60 rounded-full animate-float-bubble" style={{ animationDuration: '4s', animationDelay: '0s' }}></span>
+          <span className="absolute bottom-10 left-[22%] w-1.5 h-1.5 bg-white/50 rounded-full animate-float-bubble" style={{ animationDuration: '5s', animationDelay: '1s' }}></span>
+          <span className="absolute bottom-6 left-[38%] w-2.5 h-2.5 bg-white/70 rounded-full animate-float-bubble" style={{ animationDuration: '3.5s', animationDelay: '0.5s' }}></span>
+          <span className="absolute bottom-9 left-[52%] w-1 h-1 bg-white/40 rounded-full animate-float-bubble" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }}></span>
+          <span className="absolute bottom-7 left-[68%] w-2 h-2 bg-white/60 rounded-full animate-float-bubble" style={{ animationDuration: '3.8s', animationDelay: '2s' }}></span>
+          <span className="absolute bottom-11 left-[82%] w-1.5 h-1.5 bg-white/50 rounded-full animate-float-bubble" style={{ animationDuration: '5.2s', animationDelay: '0.8s' }}></span>
+          <span className="absolute bottom-8 left-[95%] w-1 h-1 bg-white/40 rounded-full animate-float-bubble" style={{ animationDuration: '4.2s', animationDelay: '1.2s' }}></span>
+        </div>
+      )}
+
       {/* 音乐控制按钮 - 固定在右上角 */}
       <div className="fixed top-24 right-6 z-50">
         {/* 音乐符号按钮 */}
@@ -123,8 +180,26 @@ export default function BackgroundMusic() {
               </div>
             )}
 
-            {/* 播放/暂停按钮 */}
-            <div className="flex items-center justify-center mb-5">
+            {/* 播放控制按钮组：上一曲 / 播放/暂停 / 下一曲 */}
+            <div className="flex items-center justify-center gap-4 mb-5">
+              {/* 上一曲 */}
+              <button
+                onClick={playPrevious}
+                disabled={!hasMultipleTracks}
+                aria-label="上一曲"
+                title="上一曲"
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+                  hasMultipleTracks
+                    ? 'bg-gradient-to-br from-purple-100 to-blue-100 text-purple-600 hover:from-purple-200 hover:to-blue-200 shadow-md'
+                    : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                }`}
+              >
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                </svg>
+              </button>
+
+              {/* 播放/暂停按钮 */}
               <button
                 onClick={togglePlay}
                 disabled={!hasTracks}
@@ -135,6 +210,7 @@ export default function BackgroundMusic() {
                     ? 'bg-gradient-to-br from-purple-500 to-pink-600 text-white shadow-xl shadow-purple-500/40'
                     : 'bg-gradient-to-br from-blue-400 to-cyan-500 text-white shadow-xl shadow-blue-500/40'
                 }`}
+                aria-label={isPlaying ? '暂停' : '播放'}
               >
                 {isPlaying ? (
                   <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
@@ -146,7 +222,92 @@ export default function BackgroundMusic() {
                   </svg>
                 )}
               </button>
+
+              {/* 下一曲 */}
+              <button
+                onClick={playNext}
+                disabled={!hasMultipleTracks}
+                aria-label="下一曲"
+                title="下一曲"
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+                  hasMultipleTracks
+                    ? 'bg-gradient-to-br from-purple-100 to-blue-100 text-purple-600 hover:from-purple-200 hover:to-blue-200 shadow-md'
+                    : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                }`}
+              >
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                </svg>
+              </button>
             </div>
+
+            {/* 流动河流可视化：三层流动的波浪 */}
+            {hasTracks && (
+              <div className="relative h-20 mb-4 mx-2 rounded-2xl overflow-hidden bg-gradient-to-b from-sky-50 via-purple-50 to-pink-50 shadow-inner">
+                {/* 底层 - 慢速深色波浪 */}
+                <svg
+                  className={`absolute inset-x-0 bottom-0 w-[200%] h-full ${
+                    isPlaying ? 'animate-wave-slow' : ''
+                  }`}
+                  viewBox="0 0 1200 80"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M0,40 C150,20 300,60 450,40 C600,20 750,60 900,40 C1050,20 1200,60 1200,40 L1200,80 L0,80 Z"
+                    fill="rgba(139, 92, 246, 0.25)"
+                  />
+                </svg>
+
+                {/* 中层 - 中速主色波浪 */}
+                <svg
+                  className={`absolute inset-x-0 bottom-0 w-[200%] h-full ${
+                    isPlaying ? 'animate-wave-mid' : ''
+                  }`}
+                  viewBox="0 0 1200 80"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M0,50 C200,30 400,70 600,50 C800,30 1000,70 1200,50 L1200,80 L0,80 Z"
+                    fill="rgba(236, 72, 153, 0.35)"
+                  />
+                </svg>
+
+                {/* 顶层 - 快速亮色波浪 */}
+                <svg
+                  className={`absolute inset-x-0 bottom-0 w-[200%] h-full ${
+                    isPlaying ? 'animate-wave-fast' : ''
+                  }`}
+                  viewBox="0 0 1200 80"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M0,55 C100,40 250,75 400,55 C550,35 700,75 850,55 C1000,35 1150,75 1200,55 L1200,80 L0,80 Z"
+                    fill="rgba(59, 130, 246, 0.4)"
+                  />
+                </svg>
+
+                {/* 漂浮的小气泡（仅播放时显示） */}
+                {isPlaying && (
+                  <>
+                    <span className="absolute bottom-2 left-[10%] w-1.5 h-1.5 bg-white/70 rounded-full animate-float-bubble" style={{ animationDelay: '0s', animationDuration: '3s' }}></span>
+                    <span className="absolute bottom-2 left-[30%] w-1 h-1 bg-white/60 rounded-full animate-float-bubble" style={{ animationDelay: '1s', animationDuration: '4s' }}></span>
+                    <span className="absolute bottom-2 left-[55%] w-2 h-2 bg-white/70 rounded-full animate-float-bubble" style={{ animationDelay: '2s', animationDuration: '3.5s' }}></span>
+                    <span className="absolute bottom-2 left-[75%] w-1 h-1 bg-white/60 rounded-full animate-float-bubble" style={{ animationDelay: '0.5s', animationDuration: '4.5s' }}></span>
+                    <span className="absolute bottom-2 left-[90%] w-1.5 h-1.5 bg-white/70 rounded-full animate-float-bubble" style={{ animationDelay: '1.5s', animationDuration: '3.2s' }}></span>
+                  </>
+                )}
+
+                {/* 暂停状态的提示 */}
+                {!isPlaying && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-xs text-gray-400 italic">河流静止中…</span>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* 歌曲信息 */}
             {hasTracks && (

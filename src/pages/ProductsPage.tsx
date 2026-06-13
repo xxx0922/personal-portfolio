@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Skeleton, { SkeletonCard } from '../components/Skeleton';
 
 interface ProductMedia {
   id: string;
@@ -113,8 +114,46 @@ const ProductsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-white/60 text-lg">加载中...</div>
+      <div className="min-h-screen">
+        {/* 背景 */}
+        <div className="fixed inset-0 z-0">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('/背景星空.png')`,
+            }}
+          ></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/90 via-slate-900/80 to-slate-900/90"></div>
+        </div>
+
+        {/* 内容 */}
+        <div className="relative z-10">
+          <Navbar personalInfo={{ name: '丰生水起', avatar: '' }} />
+
+          <main className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+            {/* 页面标题骨架屏 */}
+            <div className="text-center mb-12">
+              <Skeleton variant="text" width="200px" height={40} className="bg-gray-600/50 mx-auto mb-4" />
+              <Skeleton variant="text" width="300px" height={24} className="bg-gray-700/40 mx-auto" />
+            </div>
+
+            {/* 筛选栏骨架屏 */}
+            <div className="mb-12">
+              <div className="flex justify-center gap-4">
+                {[1, 2, 3].map(i => (
+                  <Skeleton key={i} variant="rounded" width={100} height={48} className="bg-gray-700/30" />
+                ))}
+              </div>
+            </div>
+
+            {/* 产品卡片骨架屏 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
+          </main>
+        </div>
       </div>
     );
   }
@@ -142,7 +181,7 @@ const ProductsPage = () => {
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 text-balance">
               产品中心
             </h1>
-            <p className="text-lg text-white/70 max-w-2xl mx-auto text-pretty">
+            <p className="text-lg text-gray-400 max-w-2xl mx-auto text-pretty">
               探索我们的创新产品与解决方案
             </p>
           </div>
@@ -162,7 +201,7 @@ const ProductsPage = () => {
                   className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
                     filterType === type.id
                       ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30'
-                      : 'bg-[#334155] text-white/80 hover:bg-[#334155]/80'
+                      : 'bg-[#334155] text-gray-200 hover:bg-[#334155]/80'
                   }`}
                 >
                   {type.label}
@@ -173,7 +212,7 @@ const ProductsPage = () => {
 
           {/* 产品统计 */}
           <div className="text-center mb-8">
-            <p className="text-white/60">
+            <p className="text-gray-300">
               共 <span className="text-sky-400 font-bold">{filteredProducts.length}</span> 个产品
             </p>
           </div>
@@ -183,7 +222,7 @@ const ProductsPage = () => {
             <div className="rounded-2xl p-12 text-center bg-red-900/30 backdrop-blur-sm border border-red-500/30 mb-8" role="alert">
               <div className="text-6xl mb-4" aria-hidden="true">⚠️</div>
               <h3 className="text-xl font-bold text-red-300 mb-3">加载失败</h3>
-              <p className="text-red-200/70 mb-6">{error}</p>
+              <p className="text-red-300 mb-6">{error}</p>
               <button
                 onClick={() => window.location.reload()}
                 className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
@@ -198,24 +237,15 @@ const ProductsPage = () => {
             <div className="rounded-2xl p-16 text-center bg-[#1E293B]/50 backdrop-blur-sm border border-white/10">
               <div className="text-8xl mb-6" aria-hidden="true">📦</div>
               <h3 className="text-2xl font-bold text-white mb-4">暂无产品</h3>
-              <p className="text-white/60 mb-6">
-                还没有添加任何产品，请在后台管理中添加
+              <p className="text-gray-300 mb-6">
+                敬请期待，更多内容陆续更新中
               </p>
-              <Link
-                to="/admin"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-sky-500 to-sky-700 text-white rounded-lg font-medium hover:opacity-90 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                去后台添加
-              </Link>
             </div>
           ) : filteredProducts.length === 0 ? (
             <div className="rounded-2xl p-16 text-center bg-[#1E293B]/50 backdrop-blur-sm border border-white/10">
               <div className="text-8xl mb-6" aria-hidden="true">🔍</div>
               <h3 className="text-2xl font-bold text-white mb-4">筛选无结果</h3>
-              <p className="text-white/60 mb-6">
+              <p className="text-gray-300 mb-6">
                 当前筛选条件下没有匹配的产品，请尝试其他筛选条件
               </p>
               <button
@@ -254,7 +284,7 @@ const ProductsPage = () => {
 
                     {/* 产品描述 */}
                     {product.shortDescription && (
-                      <p className="text-sm text-white/60 mb-4 line-clamp-2">
+                      <p className="text-sm text-gray-300 mb-4 line-clamp-2">
                         {product.shortDescription}
                       </p>
                     )}

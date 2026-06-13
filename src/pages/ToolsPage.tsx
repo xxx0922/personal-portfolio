@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Skeleton, { SkeletonToolCard, SkeletonText } from '../components/Skeleton';
 
 interface Tool {
   id: string;
@@ -76,10 +77,55 @@ const ToolsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white/80 text-lg">加载中...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+        {/* 星空背景 */}
+        <div className="fixed inset-0 z-0">
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-30"
+            style={{
+              backgroundImage: `url('/背景星空.png')`,
+            }}
+          ></div>
+        </div>
+
+        {/* 内容 */}
+        <div className="relative z-10">
+          {/* 返回按钮骨架屏 */}
+          <div className="pt-8 px-4 sm:px-6 lg:px-8">
+            <Skeleton variant="rounded" width={120} height={36} className="bg-gray-700/30" />
+          </div>
+
+          <main className="pt-8 pb-12 px-4 sm:px-6 lg:px-8">
+            {/* 页面标题骨架屏 */}
+            <div className="text-center mb-16">
+              <Skeleton variant="rounded" width={64} height={64} className="bg-gray-700/30 mx-auto mb-4" />
+              <Skeleton variant="text" width="200px" height={36} className="bg-gray-600/50 mx-auto mb-4" />
+              <Skeleton variant="text" width="300px" height={20} className="bg-gray-700/40 mx-auto" />
+            </div>
+
+            {/* 工具卡片骨架屏 - 按分类显示 */}
+            <div className="space-y-16">
+              {[1, 2].map((categoryIndex) => (
+                <div key={categoryIndex}>
+                  {/* 分类标题骨架屏 */}
+                  <div className="flex items-center gap-4 mb-8">
+                    <Skeleton variant="rounded" width={48} height={48} className="bg-gray-700/30" />
+                    <Skeleton variant="text" width={120} height={32} className="bg-gray-600/50" />
+                  </div>
+
+                  {/* 工具卡片骨架屏 */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[1, 2, 3, 4].map(i => (
+                      <SkeletonToolCard key={i} />
+                    ))}
+                  </div>
+
+                  {/* 分隔线骨架屏 */}
+                  <div className="mt-12 h-px bg-gray-700/30"></div>
+                </div>
+              ))}
+            </div>
+          </main>
         </div>
       </div>
     );
@@ -104,7 +150,7 @@ const ToolsPage = () => {
         <div className="pt-8 px-4 sm:px-6 lg:px-8">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors mb-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded"
+            className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded"
             aria-label="返回首页"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -135,7 +181,7 @@ const ToolsPage = () => {
             <div className="rounded-2xl p-16 text-center bg-white/5 backdrop-blur-sm border border-white/10">
               <div className="text-8xl mb-6" aria-hidden="true">📦</div>
               <h3 className="text-2xl font-bold text-white mb-4">暂无工具</h3>
-              <p className="text-white/60">
+              <p className="text-gray-300">
                 还没有添加任何工具，请在后台管理中添加
               </p>
             </div>
@@ -177,7 +223,7 @@ const ToolsPage = () => {
                       </h3>
 
                       {/* 工具描述 */}
-                      <p className="text-sm text-white/60 leading-relaxed">
+                      <p className="text-sm text-gray-300 leading-relaxed">
                         {tool.description}
                       </p>
 

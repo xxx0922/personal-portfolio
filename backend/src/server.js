@@ -109,6 +109,56 @@ app.use('/api/social-links', socialLinksRoutes);
 app.use('/api/site-config', siteConfigRoutes);
 app.use('/api/contact', contactRoutes);
 
+// Webhook 代理（解决浏览器 CORS 限制）
+app.post('/api/webhook/send', async (req, res) => {
+  try {
+    const { url, payload } = req.body;
+    if (!url || !payload) {
+      return res.status(400).json({ error: 'Missing url or payload' });
+    }
+
+    console.log('[Webhook Proxy] Forwarding to:', url);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.text();
+    console.log('[Webhook Proxy] Response:', response.status, result);
+
+    let parsedResult = null;
+    try {
+      parsedResult = result ? JSON.parse(result) : null;
+    } catch (_) {
+      parsedResult = null;
+    }
+
+    // 飞书成功返回通常是 { code: 0, msg: "success" }
+    // 企业微信成功返回通常是 { errcode: 0, errmsg: "ok" }
+    // 钉钉成功返回通常是 { errcode: 0, errmsg: "ok" }
+    const businessSuccess = parsedResult
+      ? (
+          parsedResult.code === 0 ||
+          parsedResult.errcode === 0 ||
+          parsedResult.StatusCode === 0 ||
+          parsedResult.status === 0
+        )
+      : response.ok;
+
+    res.json({
+      success: response.ok && businessSuccess,
+      status: response.status,
+      result: result,
+      parsed: parsedResult,
+      error: response.ok && !businessSuccess ? (parsedResult?.msg || parsedResult?.errmsg || 'Webhook 返回业务失败') : undefined,
+    });
+  } catch (error) {
+    console.error('[Webhook Proxy] Error:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });

@@ -47,11 +47,13 @@ router.get('/', async (req, res) => {
   }
 });
 
-// 更新完整站点配置
+// 更新完整站点配置（merge 而不是覆盖，避免冲掉 music 等其他字段）
 router.put('/', authenticateToken, requireAdmin, async (req, res) => {
   try {
-    await writeData('siteConfig', req.body);
-    res.json(req.body);
+    const existing = await readData('siteConfig') || {};
+    const merged = { ...existing, ...req.body };
+    await writeData('siteConfig', merged);
+    res.json(merged);
   } catch (error) {
     console.error('Failed to update site config:', error);
     res.status(500).json({ error: '更新站点配置失败' });

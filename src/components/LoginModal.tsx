@@ -102,16 +102,6 @@ const LoginModal = ({ isOpen, onClose, message }: LoginModalProps) => {
             </button>
           </div>
         </form>
-
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <div className="text-sm text-gray-600">
-            <p className="font-medium mb-2">测试账号：</p>
-            <div className="space-y-1">
-              <p>管理员：admin / admin123</p>
-              <p>访客：friend / friend123</p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

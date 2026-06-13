@@ -108,13 +108,6 @@ const pagePreviews: PagePreview[] = [
     description: '全站搜索功能',
     icon: '🔍',
     color: 'from-blue-500 to-indigo-500'
-  },
-  {
-    path: '/admin/login',
-    name: '管理后台',
-    description: '内容管理后台登录',
-    icon: '🔐',
-    color: 'from-slate-600 to-gray-700'
   }
 ];
 
@@ -217,14 +210,6 @@ const PreviewPage = () => {
               className="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors"
             >
               🌐 访问首页
-            </a>
-            <a
-              href={`${window.location.origin}/admin/login`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white text-purple-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors"
-            >
-              🔐 管理后台
             </a>
           </div>
         </div>

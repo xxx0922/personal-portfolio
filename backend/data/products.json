@@ -62,5 +62,55 @@
         "subFolders": []
       }
     ]
+  },
+  {
+    "id": "1780754800000",
+    "name": "无锡灵山景区交通监控仪表盘",
+    "description": "面向景区交通管理部门的实时监控与决策支持系统，整合历年节假日客流车流历史数据、停车场实时信息及周边道路状况，提供智能预警和交通管制建议",
+    "icon": "🚗",
+    "coverImage": "/uploads/products/product-1780837923540-482361874.png",
+    "shortDescription": "景区交通管理智能决策支持系统 · React + TypeScript + Supabase",
+    "detailedDescription": "## 项目背景\n\n无锡灵山景区每逢节假日游客车流激增，亟需一套实时监控与决策支持系统辅助交通管理部门高效调度。\n\n## 核心功能\n\n### 🎯 实时监控仪表盘\n- **停车场实时状态**：各停车场剩余车位实时显示\n- **入园人数统计**：实时入园人数与预约游客数据对比\n- **道路交通状况**：周边主要道路拥堵情况可视化\n- **天气信息**：实时天气、温度展示\n- **预警状态**：根据多维数据自动触发管制预警\n- **短驳车辆调度**：景区内部短驳车辆调度建议\n\n### 📊 历史数据分析\n- 历年节假日客流车流趋势对比\n- 多年同期数据图表分析\n- 数据筛选与导出（Excel/CSV）\n\n### 🛠 管理员后台\n- 报告自动生成\n- 历史数据查询与可视化\n- 趋势对比与预测\n- Excel/CSV 数据批量上传\n- 数据模拟器（用于测试场景）\n- 用户权限管理（第一个注册用户自动成为管理员）\n\n## 技术栈\n\n| 维度 | 技术选型 |\n|------|---------|\n| 前端框架 | React 18 + TypeScript 5.9 |\n| 构建工具 | Vite 5 |\n| UI 组件库 | Radix UI + shadcn/ui（39 个组件） |\n| 样式 | Tailwind CSS + tailwindcss-animate |\n| 状态管理 | React Hook Form + Zod |\n| 路由 | React Router v7 |\n| 数据库 | Supabase（云数据库 + Auth） |\n| 图表 | Recharts |\n| 地图 | 百度地图 API |\n| 数据处理 | XLSX、date-fns |\n| 动画 | Motion（Framer Motion） |\n| 通知 | Sonner |\n| 包管理 | pnpm |\n\n## 项目亮点\n\n- ✅ **实时性**：基于 Supabase Realtime 实现数据实时推送\n- ✅ **响应式设计**：完美适配大屏指挥中心与移动端\n- ✅ **数据可视化**：Recharts + 自研图表，多维度展示交通态势\n- ✅ **智能预警**：基于历史数据的自动阈值告警\n- ✅ **权限分级**：管理员/普通用户两级权限\n- ✅ **数据驱动决策**：所有管制建议均有数据支撑\n\n## 项目状态\n\n- **开发时间**：2026 年\n- **应用 ID**：app-8p3pb8bea7sx\n- **托管平台**：秒哒 miaoda.cn\n- **目标用户**：景区交通管理部门\n",
+    "mediaResources": [
+      {
+        "id": "media-1780837925944",
+        "type": "image",
+        "url": "/uploads/products/product-1780837923540-482361874.png",
+        "thumbnailUrl": "",
+        "title": "",
+        "description": "",
+        "sortOrder": 0,
+        "uploadedAt": "2026-06-07T13:12:05.944Z"
+      },
+      {
+        "id": "media-1780837932021",
+        "type": "image",
+        "url": "/uploads/products/product-1780837931023-135353909.png",
+        "thumbnailUrl": "",
+        "title": "",
+        "description": "",
+        "sortOrder": 1,
+        "uploadedAt": "2026-06-07T13:12:12.021Z"
+      }
+    ],
+    "externalUrl": "http://localhost:5180",
+    "sortOrder": 0,
+    "isPublished": true,
+    "folders": [
+      {
+        "id": "folder-1780754800001",
+        "name": "项目文档",
+        "count": 0,
+        "attachments": [],
+        "subFolders": []
+      },
+      {
+        "id": "folder-1780754800002",
+        "name": "效果截图",
+        "count": 0,
+        "attachments": [],
+        "subFolders": []
+      }
+    ]
   }
 ]

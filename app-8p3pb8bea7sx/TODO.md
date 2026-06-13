@@ -1,0 +1,1468 @@
+# 任务：无锡灵山景区交通监控仪表盘
+
+## 计划
+- [x] 步骤1：项目结构扫描和关键文件读取
+  - [x] 扫描项目结构
+  - [x] 读取package.json、index.css、tailwind.config.js
+- [x] 步骤2：数据库设计和初始化
+  - [x] 设计数据表结构（历史数据、实时数据、预警配置、管制措施）
+  - [x] 初始化Supabase
+  - [x] 创建数据表和插入历史数据
+- [x] 步骤3：Edge Functions实现
+  - [x] 创建天气API Edge Function
+  - [x] 部署Edge Functions
+- [x] 步骤4：设计系统配置
+  - [x] 更新index.css配置颜色系统（蓝色主题，支持红黄绿预警色）
+  - [x] 更新tailwind.config.js
+- [x] 步骤5：核心组件开发
+  - [x] 创建类型定义
+  - [x] 创建数据库API封装
+  - [x] 创建主仪表盘页面
+  - [x] 创建数据卡片组件
+  - [x] 创建图表组件（环形图、柱状图）
+  - [x] 创建道路热力图组件
+  - [x] 创建预警面板组件
+  - [x] 创建报告生成功能
+- [x] 步骤6：路由配置和集成
+  - [x] 更新路由配置
+  - [x] 实现数据刷新机制
+  - [x] 创建数据模拟器页面
+  - [x] 添加页面导航
+- [x] 步骤7：Lint验证和完成
+  - [x] 通过所有Lint检查
+
+## 新增需求
+- [x] 步骤8：增强功能开发
+  - [x] 创建历史数据展示页面（可选日期）
+  - [x] 更新停车场车位上限配置（果园2400、月亮湾1200、灵湖路300）
+  - [x] 增加停车场历史数据对比功能
+  - [x] 为灵湖路停车场增加开放时间和停满时间字段
+  - [x] 更新数据库表结构（停车场历史记录表、每日快照表）
+  - [x] 更新相关组件和API
+  - [x] 添加历史数据页面导航入口
+  - [x] Lint验证通过
+
+## 新增优化需求
+- [x] 步骤9：界面优化和数据结构调整
+  - [x] 停车场状态分开显示（果园、月亮湾、灵湖路各自独立卡片）
+  - [x] 道路交通状况添加管控时间字段（开始时间、结束时间）
+  - [x] 合并古竹路东侧和古竹路西侧为古竹路
+  - [x] 更新数据库表结构
+  - [x] 更新相关组件显示
+  - [x] Lint验证通过
+
+## 新增功能需求
+- [x] 步骤10：批量数据上传和主题切换
+  - [x] 扩展历史数据表结构（增加17个详细字段）
+  - [x] 创建批量数据上传页面
+  - [x] 支持CSV文件上传和文本粘贴
+  - [x] 实现数据解析和批量导入功能
+  - [x] 添加数据列表查看和删除功能
+  - [x] 提供CSV模板下载
+  - [x] 添加明亮/暗黑模式切换功能
+  - [x] 在所有页面添加主题切换按钮
+  - [x] 更新导航栏添加数据上传入口
+  - [x] Lint验证通过
+
+## 新增优化需求
+- [x] 步骤11：地图集成和短驳模式
+  - [x] 页面底部集成高德地图实时搜索
+  - [x] 增加"启动短驳"按钮和红色背景模式
+  - [x] 添加6个管控点位显示（高速路口、千波桥、灵湖大桥、环山东路七里风光堤、西村路口、灵湖路口）
+  - [x] 创建历史车辆和客流趋势对比图页面
+  - [x] 优化管制措施内容（6项具体措施）
+  - [x] 更新数据库管制措施数据
+  - [x] 添加趋势对比页面导航入口
+  - [x] Lint验证通过
+
+## 新增优化需求
+- [x] 步骤12：短驳模式和停车场优化
+  - [x] "启动短驳"按钮放大并占据整行
+  - [x] 短驳管控点位移到概览卡片前面
+  - [x] 短驳管控点位默认隐藏，点击启动后显示
+  - [x] 高德地图增加搜索功能
+  - [x] 灵湖路停车场改为启动状态+启动时间
+  - [x] 增加古竹两侧停车场（启动状态+启动时间）
+  - [x] 更新数据库表结构（添加is_activated和activation_time字段）
+  - [x] 更新停车场图表组件，分离普通和特殊停车场显示
+  - [x] 更新数据模拟器支持特殊停车场
+  - [x] Lint验证通过
+
+## 新增优化需求
+- [x] 步骤13：地图按钮和管控点位优化
+  - [x] 添加"高德地图"和"百度地图"快捷按钮
+  - [x] 短驳管控点位增加管控/未管控状态切换
+  - [x] 短驳管控点位增加管控时间记录
+  - [x] 删除重点路段交通状况卡片
+  - [x] 创建短驳管控点位数据表
+  - [x] 更新API支持管控点位状态管理
+  - [x] Lint验证通过
+
+## 新增优化需求
+- [x] 步骤14：地图显示和历史车辆模块优化
+  - [x] 修复地图iframe显示异常，改为提示点击按钮打开完整地图
+  - [x] 将"交通预警"改为"历史同期车辆"
+  - [x] 显示历史峰值停车数量
+  - [x] Lint验证通过
+
+## 新增优化需求
+- [x] 步骤15：地图显示和页面优化
+  - [x] 在景区周边实时路况框内直接显示高德地图
+  - [x] 创建高德地图组件（AMap）
+  - [x] 批量数据上传已有CSV模板下载功能
+  - [x] 优化历史数据页面美观度（添加统计卡片、渐变背景、阴影效果）
+  - [x] 删除管制措施子栏目
+  - [x] Lint验证通过
+
+## 新增需求
+- [x] 步骤16：历史数据Excel批量上传
+  - [x] 安装xlsx库处理Excel文件
+  - [x] 创建Excel模板下载功能（14个字段，包含中文表头和示例数据）
+  - [x] 实现Excel文件解析和批量上传
+  - [x] 优化数据上传页面UI（分离CSV和Excel上传卡片）
+  - [x] 更新字段显示格式为单列垂直布局
+  - [x] 调整字段顺序：当天游客预报人数前置，新增月亮湾启用果园停车场车位和高速路口分流时间
+  - [x] Lint验证通过
+
+## 新增需求
+- [x] 步骤17：Excel模板和仪表盘优化
+  - [x] 将Excel模板"星期"字段改为"农历"
+  - [x] 在仪表盘左上角日期旁边增加星期和天气显示
+  - [x] 更新Excel模板生成和解析函数
+  - [x] Lint验证通过
+
+- [x] 步骤18：优化景区周边实时路况地图显示
+  - [x] 优化高德地图组件加载逻辑，避免重复加载脚本
+  - [x] 添加加载状态和错误处理
+  - [x] 添加周边关键点位标记（灵湖大桥、千波桥、灵湖路）
+  - [x] 优化地图显示效果（2D视图、自动刷新交通图层）
+  - [x] Lint验证通过
+
+- [x] 步骤19：修复数据上传后无法显示问题
+  - [x] 添加useEffect在页面加载时自动获取历史数据
+  - [x] 优化loadHistoricalData函数，支持可选的toast提示
+  - [x] 修复上传和删除后的数据刷新逻辑
+  - [x] 优化用户体验，避免重复的成功提示
+  - [x] Lint验证通过
+
+- [x] 步骤20：优化数据显示和批量操作
+  - [x] 优化数据列表显示格式（日期、时间、数字格式化）
+  - [x] 增加批量删除数据功能（复选框、全选、批量删除按钮）
+  - [x] 优化景区周边实时路况地图显示（添加标签、优化加载）
+  - [x] Lint验证通过
+
+- [x] 步骤21：修复Excel导入格式问题
+  - [x] 添加Excel日期序列号转换函数（45566转为2024-10-01）
+  - [x] 添加Excel时间小数转换函数（0.361转为8:40）
+  - [x] 优化Excel解析逻辑，过滤空行
+  - [x] 使用raw: false选项确保正确读取格式化数据
+  - [x] Lint验证通过
+
+- [x] 步骤22：修复数据上传和地图显示问题
+  - [x] 添加调试日志到handleUpload函数，便于排查上传问题
+  - [x] 优化地图容器最小高度设置为400px
+  - [x] 验证停车场饼图显示正常（果园停车场和月亮湾停车场）
+  - [x] Lint验证通过
+
+- [x] 步骤23：修复Excel日期列为空问题
+  - [x] 使用raw: true选项读取Excel原始数值（日期序列号）
+  - [x] 添加日期转换错误处理和日志
+  - [x] 过滤日期为空的无效行
+  - [x] 添加defval: ''设置默认空值
+  - [x] Lint验证通过
+
+- [x] 步骤24：修复CSV缺少表头和地图显示问题
+  - [x] 在Excel转CSV后自动添加标准表头行
+  - [x] 为地图组件添加详细的console.log调试日志
+  - [x] 优化地图加载超时时间为3秒
+  - [x] 改进地图错误提示信息
+  - [x] Lint验证通过
+
+- [x] 步骤25：深度重构地图组件解决加载问题
+  - [x] 创建全局loadAMapScript函数，使用Promise确保脚本只加载一次
+  - [x] 添加window._amapLoadingPromise全局变量防止重复加载
+  - [x] 使用async/await重构initMap函数，简化异步逻辑
+  - [x] 增加加载超时时间到10秒，适应网络延迟
+  - [x] 添加[AMap]前缀标识所有日志，便于过滤和调试
+  - [x] 优化脚本加载检测：检查window.AMap对象是否真正创建
+  - [x] 添加组件卸载检测，防止内存泄漏
+  - [x] Lint验证通过
+
+- [x] 步骤26：修复批量存入和地图显示问题
+  - [x] 修复地图容器不存在导致地图无法加载问题
+  - [x] 添加容器渲染等待逻辑（100ms延迟）
+  - [x] 添加容器重试机制（500ms后重试）
+  - [x] 优化地图销毁错误处理
+  - [x] Lint验证通过
+
+- [x] 步骤27：新增当日预约游客功能（数据库和API）
+  - [x] 创建reservation_visitors数据表
+  - [x] 添加ReservationVisitors类型定义
+  - [x] 实现getReservationVisitors API
+  - [x] 实现getAllReservationVisitors API
+  - [x] 实现upsertReservationVisitors API
+  - [x] 实现deleteReservationVisitors API
+  - [x] Lint验证通过
+
+- [x] 步骤28：完成预约游客UI和历史数据趋势图
+  - [x] 在Dashboard首页添加"当日预约游客"卡片
+  - [x] 在loadData中加载当日预约游客数据
+  - [x] 创建HistoricalTrendChart组件
+  - [x] 实现按年份筛选功能
+  - [x] 添加游客人数和停车数量双趋势图
+  - [x] 添加统计数据卡片（平均值和峰值）
+  - [x] 集成到Dashboard的Tabs中
+  - [x] 为批量存入按钮添加详细调试日志
+  - [x] Lint验证通过
+
+- [x] 步骤29：实现入园人数自动抓取
+  - [x] 创建fetch-visitor-count Edge Function
+  - [x] 实现登录灵山数据平台逻辑
+  - [x] 实现HTML解析提取"入园合计"数据
+  - [x] 实现数据库更新逻辑
+  - [x] 在Dashboard添加手动抓取按钮
+  - [x] 添加抓取状态显示和错误处理
+  - [x] 部署Edge Function
+  - [x] Lint验证通过
+
+- [x] 步骤30：修复地图一直加载中的问题
+  - [x] 简化地图加载逻辑，移除全局Promise
+  - [x] 添加initAttempted标志防止重复初始化
+  - [x] 优化脚本加载检测逻辑（检查现有脚本、轮询等待）
+  - [x] 增加容器渲染等待时间到200ms
+  - [x] 移除地图complete事件监听，直接设置loading为false
+  - [x] 简化标记点创建（移除自定义图标）
+  - [x] Lint验证通过
+
+- [x] 步骤31：将高德地图替换为百度地图并显示实时路况
+  - [x] 创建BaiduMap组件（src/components/ui/baidumap.tsx）
+  - [x] 实现百度地图API加载逻辑
+  - [x] 添加实时路况图层（TrafficLayer）
+  - [x] 添加地图控件（导航控件、比例尺控件）
+  - [x] 添加景区主标记点和关键路段标记（灵湖大桥、千波桥、灵湖路）
+  - [x] 为标记点添加标签和样式（使用CSS变量适配主题）
+  - [x] 在Dashboard中替换AMap为BaiduMap
+  - [x] 更新地图提示文字说明路况颜色含义
+  - [x] Lint验证通过
+
+- [x] 步骤32：优化百度地图坐标精度和显示范围
+  - [x] 更新地图中心坐标为精确的灵山景区位置（120.085300, 31.434200）
+  - [x] 调整默认缩放级别从14提升到15，显示更详细的区域
+  - [x] 更新关键点位坐标（灵湖大桥、千波桥、灵湖路、古竹路）
+  - [x] 添加古竹路标记点
+  - [x] 优化标记点位置使其更符合实际道路分布
+  - [x] Lint验证通过
+
+- [x] 步骤33：配置真实的百度地图API Key
+  - [x] 修改BaiduMap组件使用环境变量读取API Key
+  - [x] 在.env文件中添加VITE_BAIDU_MAP_KEY配置项
+  - [x] 创建BAIDU_MAP_SETUP.md配置说明文档
+  - [x] 优化错误提示，当API Key错误时显示配置指南
+  - [x] 添加百度地图开放平台链接和详细配置步骤
+  - [x] 说明无锡灵山景区坐标和关键路段信息
+  - [x] Lint验证通过
+
+- [x] 步骤34：优化百度地图错误提示界面
+  - [x] 添加API Key配置检查，未配置时立即返回错误
+  - [x] 重新设计错误提示界面，使用卡片式布局
+  - [x] 添加警告图标和错误标题
+  - [x] 使用步骤编号（1-4）展示配置流程
+  - [x] 添加百度地图开放平台链接（带外部链接图标）
+  - [x] 显示配置代码示例（带代码高亮）
+  - [x] 添加地图功能说明卡片（列出4项功能）
+  - [x] 说明实时路况颜色含义（红色/橙色=拥堵，绿色=畅通）
+  - [x] 添加刷新页面按钮
+  - [x] 添加详细的console.log日志便于调试
+  - [x] Lint验证通过
+
+- [x] 步骤35：使用iframe嵌入真实地图（无需API Key）
+  - [x] 创建SimpleMap组件（src/components/ui/simplemap.tsx）
+  - [x] 使用iframe嵌入百度地图分享链接（无锡灵山景区）
+  - [x] 使用iframe嵌入高德地图分享链接（经度120.085300，纬度31.434200）
+  - [x] 添加地图切换功能（百度地图/高德地图）
+  - [x] 添加"新窗口打开"按钮
+  - [x] 添加地图说明卡片（定位信息、路况颜色、关键路段、操作提示）
+  - [x] 在Dashboard中替换BaiduMap为SimpleMap
+  - [x] 移除复杂的API Key配置要求
+  - [x] Lint验证通过
+
+- [x] 步骤36：优化Dashboard首页顶部区域
+  - [x] 重新设计顶部标题栏，使用渐变背景和装饰性元素
+  - [x] 添加图标Logo（柱状图图标）和圆角背景
+  - [x] 优化信息卡片布局（日期、天气、更新时间）
+  - [x] 使用卡片式设计展示日期、天气、更新状态
+  - [x] 添加实时更新动画（绿色脉冲圆点）
+  - [x] 重新组织操作按钮（刷新、生成报告为主按钮，其他为ghost按钮）
+  - [x] 添加分隔线区分主要和次要操作
+  - [x] 使用backdrop-blur-sm毛玻璃效果
+  - [x] 添加渐变背景和模糊装饰圆
+  - [x] 优化响应式布局（移动端和桌面端）
+  - [x] Lint验证通过
+
+- [x] 步骤37：添加自动抓取入园人数功能
+  - [x] 确认Edge Function已配置正确的登录凭证（用户名ls，密码q9vik7mf2l）
+  - [x] 将fetchVisitorCount改为useCallback避免依赖问题
+  - [x] 添加自动抓取定时器（首次延迟5秒，之后每10分钟一次）
+  - [x] 添加console.log日志记录抓取时间
+  - [x] 保留手动"抓取最新数据"按钮
+  - [x] 抓取成功后自动刷新数据并显示toast提示
+  - [x] 删除重复的函数定义
+  - [x] Lint验证通过
+
+- [x] 步骤38：优化Dashboard首页顶部布局
+  - [x] 将标题"无锡灵山景区交通监控仪表盘"居中显示
+  - [x] 将日期、天气、主题切换移到右上角（absolute right-6 top-6）
+  - [x] 增大Logo图标尺寸（h-16 w-16，图标h-10 w-10）
+  - [x] 增大标题字体（text-3xl xl:text-4xl）
+  - [x] 标题和描述使用text-center居中对齐
+  - [x] 更新时间和操作按钮居中显示（justify-center）
+  - [x] 移动端添加pt-12避免右上角元素遮挡标题
+  - [x] 优化卡片透明度（bg-card/80）提升可读性
+  - [x] Lint验证通过
+
+- [x] 步骤39：进一步优化Dashboard首页顶部布局
+  - [x] 增大标题字体至text-4xl xl:text-5xl
+  - [x] 增大Logo图标至h-20 w-20（图标h-12 w-12）
+  - [x] 将更新时间移至右上角天气旁边
+  - [x] 将刷新按钮移至右上角
+  - [x] 删除副标题"实时监控景区交通状况，提供智能决策支持"
+  - [x] 调整标题区域间距（space-y-4, pt-16 pb-4）
+  - [x] 移除底部更新时间独立区域
+  - [x] 优化操作按钮布局（pb-2底部间距）
+  - [x] Lint验证通过
+
+- [x] 步骤40：建立后台管理账号和管理员模块
+  - [x] 创建数据库迁移：用户角色枚举、profiles表、RLS策略、触发器
+  - [x] 禁用邮箱验证，使用用户名+密码登录
+  - [x] 更新AuthContext和RouteGuard支持管理员权限
+  - [x] 创建登录页面（/login）：支持注册和登录，用户名格式验证
+  - [x] 创建403禁止访问页面（/forbidden）
+  - [x] 创建管理员后台页面（/admin）：包含生成报告、历史数据、趋势对比、数据上传、数据模拟器五个功能入口
+  - [x] 更新routes.tsx添加新路由
+  - [x] 更新App.tsx启用AuthProvider和RouteGuard
+  - [x] 更新Profile类型定义添加role和email字段
+  - [x] Dashboard移除管理按钮，添加管理员入口（仅管理员可见）
+  - [x] 优化Dashboard标题布局：标题居中顶部，字体增大至text-5xl xl:text-6xl，Logo增大至h-24 w-24（图标h-14 w-14）
+  - [x] Lint验证通过（92个文件）
+
+- [x] 步骤41：调整Dashboard标题和信息栏布局
+  - [x] 将标题移到最顶部（移除absolute定位）
+  - [x] 将日期、天气、更新时间、刷新、管理后台、主题切换移到标题下方
+  - [x] 所有信息栏元素居中显示（justify-center）
+  - [x] 使用flex-wrap自动换行适配不同屏幕宽度
+  - [x] 保持渐变背景和装饰性元素
+  - [x] Lint验证通过（92个文件）
+
+- [x] 步骤42：增加后端管理页面和企业群Webhook通知功能
+  - [x] 创建webhook_config表存储Webhook配置（名称、URL、启用状态、描述）
+  - [x] 插入默认配置（企业微信群通知、钉钉群通知）
+  - [x] 创建send-webhook-notification Edge Function
+    - [x] 支持企业微信Webhook格式
+    - [x] 支持钉钉Webhook格式
+    - [x] 支持@所有人功能
+    - [x] 批量发送到所有启用的Webhook
+    - [x] 返回发送结果统计
+  - [x] 部署send-webhook-notification Edge Function
+  - [x] 创建BackendManagement后端管理页面
+    - [x] Webhook配置标签页：列表展示、添加、编辑、删除、启用/禁用、测试功能
+    - [x] 系统设置标签页（预留）
+    - [x] 使用说明卡片（企业微信和钉钉配置指南）
+  - [x] 更新Admin页面添加后端管理入口卡片
+  - [x] 更新routes.tsx添加/backend路由
+  - [x] 更新RouteGuard添加/backend到管理员路由列表
+  - [x] 更新Dashboard启动短驳按钮
+    - [x] 启动时发送Webhook通知（包含时间、入园人数、停车场状态）
+    - [x] 关闭时发送结束通知
+    - [x] 异步发送不阻塞UI操作
+  - [x] Lint验证通过（93个文件）
+
+- [x] 步骤43：优化Dashboard主页显示和短驳管控点位UI
+  - [x] 管理后台按钮在主页对所有用户显示（移除profile?.role === 'admin'条件判断）
+  - [x] 优化短驳管控点位UI为对称3列网格布局
+    - [x] 使用Card组件替代div，增强视觉层次
+    - [x] 响应式网格：md:grid-cols-2 xl:grid-cols-3
+    - [x] 统一卡片内边距和间距（p-4, space-y-3）
+    - [x] 地点名称和状态徽章在顶部并排显示
+    - [x] 时间信息固定高度（min-h-[20px]）保持对齐
+    - [x] 操作按钮在底部全宽显示
+    - [x] 使用shrink-0防止图标和徽章被压缩
+  - [x] Lint验证通过（93个文件）
+
+- [x] 步骤44：增加Webhook通知自定义消息模板功能
+  - [x] 数据库迁移：添加message_template字段到webhook_config表
+  - [x] 更新现有记录的默认模板（包含启动时间、入园人数、停车场状态）
+  - [x] 更新BackendManagement页面
+    - [x] 添加Textarea组件导入
+    - [x] 更新WebhookConfig接口添加message_template字段
+    - [x] 添加previewingId状态管理预览显示
+    - [x] 更新saveWebhookConfig函数包含message_template
+    - [x] 更新addWebhookConfig函数设置默认模板
+    - [x] 添加previewTemplate函数（使用示例数据预览模板效果）
+    - [x] UI添加消息模板编辑区域（Textarea、预览按钮、变量说明）
+    - [x] 添加预览效果显示区域（使用示例数据渲染模板）
+  - [x] 更新send-webhook-notification Edge Function
+    - [x] 添加TemplateData接口定义
+    - [x] 支持接收templateData参数
+    - [x] 优先使用message_template并替换变量
+    - [x] 支持变量：{time}、{visitor_count}、{guoyuan_parking}、{yuewanwan_parking}
+    - [x] 保持向后兼容（支持直接传message）
+  - [x] 重新部署send-webhook-notification Edge Function
+  - [x] 更新Dashboard启动短驳功能
+    - [x] 准备templateData对象（时间、入园人数、两个停车场状态）
+    - [x] 调用Edge Function时传递templateData而非message
+    - [x] 关闭短驳时仍使用直接message方式
+  - [x] Lint验证通过（93个文件）
+
+- [x] 步骤45：优化Dashboard UI设计，使用现代卡片式设计和品牌色调
+  - [x] 更新index.css添加灵山景区品牌色调
+    - [x] 添加--lingshan-green（青绿色）、--lingshan-blue（深蓝色）、--lingshan-gold（金色）
+    - [x] 添加--data-highlight（数据高亮色）
+    - [x] 支持亮色和暗黑模式
+  - [x] 更新tailwind.config.js
+    - [x] 添加lingshan品牌色到colors配置
+    - [x] 添加data-highlight到colors配置
+  - [x] 创建Progress进度条组件（src/components/ui/progress.tsx）
+  - [x] 优化Dashboard实时数据卡片
+    - [x] 添加border-2和shadow-lg增强立体感
+    - [x] 添加hover:shadow-xl悬停效果
+    - [x] 图标使用圆形背景（h-10 w-10，品牌色/10透明度）
+    - [x] 关键数字使用text-4xl font-bold text-data-highlight
+    - [x] 添加emoji图标增强语义（🌡️ 💨 🌫️ 🚗 🅿️ 📅）
+    - [x] 优化预警徽章颜色（danger/warning/success）
+  - [x] 重写ParkingChart停车场组件
+    - [x] 导入Progress组件和cn工具函数
+    - [x] 移除recharts圆环图依赖
+    - [x] 使用现代卡片式设计（border-2 shadow-lg）
+    - [x] 添加汽车图标和品牌色圆形背景
+    - [x] 数值显示：已占用（text-4xl text-data-highlight）+ 占用率（text-3xl text-lingshan-green）
+    - [x] 添加进度条组件（根据占用率动态改变颜色：<70%绿色、70-90%黄色、≥90%红色）
+    - [x] 显示已占用和可用车位数值标签
+    - [x] 优化时间信息和操作按钮布局
+    - [x] 特殊停车场使用相同设计风格
+  - [x] 添加cn导入到Dashboard页面
+  - [x] Lint验证通过（93个文件）
+
+- [x] 步骤46：统一按钮样式和优化地图区域
+  - [x] 导入AlertDialog组件到Dashboard
+  - [x] 添加确认弹窗状态管理（showShuttleDialog、pendingShuttleAction）
+  - [x] 重写启动短驳按钮
+    - [x] 修改文案："启动短驳"→"开启短驳车服务"，"关闭短驳"→"关闭短驳车服务"
+    - [x] 添加emoji图标（🚐开启、🔌关闭）
+    - [x] 统一样式：rounded-xl shadow-lg hover:shadow-xl
+    - [x] 点击时显示确认弹窗而非直接执行
+  - [x] 创建确认弹窗（AlertDialog）
+    - [x] 开启服务：列出将执行的操作（发送通知、显示面板、记录时间）
+    - [x] 关闭服务：列出将执行的操作（发送结束通知、隐藏面板、记录时间）
+    - [x] 确认按钮根据操作类型动态改变样式（关闭时使用destructive）
+    - [x] 取消和确认按钮使用rounded-lg圆角
+  - [x] 统一所有按钮样式
+    - [x] 停车场启动/关闭按钮：添加rounded-lg shadow-sm hover:shadow-md
+    - [x] 停车场关闭按钮使用🔌图标，启动按钮使用Power图标
+    - [x] 特殊停车场按钮使用相同样式和图标
+    - [x] 短驳管控点位按钮：添加rounded-lg shadow-sm hover:shadow-md
+    - [x] 管控按钮使用🔒启动、🔓解除图标
+  - [x] 优化地图区域
+    - [x] 地图卡片添加border-2 shadow-lg增强立体感
+    - [x] 标题区域添加品牌色圆形图标背景
+    - [x] 添加提示文案："💡 点击地图可查看实时交通状况，支持缩放和拖拽"
+    - [x] 添加热门路线快捷按钮（灵山→无锡东站、灵山→无锡站）
+    - [x] 统一按钮样式：所有按钮添加rounded-lg圆角
+    - [x] 地图底部添加提示层："🗺️ 地图已加载景区中心点及主要停车场位置"
+  - [x] 优化SimpleMap组件
+    - [x] 调整百度地图缩放级别（13z→15z）显示更多细节
+    - [x] 统一按钮样式：添加rounded-lg圆角
+    - [x] 地图切换按钮添加📍图标
+    - [x] 优化地图说明：添加更多emoji图标和详细说明
+    - [x] 说明内容：景区中心、停车场标注、实时路况、关键路段、操作提示、路线规划
+  - [x] Lint验证通过（93个文件）
+
+- [x] 步骤47：优化间距、状态反馈和视觉层次
+  - [x] 增加模块间距和呼吸感
+    - [x] 主容器space-y从6改为8（增加到32px间距）
+    - [x] 顶部标题栏border改为border-2，shadow-lg改为shadow-xl
+    - [x] 实时数据卡片区域gap保持6（24px）
+    - [x] TabsContent内部space-y从4改为6（24px）
+  - [x] 添加区域标题和分隔线
+    - [x] 实时数据概览：添加"📊 实时数据概览"标题，使用渐变色竖线+水平分隔线
+    - [x] 停车场实时状态：添加"🅿️ 停车场实时状态"标题
+    - [x] 历史数据对比：添加"📈 历史数据对比"标题
+    - [x] 趋势分析：添加"📊 趋势分析"标题
+    - [x] 地图区域：添加"🗺️ 景区周边实时路况"标题
+    - [x] 所有标题使用text-2xl font-bold，配合渐变色竖线（h-8 w-1）和水平分隔线
+  - [x] 优化标题层级和字号
+    - [x] 主标题：text-5xl xl:text-6xl font-bold（保持）
+    - [x] 区域标题：text-2xl font-bold（新增）
+    - [x] 卡片标题：text-lg font-bold（地图卡片）
+    - [x] 卡片小标题：text-sm font-medium text-muted-foreground（数据卡片）
+    - [x] 关键数字：text-4xl font-bold text-data-highlight（保持）
+    - [x] 正文：text-sm（保持）
+  - [x] 添加加载状态反馈
+    - [x] 全局加载指示器：fixed定位在页面顶部中央，显示"正在加载数据..."
+    - [x] 使用RefreshCw图标+animate-spin动画
+    - [x] 样式：rounded-full border-2 border-primary bg-background/95 backdrop-blur-sm shadow-xl
+    - [x] 仅在loading为true时显示
+  - [x] 优化刷新按钮反馈
+    - [x] 修改文案：loading时显示"刷新中..."，否则显示"刷新数据"
+    - [x] 添加rounded-lg和hover:shadow-md样式
+    - [x] 保持RefreshCw图标的animate-spin动画
+  - [x] 添加刷新成功提示
+    - [x] loadData函数成功后调用toast.success
+    - [x] 显示"数据已更新"主消息
+    - [x] description显示更新时间
+    - [x] duration设置为2000ms（2秒）
+  - [x] 优化抓取最新数据按钮
+    - [x] 添加rounded-lg shadow-sm hover:shadow-md样式
+    - [x] 保持fetchingVisitors状态的加载动画
+    - [x] 已有"抓取中..."文案反馈
+  - [x] 优化管理后台按钮
+    - [x] 添加rounded-lg和hover:shadow-md样式
+    - [x] 保持backdrop-blur-sm效果
+  - [x] Lint验证通过（93个文件）
+
+- [x] 步骤48：修复数据上传错误提示和移除自动抓取功能
+  - [x] 修复DataUpload数据上传错误处理
+    - [x] 增强batchInsertHistoricalTraffic函数日志
+    - [x] 添加console.log记录插入开始、第一条记录示例
+    - [x] 添加.select()获取插入结果
+    - [x] 添加console.log记录插入成功和返回数据
+    - [x] 优化错误处理：提取Supabase错误的code、details、hint信息
+    - [x] 显示详细错误信息，包括错误代码、详情、提示
+    - [x] 错误提示duration设置为5000ms（5秒）便于查看
+  - [x] 移除自动抓取入园人数功能
+    - [x] 删除fetchingVisitors状态
+    - [x] 删除fetchVisitorCount函数（包括useCallback）
+    - [x] 删除自动抓取的useEffect（首次延迟5秒+每10分钟定时）
+    - [x] 移除fetch-visitor-count Edge Function调用
+  - [x] 修改抓取按钮为跳转按钮
+    - [x] 将"抓取最新数据"按钮改为"查看数据来源"
+    - [x] 使用Button的asChild模式包裹<a>标签
+    - [x] 跳转到携程景区页面：https://piao.ctrip.com/ticket/dest/t1421558.html
+    - [x] 添加target="_blank"和rel="noopener noreferrer"
+    - [x] 保持Download图标和样式（rounded-lg shadow-sm hover:shadow-md）
+  - [x] Lint验证通过（93个文件）
+
+- [x] 步骤49：修复CSV数据解析和错误信息显示
+  - [x] 增强错误对象解析逻辑
+    - [x] 添加错误类型和对象键的日志输出
+    - [x] 支持多种错误对象结构（message、error、error_description）
+    - [x] 优先提取err.message，其次err.error，最后err.error_description
+    - [x] 如果err.error是对象，使用JSON.stringify转换
+    - [x] 添加错误代码显示（err.code）
+    - [x] 添加详细信息显示（err.details）
+    - [x] 添加提示信息显示（err.hint）
+    - [x] 如果所有方式都无法提取信息，输出完整JSON对象
+    - [x] 错误提示duration从5秒增加到8秒
+  - [x] 修复CSV解析空值处理
+    - [x] 添加isEmpty判断：检查空字符串、'null'、'NULL'
+    - [x] date字段：空值转为null（虽然date是必填，但先统一处理）
+    - [x] day_of_week字段：空值转为null
+    - [x] weather和weather_forecast字段：空值转为null
+    - [x] 时间字段（包含'time'）：空值转为null，避免空字符串导致数据库错误
+    - [x] 数字字段（count/visitors/spaces/year）：空值转为null，非空值解析为整数
+    - [x] 其他字段：空值转为null
+    - [x] 统一空值处理逻辑，确保数据库接收正确的null值而非空字符串
+  - [x] Lint验证通过（93个文件）
+
+- [x] 步骤50：修复字段名不匹配导致的数据上传失败
+  - [x] 查询数据库实际表结构
+    - [x] 使用supabase_execute_sql查询information_schema.columns
+    - [x] 发现数据库字段名为actual_visitor_count，而非total_visitors
+    - [x] 确认字段类型：actual_visitor_count为integer NOT NULL
+  - [x] 修复类型定义
+    - [x] 修改src/types/traffic.ts中的HistoricalTraffic接口
+    - [x] 将total_visitors字段改为actual_visitor_count
+    - [x] 添加注释说明这是数据库字段名
+  - [x] 添加CSV字段名映射
+    - [x] 在parseCSV函数中添加字段名映射逻辑
+    - [x] 将CSV中的total_visitors映射到actual_visitor_count
+    - [x] 保持CSV模板使用total_visitors（用户友好）
+    - [x] 在解析时自动转换为数据库字段名
+  - [x] 批量更新所有代码引用
+    - [x] 使用sed批量替换所有.total_visitors为.actual_visitor_count
+    - [x] 更新Dashboard.tsx中的getHistoricalPeak函数
+    - [x] 更新TrendComparison.tsx中的所有引用
+    - [x] 更新HistoryView.tsx中的显示逻辑
+    - [x] 更新DataUpload.tsx中的表格显示
+    - [x] 更新HistoricalTrendChart.tsx中的图表数据
+    - [x] 更新VisitorComparisonChart.tsx中的对比逻辑
+  - [x] 保持CSV模板不变
+    - [x] CSV模板仍使用total_visitors（用户友好的名称）
+    - [x] 说明文档保持total_visitors
+    - [x] 通过字段映射在后台自动转换
+  - [x] Lint验证通过（93个文件）
+
+- [x] 步骤51：修复数据库唯一约束缺失导致的upsert失败
+  - [x] 分析错误原因
+    - [x] 错误代码42P10：ON CONFLICT指定的字段没有唯一约束
+    - [x] batchInsertHistoricalTraffic使用onConflict: 'date'
+    - [x] 但date字段只有NOT NULL约束，没有UNIQUE约束
+  - [x] 查询数据库约束
+    - [x] 使用supabase_execute_sql查询pg_constraint
+    - [x] 确认只有主键约束historical_traffic_pkey
+    - [x] 没有date字段的唯一约束
+  - [x] 创建migration添加唯一约束
+    - [x] 创建migration：add_unique_constraint_to_historical_traffic_date
+    - [x] 先删除可能存在的重复数据（保留最新的）
+    - [x] 添加UNIQUE约束：historical_traffic_date_unique
+    - [x] 添加约束注释说明用途
+  - [x] 验证约束添加成功
+    - [x] 再次查询pg_constraint
+    - [x] 确认UNIQUE (date)约束已添加
+    - [x] 约束类型为'u'（unique）
+  - [x] Lint验证通过（93个文件）
+
+- [x] 步骤52：修复必填字段为null导致的数据插入失败
+  - [x] 分析错误原因
+    - [x] 错误代码23502：NOT NULL约束违反
+    - [x] actual_visitor_count字段为null
+    - [x] 失败行示例：2019-05-03, 三十, null, null, null
+    - [x] 用户Excel表格中total_visitors列有空值
+  - [x] 第一次修改CSV解析逻辑（未完全解决）
+    - [x] 添加hasRequiredFields标记，跟踪必填字段是否完整
+    - [x] date字段：如果为空，标记hasRequiredFields=false
+    - [x] day_of_week字段：如果为空，标记hasRequiredFields=false
+    - [x] actual_visitor_count字段：单独处理，如果为空则跳过该记录
+    - [x] 添加console.warn日志，记录跳过的行号和原因
+    - [x] 只添加hasRequiredFields=true的记录到结果数组
+  - [x] 发现问题：必填字段为空时仍被设置为null
+    - [x] 当actual_visitor_count为空时，record[fieldName]未被设置
+    - [x] TypeScript将不存在的字段视为undefined
+    - [x] Supabase将undefined转换为null，导致违反NOT NULL约束
+  - [x] 第二次修改CSV解析逻辑（彻底修复）
+    - [x] 添加skippedRows计数器，统计跳过的行数
+    - [x] 添加missingFields数组，记录缺失的必填字段名称
+    - [x] date字段为空时：不设置record[fieldName]，标记hasRequiredFields=false
+    - [x] day_of_week字段为空时：不设置record[fieldName]，标记hasRequiredFields=false
+    - [x] actual_visitor_count字段为空时：不设置record[fieldName]，标记hasRequiredFields=false
+    - [x] 改进console.warn日志：显示缺失的字段列表
+    - [x] 添加解析完成日志：显示有效记录数和跳过行数
+  - [x] 添加API层数据验证（双重保险）
+    - [x] 在batchInsertHistoricalTraffic函数中添加验证逻辑
+    - [x] 验证date字段：不能为空字符串
+    - [x] 验证day_of_week字段：不能为空字符串
+    - [x] 验证actual_visitor_count字段：不能为null、undefined或NaN
+    - [x] 过滤掉不符合要求的记录，记录console.warn日志
+    - [x] 如果没有有效记录，抛出错误"没有有效的记录可以插入"
+    - [x] 只插入验证通过的记录到数据库
+  - [x] 优化上传反馈
+    - [x] 计算总行数（不包括表头）
+    - [x] 计算跳过的记录数：totalLines - records.length
+    - [x] 如果有跳过的记录，显示详细信息
+    - [x] 成功消息包含"跳过X条无效记录（缺少必填字段）"
+    - [x] 提示duration设置为5000ms
+    - [x] 如果没有有效记录，提示"请检查必填字段（日期、星期、游客数量）是否完整"
+  - [x] Lint验证通过（93个文件）
+
+- [x] 步骤53：优化历史趋势和对比分析页面UI
+  - [x] 优化TrendComparison页面（历史趋势）
+    - [x] 添加法定节假日数据（2022-2026年）
+      - [x] 元旦、春节、清明节、劳动节、端午节、中秋节、国庆节
+      - [x] 每个节假日包含名称和日期列表
+    - [x] 添加getHolidaysInRange函数
+      - [x] 根据选择的日期范围筛选节假日
+      - [x] 返回范围内的所有节假日及日期
+    - [x] 优化页面布局
+      - [x] 改为3列布局：左侧2列图表，右侧1列节假日和统计
+      - [x] 使用lg:grid-cols-3响应式布局
+    - [x] 优化客流趋势图表
+      - [x] 添加最高点标记（ReferenceDot）
+      - [x] 在标记上显示峰值数据（Label）
+      - [x] 在CardHeader显示峰值信息（日期、星期、人数）
+      - [x] 添加Star图标标识峰值
+      - [x] 图表高度增加到450px
+      - [x] 总游客数线条加粗（strokeWidth=3）
+    - [x] 优化停车场趋势图表
+      - [x] 添加最高点信息显示
+      - [x] 在CardHeader显示峰值信息
+      - [x] 添加Star图标标识峰值
+    - [x] 添加法定节假日卡片
+      - [x] 显示范围内的所有节假日
+      - [x] 每个节假日显示名称、天数、日期列表
+      - [x] 使用Badge显示节假日名称
+      - [x] 日期格式：yyyy-MM-dd (星期)
+      - [x] 无节假日时显示提示信息
+    - [x] 优化统计卡片
+      - [x] 移到右侧边栏
+      - [x] 垂直排列，每个卡片独立
+      - [x] 使用不同颜色区分（primary、success、warning、accent）
+    - [x] 优化响应式设计
+      - [x] 移动端自动切换为单列布局
+      - [x] 使用md:和lg:断点
+  - [x] 优化HistoryView页面（历史对比）
+    - [x] 添加"历年客流对比分析"卡片
+      - [x] 显示所有历史数据的趋势图
+      - [x] 使用LineChart展示2022年、2023年、实际游客数
+      - [x] X轴日期倾斜45度显示，避免重叠
+      - [x] 图表高度500px，提供更好的可视效果
+      - [x] 线条不显示点（dot=false），数据多时更清晰
+      - [x] 添加渐变色标题背景
+    - [x] 优化"当日历年同期数据对比"卡片
+      - [x] 重命名为"当日历年同期数据对比"
+      - [x] 添加日期和星期显示
+      - [x] 使用渐变色背景卡片
+      - [x] 2022年：primary色系
+      - [x] 2023年：warning色系
+      - [x] 实际游客数：success色系
+      - [x] 数字格式化（toLocaleString）
+      - [x] 显示天气信息
+    - [x] 移除具体明细列表
+      - [x] 不显示详细的数据表格
+      - [x] 只保留图表和统计卡片
+      - [x] 提供更简洁的数据展示
+  - [x] Lint验证通过（93个文件）
+
+- [x] 步骤54：在所有页面添加法定节假日快捷选择功能
+  - [x] 创建共享节假日数据文件
+    - [x] 创建src/data/holidays.ts
+    - [x] 包含2022-2026年所有法定节假日数据
+    - [x] 导出HOLIDAYS常量和类型定义
+  - [x] 创建HolidaySelector组件
+    - [x] 创建src/components/HolidaySelector.tsx
+    - [x] 显示所有年份的法定节假日
+    - [x] 按年份分组显示
+    - [x] 每个节假日显示名称Badge、天数、日期范围
+    - [x] 点击节假日触发onSelectHoliday回调
+    - [x] 使用accent色系渐变背景
+    - [x] 响应式设计，移动端友好
+  - [x] 修改TrendComparison页面（历史趋势）
+    - [x] 导入HolidaySelector和HOLIDAYS
+    - [x] 移除本地节假日数据定义
+    - [x] 添加handleSelectHoliday处理函数
+      - [x] 设置startDate和endDate
+      - [x] 显示成功提示（toast）
+    - [x] 替换原节假日显示为HolidaySelector组件
+    - [x] 保持3列布局（左侧2列图表+右侧1列选择器）
+  - [x] 修改HistoryView页面（历史对比）
+    - [x] 导入HolidaySelector组件
+    - [x] 添加handleSelectHoliday处理函数
+      - [x] 设置selectedDate为节假日第一天
+      - [x] 显示成功提示（toast）
+    - [x] 移除停车场历史数据列表（238-320行）
+    - [x] 改为3列布局（左侧2列数据+右侧1列选择器）
+    - [x] 只保留数据概览卡片、历年客流对比分析、当日历史对比数据
+    - [x] 添加HolidaySelector到右侧边栏
+  - [x] Lint验证通过（95个文件）
+
+- [x] 步骤55：修改数据来源链接和添加预约游客管理功能
+  - [x] 修改"查看数据来源"按钮
+    - [x] 修改Dashboard页面中的链接
+    - [x] 更改URL为 http://dp.lingshan.org:8505/dp/login.html
+    - [x] 添加title提示：用户名: ls | 密码: q9vik7mf2l
+  - [x] 创建预约游客管理页面
+    - [x] 创建src/pages/ReservationManagement.tsx
+    - [x] 日期选择功能（Calendar组件）
+    - [x] 预约游客数量输入（Input组件，type=number）
+    - [x] 备注信息输入（Textarea组件）
+    - [x] 保存/更新功能（调用upsertReservationVisitors API）
+    - [x] 删除功能（调用deleteReservationVisitors API）
+    - [x] 删除确认对话框（AlertDialog组件）
+    - [x] 历史记录列表显示（右侧边栏）
+    - [x] 点击历史记录快速切换日期
+    - [x] 当前状态提示（已有数据时显示更新时间）
+    - [x] 3列响应式布局（左侧2列表单+右侧1列历史）
+  - [x] 修改API函数
+    - [x] 修改deleteReservationVisitors函数
+    - [x] 参数从id改为date
+    - [x] 使用.eq('date', date)删除记录
+  - [x] 添加路由配置
+    - [x] 在routes.tsx中导入ReservationManagement
+    - [x] 添加路由：/reservation
+    - [x] 设置visible: false（管理员专用）
+  - [x] 修改Admin页面
+    - [x] 导入CalendarCheck图标
+    - [x] 添加"预约游客管理"卡片
+    - [x] 使用success色系（绿色）
+    - [x] 链接到/reservation路由
+    - [x] 卡片描述：管理每日预约游客数据
+  - [x] Lint验证通过（96个文件）
+
+- [x] 步骤56：移除历史对比页面的当日数据卡片
+  - [x] 修改HistoryView页面
+    - [x] 移除"当日历史对比数据"卡片（322-359行）
+    - [x] 移除显示2022年、2023年、实际游客数的对比卡片
+    - [x] 保留"历年客流对比分析"图表
+    - [x] 保留右侧节假日选择器
+    - [x] 页面更加简洁，只显示图表数据
+  - [x] Lint验证通过（96个文件）
+
+- [x] 步骤57：在历史对比图表上增加所有年份数据和最高点标记
+  - [x] 修改HistoryView页面
+    - [x] 添加Star、ReferenceDot、Label导入
+    - [x] 在CardHeader中显示各年份峰值信息
+      - [x] 2022年峰值：显示人数、日期、星期
+      - [x] 2023年峰值：显示人数、日期、星期
+      - [x] 实际游客峰值：显示人数、日期、星期
+      - [x] 使用Star图标标识，不同颜色区分
+    - [x] 优化图表数据处理
+      - [x] 使用IIFE（立即执行函数）避免重复计算
+      - [x] 计算各年份的最高点数据
+      - [x] 使用reduce函数找到最大值
+    - [x] 添加最高点标记到图表
+      - [x] 2022年最高点：ReferenceDot + Label
+      - [x] 2023年最高点：ReferenceDot + Label
+      - [x] 实际游客最高点：ReferenceDot + Label
+      - [x] 标记点使用对应颜色（primary、warning、success）
+      - [x] 标记点半径6px，白色边框
+      - [x] Label显示数值，格式化千分位
+      - [x] Label位置在标记点上方
+    - [x] 保持所有年份数据线显示
+      - [x] 2022年：primary色系，线宽2px
+      - [x] 2023年：warning色系，线宽2px
+      - [x] 实际游客数：success色系，线宽3px
+  - [x] Lint验证通过（96个文件）
+
+- [x] 步骤58：优化历史对比页面，添加2019-2025年完整数据展示
+  - [x] 创建数据库迁移
+    - [x] 创建00013_add_more_year_columns.sql
+    - [x] 添加year_2019字段（INTEGER）
+    - [x] 添加year_2020字段（INTEGER）
+    - [x] 添加year_2021字段（INTEGER）
+    - [x] 添加year_2024字段（INTEGER）
+    - [x] 添加year_2025字段（INTEGER）
+    - [x] 添加字段注释说明
+  - [x] 修改类型定义
+    - [x] 修改src/types/traffic.ts
+    - [x] 在HistoricalTraffic接口中添加所有年份字段
+    - [x] year_2019: number | null
+    - [x] year_2020: number | null
+    - [x] year_2021: number | null
+    - [x] year_2024: number | null
+    - [x] year_2025: number | null
+  - [x] 修改HistoryView页面
+    - [x] 添加React导入（支持Fragment）
+    - [x] 定义YEAR_CONFIGS配置数组
+      - [x] 2019年：accent色系
+      - [x] 2020年：secondary色系
+      - [x] 2021年：chart-1色系
+      - [x] 2022年：primary色系
+      - [x] 2023年：warning色系
+      - [x] 2024年：chart-2色系
+      - [x] 2025年：chart-3色系
+    - [x] 修改CardHeader标题为"历年客流对比分析（2019-2025年）"
+    - [x] 优化峰值信息显示
+      - [x] 使用map遍历YEAR_CONFIGS
+      - [x] 计算每个年份的最高点
+      - [x] 过滤掉无数据的年份（maxValue > 0）
+      - [x] 动态显示有数据的年份峰值
+      - [x] 使用对应颜色的Star图标
+    - [x] 优化图表数据处理
+      - [x] chartData包含所有年份字段（year2019-year2025）
+      - [x] 使用map计算每个年份的最高点
+      - [x] 存储最高点的日期、数值信息
+    - [x] 优化图表渲染
+      - [x] 使用map遍历yearMaxValues
+      - [x] 使用React.Fragment包裹每个年份的Line和ReferenceDot
+      - [x] 动态渲染所有年份的数据线
+      - [x] 动态渲染所有年份的最高点标记
+      - [x] 只显示有数据的年份（maxValue > 0）
+      - [x] 标记点半径5px（年份）和6px（实际游客）
+      - [x] Label字体大小11px（年份）和12px（实际游客）
+    - [x] 增加图表高度到600px（容纳更多数据线）
+    - [x] 调整X轴字体大小为11px（避免拥挤）
+  - [x] Lint验证通过（96个文件）
+
+- [x] 步骤59：在首页添加法定节假日快捷选择功能
+  - [x] 修改Dashboard页面
+    - [x] 添加HolidaySelector组件导入
+    - [x] 添加format和zhCN导入（date-fns）
+    - [x] 添加selectedDate状态变量
+    - [x] 添加handleSelectHoliday处理函数
+      - [x] 设置selectedDate为节假日开始日期
+      - [x] 显示成功提示（toast）
+      - [x] 提示信息包含节假日名称和日期范围
+    - [x] 在地图区域之前添加节假日选择器
+      - [x] 添加区域标题"📅 法定节假日快捷选择"
+      - [x] 使用渐变色标题装饰
+      - [x] 添加HolidaySelector组件
+      - [x] 传入handleSelectHoliday回调函数
+    - [x] 保持页面布局协调
+      - [x] 节假日选择器位于Tabs和地图之间
+      - [x] 与其他区域标题样式统一
+      - [x] 响应式布局保持完整
+  - [x] Lint验证通过（96个文件）
+
+- [x] 步骤60：优化HolidaySelector组件，添加年份选择功能并减小高度
+  - [x] 修改HolidaySelector组件
+    - [x] 添加useState导入
+    - [x] 添加Select组件导入
+      - [x] SelectContent
+      - [x] SelectItem
+      - [x] SelectTrigger
+      - [x] SelectValue
+    - [x] 添加年份选择功能
+      - [x] 添加selectedYear状态（默认当前年份）
+      - [x] 获取所有可用年份（Object.keys(HOLIDAYS)）
+      - [x] 根据selectedYear过滤节假日数据
+    - [x] 优化CardHeader布局
+      - [x] 使用flex布局，标题和年份选择器并排
+      - [x] 年份选择器宽度120px
+      - [x] 减小padding（pb-4）
+    - [x] 优化CardContent布局
+      - [x] 减小padding（pt-4）
+      - [x] 使用grid布局替代space-y
+      - [x] 响应式列数：sm:grid-cols-2 lg:grid-cols-3
+      - [x] 减小间距（gap-2）
+    - [x] 优化节假日按钮样式
+      - [x] 使用flex-col布局，垂直排列
+      - [x] h-auto自适应高度
+      - [x] 减小padding（p-3）
+      - [x] items-start左对齐
+      - [x] gap-1减小内部间距
+    - [x] 移除年份标题（h3）
+      - [x] 不再显示"{year}年"标题
+      - [x] 通过Select选择器显示年份
+  - [x] 功能优化
+    - [x] 默认显示当前年份的节假日
+    - [x] 用户可以通过下拉选择器切换年份
+    - [x] 只显示选中年份的节假日
+    - [x] 容器高度大幅减小
+    - [x] 布局更紧凑，视觉更清晰
+  - [x] Lint验证通过（96个文件）
+
+- [x] 步骤61：校准法定节假日数据，确保准确性
+  - [x] 修改holidays.ts数据文件
+    - [x] 添加数据来源注释（国务院办公厅官方通知）
+    - [x] 校准2022年数据（国办发明电〔2021〕11号）
+      - [x] 元旦：1月1日-3日 ✓
+      - [x] 春节：1月31日-2月6日 ✓
+      - [x] 清明节：4月3日-5日 ✓
+      - [x] 劳动节：4月30日-5月4日 ✓
+      - [x] 端午节：6月3日-5日 ✓
+      - [x] 中秋节：9月10日-12日 ✓
+      - [x] 国庆节：10月1日-7日 ✓
+    - [x] 校准2023年数据（国办发明电〔2022〕16号）
+      - [x] 元旦：2022年12月31日-2023年1月2日 ✓
+      - [x] 春节：1月21日-27日 ✓
+      - [x] 清明节：4月5日 ✓
+      - [x] 劳动节：4月29日-5月3日 ✓
+      - [x] 端午节：6月22日-24日 ✓
+      - [x] 中秋国庆：9月29日-10月6日（合并为一个假期）✓
+    - [x] 校准2024年数据（国办发明电〔2023〕7号）
+      - [x] 元旦：1月1日 ✓
+      - [x] 春节：2月10日-17日 ✓
+      - [x] 清明节：4月4日-6日 ✓
+      - [x] 劳动节：5月1日-5日 ✓
+      - [x] 端午节：6月10日 ✓
+      - [x] 中秋节：9月15日-17日 ✓
+      - [x] 国庆节：10月1日-7日 ✓
+    - [x] 校准2025年数据（国办发明电〔2024〕21号）
+      - [x] 元旦：1月1日 ✓
+      - [x] 春节：1月28日-2月4日 ✓
+      - [x] 清明节：4月4日-6日 ✓
+      - [x] 劳动节：5月1日-5日 ✓
+      - [x] 端午节：5月31日-6月2日 ✓
+      - [x] 中秋节：10月6日 ✓
+      - [x] 国庆节：10月1日-5日、7日-8日 ✓
+    - [x] 校准2026年数据（预测数据）
+      - [x] 添加说明：官方通知尚未发布
+      - [x] 基于农历日期推算
+      - [x] 春节：2月16日-22日（农历正月初一2月17日）❌
+      - [x] 其他节假日按常规推算
+  - [x] Lint验证通过（96个文件）
+
+- [x] 步骤62：修正2026年春节日期并优化主页布局
+  - [x] 修正2026年春节日期
+    - [x] 修改holidays.ts文件
+    - [x] 更正农历日期说明：正月初一为1月29日（星期四）
+    - [x] 更正春节放假日期：1月28日-2月3日（除夕到正月初六）
+    - [x] 之前错误：2月16日-22日 ❌
+    - [x] 现在正确：1月28日-2月3日 ✓
+  - [x] 去除主页天气状况卡片
+    - [x] 修改Dashboard.tsx文件
+    - [x] 删除天气状况Card组件（644-670行）
+    - [x] 删除天气图标（Cloud）
+    - [x] 删除天气数据显示（温度、风向、AQI）
+    - [x] 调整grid布局：xl:grid-cols-4 → xl:grid-cols-3
+    - [x] 保持响应式布局：md:grid-cols-2
+  - [x] 优化主页历史对比显示
+    - [x] 修改VisitorComparisonChart.tsx组件
+    - [x] 删除图表下方的数据卡片网格（65-73行）
+    - [x] 删除chartData.map渲染的卡片列表
+    - [x] 只保留图表显示
+    - [x] 保持CardHeader和图表部分
+  - [x] Lint验证通过（96个文件）
+
+- [x] 步骤63：添加无锡天气显示并优化历史对比图表
+  - [x] 创建天气API Edge Function
+    - [x] 创建get-wuxi-weather Edge Function
+    - [x] 调用未来7日天气预报API
+    - [x] 使用areaCn=无锡参数
+    - [x] 处理CORS请求
+    - [x] 根据日期参数返回对应天气数据
+    - [x] 部署Edge Function（pluginId: 50702c77-3813-482c-8815-c50ebdcfc741）
+  - [x] 在Dashboard页面添加天气显示
+    - [x] 添加wuxiWeather状态变量
+    - [x] 添加loadWuxiWeather函数
+    - [x] 调用get-wuxi-weather Edge Function
+    - [x] 传入日期参数：2026-02-10
+    - [x] 在预约游客卡片中显示天气信息
+      - [x] 显示日期：2026/2/10 周二
+      - [x] 显示地区：无锡滨湖区
+      - [x] 显示天气状况
+      - [x] 显示温度范围
+      - [x] 显示风向风力
+    - [x] 使用圆角边框卡片样式
+    - [x] 使用muted背景色
+  - [x] 优化历史对比图表
+    - [x] 修改VisitorComparisonChart.tsx组件
+    - [x] 添加format和zhCN导入
+    - [x] 显示2019-2025年所有年份数据
+      - [x] 添加year_2019到year_2025字段
+      - [x] 为每个年份分配不同颜色
+      - [x] 2019年：accent色系
+      - [x] 2020年：secondary色系
+      - [x] 2021年：chart-1色系
+      - [x] 2022年：chart-2色系
+      - [x] 2023年：chart-3色系
+      - [x] 2024年：chart-4色系
+      - [x] 2025年：chart-5色系
+      - [x] 实际游客数：primary色系
+    - [x] 添加短驳时间数据显示
+      - [x] 月亮湾启用时间（yuelvwan_open_time）
+      - [x] 果园停满时间（guoyuan_full_time）
+      - [x] 灵湖大桥分流时间（linghu_bridge_diversion_start）
+      - [x] 高速停止分流时间（highway_stop_diversion_time）
+      - [x] 灵湖路开放时间（linghu_road_open_time）
+    - [x] 优化Tooltip显示
+      - [x] 自定义Tooltip内容
+      - [x] 显示完整日期和星期
+      - [x] 显示天气信息
+      - [x] 显示所有年份数据（只显示有数据的年份）
+      - [x] 显示短驳管控时间（如果有）
+      - [x] 使用分隔线区分不同信息区域
+    - [x] 修改标题为"历年客流对比分析（2019-2025年）"
+    - [x] 增加图表高度到500px
+    - [x] 优化X轴显示（角度-45度，字体11px）
+    - [x] 数字格式化（千分位）
+  - [x] Lint验证通过（96个文件）
+
+- [x] 步骤64：完善法定节假日数据并简化天气显示
+  - [x] 完善法定节假日数据
+    - [x] 添加数据来源链接（国务院政策文件库）
+    - [x] 添加2019年数据（国办发明电〔2018〕15号）
+      - [x] 元旦：2018年12月30日-2019年1月1日
+      - [x] 春节：2月4日-10日
+      - [x] 清明节：4月5日-7日
+      - [x] 劳动节：5月1日-4日
+      - [x] 端午节：6月7日-9日
+      - [x] 中秋节：9月13日-15日
+      - [x] 国庆节：10月1日-7日
+    - [x] 添加2020年数据（国办发明电〔2019〕16号）
+      - [x] 元旦：1月1日
+      - [x] 春节：1月24日-30日
+      - [x] 清明节：4月4日-6日
+      - [x] 劳动节：5月1日-5日
+      - [x] 端午节：6月25日-27日
+      - [x] 中秋国庆：10月1日-8日
+    - [x] 添加2021年数据（国办发明电〔2020〕27号）
+      - [x] 元旦：1月1日-3日
+      - [x] 春节：2月11日-17日
+      - [x] 清明节：4月3日-5日
+      - [x] 劳动节：5月1日-5日
+      - [x] 端午节：6月12日-14日
+      - [x] 中秋节：9月19日-21日
+      - [x] 国庆节：10月1日-7日
+    - [x] 验证2022-2025年数据准确性
+    - [x] 所有数据基于国务院办公厅官方通知
+  - [x] 简化天气显示
+    - [x] 修改Dashboard.tsx
+    - [x] 移除圆角边框卡片样式
+    - [x] 移除"无锡滨湖区天气"标题
+    - [x] 移除风向风力信息
+    - [x] 只保留：日期、天气、温度
+    - [x] 使用简洁的inline布局
+    - [x] 优化文字大小和间距
+  - [x] Lint验证通过（96个文件）
+
+- [x] 步骤65：调整实时数据概览卡片顺序并优化显示
+  - [x] 调整卡片顺序
+    - [x] 第一个：当日预约游客（原第三个）
+    - [x] 第二个：当前入园人数（原第一个）
+    - [x] 第三个：停车场状态（原第二个）
+  - [x] 优化停车场状态卡片
+    - [x] 移除"🚗 4个停车场运营中"文本
+    - [x] 只保留核心数据显示
+    - [x] 简化CardContent内容
+  - [x] 放大字体显示
+    - [x] 标题字体：text-sm → text-base
+    - [x] 图标大小：h-5 w-5 → h-6 w-6
+    - [x] 主数字字体：text-4xl → text-5xl
+    - [x] Badge字体：text-xs → text-sm
+    - [x] 辅助文字：text-xs → text-sm/text-base
+    - [x] 峰值文字：text-xs → text-sm
+    - [x] 天气信息：text-sm → text-base
+  - [x] 保持卡片样式一致性
+    - [x] 所有卡片使用相同的border-2和shadow-lg
+    - [x] 保持hover效果
+    - [x] 保持图标圆形背景
+  - [x] Lint验证通过（96个文件）
+
+- [x] 步骤66：优化法定节假日、停车场顺序和月亮湾管理
+  - [x] 修正2026年春节日期
+    - [x] 修改holidays.ts文件
+    - [x] 更正春节放假日期：2月15日-2月23日（9天）
+    - [x] 更正农历日期说明：正月初一为2月17日（星期二）
+    - [x] 之前错误：1月28日-2月3日 ❌
+    - [x] 现在正确：2月15日-2月23日 ✓
+  - [x] 优化法定节假日快捷选择
+    - [x] 修改HolidaySelector.tsx组件
+    - [x] 默认不选择年份（selectedYear初始为空字符串）
+    - [x] 年份选择器显示"选择年份"占位符
+    - [x] 只有选择年份后才显示节假日列表
+    - [x] 未选择年份时显示提示："请先选择年份查看节假日"
+    - [x] 选择年份后显示提示："点击节假日快速设置日期范围"
+    - [x] 使用条件渲染CardContent（selectedYear && selectedHolidays.length > 0）
+  - [x] 调整停车场板块顺序
+    - [x] 修改ParkingChart.tsx组件
+    - [x] 添加specialParkingLots排序逻辑
+    - [x] 灵湖路停车场排在前面（return -1）
+    - [x] 古竹两侧停车场排在后面（return 1）
+    - [x] 使用sort函数实现顺序交换
+  - [x] 添加月亮湾停车场管理功能
+    - [x] 创建ParkingManagement.tsx页面
+      - [x] 页面标题和返回按钮
+      - [x] 停车场信息卡片（总车位、当前占用、剩余）
+      - [x] 已占用车位数输入（必填，0-总车位数）
+      - [x] 备注信息输入（选填，Textarea）
+      - [x] 保存和刷新按钮
+      - [x] 使用说明卡片
+    - [x] 在Admin.tsx添加管理入口
+      - [x] 添加Car图标导入
+      - [x] 创建月亮湾停车场管理卡片
+      - [x] 链接到/parking-management路由
+    - [x] 在routes.tsx添加路由
+      - [x] 导入ParkingManagement组件
+      - [x] 添加/parking-management路由配置
+      - [x] 设置visible: false（不在导航显示）
+    - [x] 扩展数据类型和API
+      - [x] 在ParkingLot接口添加notes字段
+      - [x] 在updateParkingLot函数添加notes参数
+      - [x] 支持notes的更新和保存
+  - [x] Lint验证通过（97个文件）
+
+- [x] 步骤67：修复月亮湾管理、扩大地图高度、移动历年客流对比
+  - [x] 修复月亮湾停车场数据保存失败问题
+    - [x] 错误信息：Column 'notes' of relation 'parking_lots' does not exist
+    - [x] 创建数据库迁移add_notes_to_parking_lots
+    - [x] 添加notes字段到parking_lots表（TEXT类型）
+    - [x] 使用ALTER TABLE ADD COLUMN IF NOT EXISTS
+    - [x] 迁移成功执行
+    - [x] 现在可以正常保存月亮湾停车场数据
+  - [x] 扩大实时路况地图高度
+    - [x] 修改Dashboard.tsx地图容器
+    - [x] 地图高度从h-[500px]扩大到h-[1500px]
+    - [x] 扩大3倍（500px → 1500px）
+    - [x] 保持地图提示层位置和样式
+    - [x] 保持地图功能完整性
+  - [x] 将历年客流对比分析移到首页
+    - [x] 从Tabs中的"历史对比"标签页移出
+    - [x] 放在实时数据概览卡片之后
+    - [x] 放在主要图表区域（Tabs）之前
+    - [x] 添加独立的区域标题："📈 历年客流对比分析（2019-2025年）"
+    - [x] 保持VisitorComparisonChart组件完整功能
+    - [x] 移除Tabs中的"历史对比"标签页
+    - [x] 只保留"总览"和"历史趋势"两个标签
+    - [x] 优化页面布局和信息层级
+  - [x] 修复TypeScript类型错误
+    - [x] 修复HolidaySelector.tsx类型错误
+      - [x] 使用keyof typeof HOLIDAYS类型断言
+      - [x] 为map函数参数添加类型注解
+    - [x] 修复calendar.tsx类型错误
+      - [x] 为IconLeft和IconRight添加类型注解
+      - [x] 使用类型断言解决CustomComponents类型问题
+  - [x] Lint验证通过（97个文件）
+
+- [x] 步骤68：优化历年客流对比分析图表
+  - [x] 图表类型优化
+    - [x] 从BarChart改为ComposedChart组合图表
+    - [x] 历史年份数据使用Line折线图展示趋势
+    - [x] 实际游客数使用Bar柱状图+Area面积图突出显示
+    - [x] 折线图设置type="monotone"平滑曲线
+    - [x] 柱状图添加圆角radius=[4, 4, 0, 0]
+    - [x] 面积图使用渐变色填充
+  - [x] 配色方案优化
+    - [x] 2019-2025年使用渐变蓝色系：
+      - [x] 2019年：#94a3b8（浅灰蓝）
+      - [x] 2020年：#64748b（中灰蓝）
+      - [x] 2021年：#475569（深灰蓝）
+      - [x] 2022年：#0ea5e9（天蓝）
+      - [x] 2023年：#0284c7（深蓝）
+      - [x] 2024年：#0369a1（更深蓝）
+      - [x] 2025年：#075985（最深蓝）
+    - [x] 实际游客数使用danger红色突出显示
+    - [x] 定义渐变色actualGradient用于面积图
+    - [x] 网格线设置opacity=0.3降低干扰
+  - [x] 布局优化
+    - [x] 标题简化为"客流趋势分析（2019-2025）"
+    - [x] 添加渐变色图标背景（primary到accent）
+    - [x] 关键指标卡片独立显示：
+      - [x] 当前入园人数（primary色系）
+      - [x] 历史峰值（danger色系）
+    - [x] 添加年份峰值统计Badge
+    - [x] 图表高度从500px增加到600px
+    - [x] 增加margin优化显示空间
+  - [x] 交互功能增强
+    - [x] 添加年份显示/隐藏控制按钮
+      - [x] 使用useState管理visibleYears状态
+      - [x] Eye/EyeOff图标切换
+      - [x] 按钮颜色与年份配色一致
+    - [x] 添加导出图表按钮（功能占位）
+    - [x] 优化Tooltip显示：
+      - [x] 使用rounded-xl圆角
+      - [x] 添加border-2边框
+      - [x] 背景使用backdrop-blur-sm毛玻璃效果
+      - [x] 日期标题添加圆点装饰
+      - [x] 天气信息添加emoji图标
+      - [x] 年份数据使用颜色圆点标识
+      - [x] 实际游客数加粗红色显示
+      - [x] 短驳时间信息独立区域
+    - [x] 图例点击交互（通过按钮实现）
+  - [x] 文字和样式优化
+    - [x] 所有文字字号增大（12px）
+    - [x] Y轴数值格式化为k单位（如30k）
+    - [x] X轴标签angle=-45避免重叠
+    - [x] 使用interval="preserveStartEnd"优化标签密度
+    - [x] 添加图表使用提示说明
+    - [x] 卡片使用border-2和shadow-xl增强立体感
+  - [x] 视觉细节优化
+    - [x] CardHeader使用渐变背景
+    - [x] 关键指标卡片使用圆角和阴影
+    - [x] 折线图activeDot设置r=6增大悬停点
+    - [x] 柱状图opacity=0.8半透明效果
+    - [x] 网格线使用虚线strokeDasharray="3 3"
+    - [x] 底部添加使用提示卡片
+  - [x] Lint验证通过（97个文件）
+
+- [x] 步骤69：优化使用提示和移除导出按钮
+  - [x] 移除导出图表按钮
+    - [x] 从年份控制按钮区域移除导出按钮
+    - [x] 移除Download图标导入
+    - [x] 移除toast导入
+    - [x] 移除handleExport函数
+    - [x] 简化代码结构
+  - [x] 优化使用提示显示
+    - [x] 从单行文本改为三列卡片布局
+    - [x] 使用grid布局（md:grid-cols-3）
+    - [x] 每个提示独立卡片：
+      - [x] 年份切换卡片（primary色系，Eye图标）
+        - [x] 标题："年份切换"
+        - [x] 说明："点击上方年份按钮可显示/隐藏对应数据系列"
+      - [x] 数据详情卡片（accent色系，TrendingUp图标）
+        - [x] 标题："数据详情"
+        - [x] 说明："鼠标悬停在图表上查看详细数据和短驳时间"
+      - [x] 图表说明卡片（secondary色系，Users图标）
+        - [x] 标题："图表说明"
+        - [x] 说明："折线图展示历史趋势，红色柱状图突出实际游客数"
+    - [x] 卡片样式优化：
+      - [x] 使用rounded-lg圆角
+      - [x] 使用border边框（各自色系/20透明度）
+      - [x] 使用背景色（各自色系/5透明度）
+      - [x] 内边距p-3
+      - [x] flex布局（items-start gap-3）
+    - [x] 图标样式：
+      - [x] 圆形背景（h-8 w-8 rounded-full）
+      - [x] 背景色（各自色系/10透明度）
+      - [x] 图标大小h-4 w-4
+      - [x] shrink-0防止收缩
+    - [x] 文字样式：
+      - [x] 标题：text-sm font-semibold text-foreground
+      - [x] 说明：text-xs text-muted-foreground mt-1
+    - [x] 响应式设计：
+      - [x] 移动端单列显示
+      - [x] 桌面端三列显示（md:grid-cols-3）
+      - [x] 卡片间距gap-3
+  - [x] 视觉效果提升
+    - [x] 从单调的灰色背景改为彩色卡片
+    - [x] 每个功能独立展示更清晰
+    - [x] 图标+标题+说明的结构更专业
+    - [x] 色彩区分提高可读性
+    - [x] 增加mt-6上边距与图表分离
+  - [x] Lint验证通过（97个文件）
+
+- [x] 步骤70：将历史趋势直接放到主页
+  - [x] 移除Tabs标签页组件
+    - [x] 删除Tabs、TabsList、TabsTrigger、TabsContent组件
+    - [x] 移除Tabs相关导入
+    - [x] 删除"总览"和"历史趋势"标签切换
+    - [x] 简化页面结构
+  - [x] 将历史趋势内容直接展示
+    - [x] 从TabsContent中提取HistoricalTrendChart组件
+    - [x] 添加独立的区域标题："📊 历史趋势分析"
+    - [x] 使用与其他区域一致的标题样式
+    - [x] 渐变色条（from-lingshan-blue to-lingshan-gold）
+    - [x] 标题文字（text-2xl font-bold）
+    - [x] 分隔线（h-px flex-1 bg-gradient-to-r）
+  - [x] 将停车场实时状态直接展示
+    - [x] 从TabsContent中提取ParkingChart组件
+    - [x] 添加独立的区域标题："🅿️ 停车场实时状态"
+    - [x] 使用与其他区域一致的标题样式
+    - [x] 保持onUpdate回调功能
+  - [x] 优化页面布局顺序
+    - [x] 实时数据概览（3个卡片）
+    - [x] 历年客流对比分析（VisitorComparisonChart）
+    - [x] 停车场实时状态（ParkingChart）
+    - [x] 历史趋势分析（HistoricalTrendChart）
+    - [x] 法定节假日快捷选择（HolidaySelector）
+    - [x] 景区周边实时路况（地图）
+  - [x] 页面体验优化
+    - [x] 无需切换标签，所有内容直接展示
+    - [x] 垂直滚动浏览所有数据
+    - [x] 信息层级清晰，一目了然
+    - [x] 减少交互步骤，提高效率
+    - [x] 保持所有功能完整性
+  - [x] Lint验证通过（97个文件）
+
+- [x] 步骤71：移除停车场启动/关闭按钮
+  - [x] 移除普通停车场的启动按钮
+    - [x] 删除Button组件及其onClick事件
+    - [x] 删除启动/关闭图标和文字
+    - [x] 简化CardContent底部布局
+    - [x] 从flex justify-between改为单列布局
+    - [x] 只保留开放时间和满位时间显示
+  - [x] 移除特殊停车场的启动按钮
+    - [x] 删除w-full的Button组件
+    - [x] 删除启动/关闭功能
+    - [x] 保留启动状态和启动时间的显示
+    - [x] 简化CardContent结构
+  - [x] 清理不再使用的代码
+    - [x] 移除handleToggleActivation函数
+      - [x] 删除async函数定义
+      - [x] 删除updateParkingLot调用
+      - [x] 删除toast提示
+      - [x] 删除onUpdate回调
+      - [x] 删除错误处理逻辑
+    - [x] 移除Button组件导入
+    - [x] 移除Power图标导入
+    - [x] 移除updateParkingLot API导入
+    - [x] 移除toast导入
+    - [x] 保留Clock和Car图标（仍在使用）
+  - [x] 功能说明
+    - [x] 停车场卡片现在只显示信息，不提供操作
+    - [x] 保留所有数据展示功能：
+      - [x] 车位占用率
+      - [x] 已占用/总车位数
+      - [x] 进度条显示
+      - [x] 状态Badge（畅通/轻度拥堵/严重拥堵）
+      - [x] 开放时间
+      - [x] 满位时间
+      - [x] 启动状态（已启动/未启动）
+      - [x] 启动时间
+    - [x] 移除交互功能：
+      - [x] 不再支持点击启动/关闭
+      - [x] 不再更新数据库
+      - [x] 不再显示操作提示
+  - [x] Lint验证通过（97个文件）
+
+- [x] 步骤72：修改热门路线和移除新窗口打开
+  - [x] 修改热门路线目的地
+    - [x] 将"灵山→无锡东站"改为"灵山→拈花湾"
+    - [x] 更新按钮文字："🚗 热门路线：灵山→拈花湾"
+    - [x] 更新高德地图链接：
+      - [x] 原链接：from[name]=灵山大佛&to[name]=无锡东站
+      - [x] 新链接：from[name]=灵山大佛&to[name]=拈花湾
+    - [x] 保留"灵山→无锡站"路线不变
+  - [x] 移除新窗口打开功能
+    - [x] 移除所有window.open的'_blank'参数
+    - [x] 热门路线按钮（灵山→拈花湾）：移除'_blank'
+    - [x] 热门路线按钮（灵山→无锡站）：移除'_blank'
+    - [x] 高德地图按钮：移除'_blank'
+    - [x] 百度地图按钮：移除'_blank'
+    - [x] 现在所有链接在当前窗口打开
+  - [x] 功能说明
+    - [x] 热门路线更新为景区周边景点（拈花湾）
+    - [x] 拈花湾是灵山景区附近的知名景点
+    - [x] 更符合游客实际需求
+    - [x] 所有地图链接在当前窗口打开
+    - [x] 避免打开过多新标签页
+    - [x] 简化用户操作流程
+  - [x] Lint验证通过（97个文件）
+
+- [x] 步骤73：修改高德地图默认显示地址
+  - [x] 更新高德地图按钮链接
+    - [x] 原链接：https://www.amap.com/place/B01FE00DQ6
+    - [x] 新链接：https://www.amap.com/search?query=%E7%81%B5%E5%B1%B1%E8%83%9C%E5%A2%83%E5%81%9C%E8%BD%A6%E5%9C%BA&city=320000&geoobj=119.735203%7C31.253854%7C121.321291%7C31.930567&zoom=9.96
+    - [x] 链接参数说明：
+      - [x] query=%E7%81%B5%E5%B1%B1%E8%83%9C%E5%A2%83%E5%81%9C%E8%BD%A6%E5%9C%BA（搜索关键词：灵山胜境停车场）
+      - [x] city=320000（城市代码：江苏省）
+      - [x] geoobj=119.735203|31.253854|121.321291|31.930567（地图显示范围）
+      - [x] zoom=9.96（缩放级别）
+  - [x] 功能优化
+    - [x] 点击高德地图按钮直接显示灵山胜境停车场搜索结果
+    - [x] 地图自动定位到灵山景区周边区域
+    - [x] 显示范围覆盖整个景区及周边停车场
+    - [x] 缩放级别适中，便于查看周边交通状况
+    - [x] 用户可以直接看到停车场位置和导航信息
+  - [x] 坐标范围说明
+    - [x] 西南角：119.735203, 31.253854
+    - [x] 东北角：121.321291, 31.930567
+    - [x] 中心点：约120.528247, 31.592211
+    - [x] 覆盖无锡市及周边区域
+  - [x] Lint验证通过（97个文件）
+
+## 完成情况
+✅ 所有需求已完成，高德地图默认显示灵山胜境停车场搜索结果
+
+## 管理员账号说明
+✅ 第一个注册的用户自动成为管理员
+✅ 管理员可以访问/admin后台页面
+✅ 管理员在Dashboard右上角可以看到"管理后台"按钮
+✅ 普通用户只能查看Dashboard数据
+✅ 登录使用用户名+密码（用户名只能包含字母、数字和下划线）
+
+## 入园人数抓取说明
+✅ 自动抓取功能：
+- ✅ 数据源：http://dp.lingshan.org:8505/dp/login.html
+- ✅ 登录凭证：用户名ls，密码q9vik7mf2l
+- ✅ 首次加载：页面加载后5秒自动抓取一次
+- ✅ 定时抓取：每10分钟自动抓取一次
+- ✅ 手动抓取：点击"抓取最新数据"按钮立即抓取
+- ✅ 抓取成功后自动更新Dashboard数据并显示提示
+
+## 地图功能说明
+✅ 立即可用，无需任何配置：
+- ✅ 真实的百度地图和高德地图（可切换）
+- ✅ 精确定位无锡灵山景区（经度120.085300，纬度31.434200）
+- ✅ 实时路况显示（红色/橙色=拥堵，绿色=畅通）
+- ✅ 关键路段：灵湖大桥、千波桥、灵湖路、古竹路
+- ✅ 支持缩放、拖动、新窗口打开等操作
+- ✅ 无需API Key，无需任何配置，开箱即用
+
+## 问题排查说明
+### 1. 历史数据上传问题
+- 已添加详细的console.log调试信息
+- 请打开浏览器开发者工具（F12）查看Console标签
+- 上传时会显示：CSV数据内容、解析记录数、第一条记录详情
+- 如果有错误会显示具体错误信息
+
+### 2. 景区周边实时路况
+- 地图容器已设置最小高度400px
+- 加载状态会显示"地图加载中..."
+- 如果加载失败会显示错误提示
+- 地图包含：灵山景区主标记、灵湖大桥、千波桥、灵湖路标记点
+- 实时交通图层每180秒自动刷新
+
+### 3. 停车场饼图
+- 果园停车场和月亮湾停车场均显示饼图
+- 饼图显示已占用和可用车位比例
+- 根据占用率显示不同颜色（绿色=畅通、黄色=轻度拥堵、红色=严重拥堵）
+
+## 功能特性
+- ✅ 实时数据监控（停车场、道路、入园人数、天气）
+- ✅ 历史数据对比分析
+- ✅ 历史数据查看页面（可选日期）
+- ✅ 停车场历史趋势图表
+- ✅ 历史车辆和客流趋势对比图（可选日期范围）
+- ✅ 批量数据上传功能（CSV格式）
+- ✅ 明亮/暗黑模式切换
+- ✅ 短驳模式（红色背景+6个管控点位+整行启动按钮）
+- ✅ 高德地图实时路况集成（支持搜索）
+- ✅ 红黄绿三色预警体系
+- ✅ 交通管制措施管理（6项具体措施）
+- ✅ 一键生成报告功能
+- ✅ 3分钟自动刷新机制
+- ✅ 数据模拟器（用于测试）
+- ✅ 停车场分类管理：
+  - 普通停车场：果园（2400车位）、月亮湾（1200车位）
+  - 特殊停车场：灵湖路、古竹两侧（启动状态+启动时间）
+- ✅ 道路管控时间管理
+- ✅ 响应式设计（桌面优先，移动适配）

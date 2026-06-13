@@ -224,6 +224,7 @@ export interface ProductCategory {
   shortDescription?: string; // 简短介绍
   detailedDescription?: string; // 详细描述（富文本）
   mediaResources?: MediaResource[]; // 媒体资源列表
+  externalUrl?: string; // 外部链接（如在线演示地址）
   sortOrder?: number; // 排序值
   isPublished?: boolean; // 是否上架
   folders: ProductFolder[];

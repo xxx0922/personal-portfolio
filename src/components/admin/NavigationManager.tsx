@@ -56,7 +56,6 @@ const NavigationManager = () => {
       }
     } catch (error) {
       showToast('保存失败', 'error');
-    }
     } finally {
       setIsSaving(false);
     }

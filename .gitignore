@@ -71,3 +71,4 @@ tests/
 # Temporary files
 *.tmp
 *.temp
+*.bak
