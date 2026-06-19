@@ -427,10 +427,11 @@ export default function DataUpload() {
     // 创建工作簿
     const wb = XLSX.utils.book_new();
     
-    // 定义表头（14个字段）
+    // 定义表头（15个字段，与 handleExcelUpload 的列映射保持一致）
     const headers = [
       '日期',
       '农历',
+      '节日',
       '当天游客预报人数',
       '天气',
       '月亮湾启用时间',
@@ -444,12 +445,13 @@ export default function DataUpload() {
       '果园停车场停车数量',
       '月亮湾停车场停车数量'
     ];
-    
+
     // 示例数据
     const sampleData = [
       [
         '2023-10-01',
         '八月十七',
+        '中秋国庆',
         16000,
         '小雨转晴',
         '08:40',
@@ -466,6 +468,7 @@ export default function DataUpload() {
       [
         '2023-10-02',
         '八月十八',
+        '中秋国庆',
         25000,
         '多云',
         '08:30',
@@ -489,6 +492,7 @@ export default function DataUpload() {
     ws['!cols'] = [
       { wch: 12 }, // 日期
       { wch: 10 }, // 农历
+      { wch: 12 }, // 节日
       { wch: 18 }, // 当天游客预报人数
       { wch: 12 }, // 天气
       { wch: 16 }, // 月亮湾启用时间
