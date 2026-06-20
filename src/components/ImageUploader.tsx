@@ -2,17 +2,17 @@ import { useState, useRef, useEffect } from 'react';
 
 // API 基础 URL - 从环境变量读取
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002';
 
-// 获取完整的图片 URL（添加后端服务器地址）
+// 获取完整的图片 URL（统一清理各种环境留下的绝对路径）
 const getImageUrl = (url: string) => {
   if (!url) return '';
-  // 如果已经是完整 URL，直接返回
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    return url;
+  // 统一清理 uploads 相关的绝对路径，转为相对路径
+  if (url.includes('/uploads/')) {
+    const match = url.match(/(\/uploads\/.*)/);
+    if (match) return match[1];
   }
-  // 如果是相对路径（如 /uploads/xxx），添加后端服务器地址
-  return `${BACKEND_URL}${url}`;
+  // 外部链接保持不变
+  return url;
 };
 
 interface ImageUploaderProps {

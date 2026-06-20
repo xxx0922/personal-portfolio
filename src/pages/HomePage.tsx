@@ -9,10 +9,6 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import BackgroundMusic from '../components/BackgroundMusic';
 import { useSEO } from '../hooks/useSEO';
 
-// 后端基础 URL（uploads 静态文件服务）
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002';
-
-
 const HomePage = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
@@ -39,14 +35,15 @@ const HomePage = () => {
     });
   };
 
-  // 获取完整的图片 URL
+  // 获取完整的图片 URL（统一清理 uploads 相关的绝对路径）
   const getImageUrl = (url: string) => {
     if (!url) return '';
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url;
+    if (url.includes('/uploads/')) {
+      const match = url.match(/(\/uploads\/.*)/);
+      if (match) return match[1];
     }
-    // 注意：使用环境变量配置的后端 URL，uploads 是静态文件目录
-    return `${BACKEND_URL}${url}`;
+    // 外部链接保持不变
+    return url;
   };
 
   // 获取头像 URL（处理相对路径）
@@ -710,24 +707,18 @@ const HomePage = () => {
                   <div className="w-full md:w-[78%]">
                     <div className="relative h-80 md:h-[28rem] rounded-xl overflow-hidden bg-gradient-to-br from-amber-100 via-yellow-50 to-orange-100">
                       {contact?.images && contact.images.length > 0 ? (
-                        <div className="flex h-full gap-4 p-4">
+                        <div className="grid grid-cols-4 gap-4 p-4 h-full">
                           {contact.images
                             .filter((img: { url: string; label: string }) => img.url)
-                            .slice(0, 1)
+                            .slice(0, 4)
                             .map((img: { url: string; label: string }, index: number) => (
                             img.url && (
-                              <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                                <div className="w-full flex-1 rounded-xl overflow-hidden shadow-xl border border-white/10 hover:scale-105 transition-transform relative flex items-center justify-center p-3 bg-white/5 backdrop-blur-md">
-                                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/15 via-purple-500/10 to-pink-500/15"></div>
+                              <div key={index} className="flex flex-col items-center gap-2">
+                                <div className="w-full aspect-square rounded-xl overflow-hidden shadow-xl border border-white/10 relative flex items-center justify-center p-2 bg-white/80">
                                   <img
                                     src={getImageUrl(img.url)}
                                     alt={`二维码 ${index + 1}`}
-                                    className="w-full h-full object-cover rounded-lg relative z-10 scale-150"
-                                    style={{
-                                      mixBlendMode: 'multiply',
-                                      backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                                      objectPosition: 'center center'
-                                    }}
+                                    className="w-full h-full object-contain rounded-lg relative z-10"
                                     loading="lazy"
                                   />
                                 </div>
