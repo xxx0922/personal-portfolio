@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { getLocalDateString } from '@/lib/utils';
 import type {
   HistoricalTraffic,
   ParkingLot,
@@ -81,6 +82,19 @@ export async function deleteHistoricalTraffic(id: number): Promise<void> {
   const { error } = await supabase
     .from('historical_traffic')
     .delete()
+    .eq('id', id);
+
+  if (error) throw error;
+}
+
+// 更新历史数据
+export async function updateHistoricalTraffic(
+  id: number,
+  updates: Partial<Omit<HistoricalTraffic, 'id' | 'created_at'>>
+): Promise<void> {
+  const { error } = await supabase
+    .from('historical_traffic')
+    .update(updates)
     .eq('id', id);
 
   if (error) throw error;
@@ -252,7 +266,7 @@ export async function updateRoadTraffic(
 
 // 获取当日入园人数
 export async function getVisitorCount(): Promise<VisitorCount | null> {
-  const today = new Date().toISOString().split('T')[0];
+  const today = getLocalDateString();
   const { data, error } = await supabase
     .from('visitor_count')
     .select('*')
@@ -265,7 +279,7 @@ export async function getVisitorCount(): Promise<VisitorCount | null> {
 
 // 更新入园人数
 export async function updateVisitorCount(count: number): Promise<void> {
-  const today = new Date().toISOString().split('T')[0];
+  const today = getLocalDateString();
   
   const { data: existing } = await supabase
     .from('visitor_count')

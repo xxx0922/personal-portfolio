@@ -11,25 +11,23 @@ interface HistoricalTrendChartProps {
 export function HistoricalTrendChart({ data }: HistoricalTrendChartProps) {
   const [selectedYear, setSelectedYear] = useState<string>('all');
 
-  // 获取所有可用年份
+  // 获取所有可用年份（从 YYYY-MM-DD 字符串提取，避免时区导致年份错位）
   const availableYears = useMemo(() => {
     const years = new Set<string>();
     data.forEach((item) => {
-      const year = new Date(item.date).getFullYear().toString();
+      const year = item.date.slice(0, 4);
       years.add(year);
     });
     return Array.from(years).sort((a, b) => b.localeCompare(a));
   }, [data]);
 
-  // 根据选择的年份过滤数据
+  // 根据选择的年份过滤数据，并始终按日期升序排列
   const filteredData = useMemo(() => {
+    const sorted = [...data].sort((a, b) => a.date.localeCompare(b.date));
     if (selectedYear === 'all') {
-      return data;
+      return sorted;
     }
-    return data.filter((item) => {
-      const year = new Date(item.date).getFullYear().toString();
-      return year === selectedYear;
-    });
+    return sorted.filter((item) => item.date.slice(0, 4) === selectedYear);
   }, [data, selectedYear]);
 
   // 准备图表数据

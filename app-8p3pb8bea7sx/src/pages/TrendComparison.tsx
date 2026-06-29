@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, ReferenceDot, Label } from 'recharts';
 import HolidaySelector from '@/components/HolidaySelector';
 import { HOLIDAYS } from '@/data/holidays';
+import { parseLocalDate } from '@/lib/utils';
 
 export default function TrendComparison() {
   const [startDate, setStartDate] = useState<Date>(new Date('2023-10-01'));
@@ -31,10 +32,10 @@ export default function TrendComparison() {
       setLoading(true);
       const data = await getHistoricalTraffic();
       
-      // 过滤日期范围内的数据
+      // 过滤日期范围内的数据（使用本地时区解析，避免日期错位）
       const filtered = data.filter((item) => {
-        const itemDate = new Date(item.date);
-        return itemDate >= startDate && itemDate <= endDate;
+        const itemDate = parseLocalDate(item.date);
+        return itemDate && itemDate >= startDate && itemDate <= endDate;
       });
       
       setHistoricalData(filtered);
@@ -57,7 +58,7 @@ export default function TrendComparison() {
 
   // 准备图表数据
   const visitorChartData = historicalData.map((item) => ({
-    date: format(new Date(item.date), 'MM-dd', { locale: zhCN }),
+    date: format(parseLocalDate(item.date) || new Date(item.date), 'MM-dd', { locale: zhCN }),
     fullDate: item.date,
     day: item.day_of_week,
     year2022: item.year_2022 || 0,
@@ -66,7 +67,7 @@ export default function TrendComparison() {
   }));
 
   const parkingChartData = historicalData.map((item) => ({
-    date: format(new Date(item.date), 'MM-dd', { locale: zhCN }),
+    date: format(parseLocalDate(item.date) || new Date(item.date), 'MM-dd', { locale: zhCN }),
     fullDate: item.date,
     day: item.day_of_week,
     guoyuan: item.guoyuan_parking_count || 0,
@@ -95,8 +96,8 @@ export default function TrendComparison() {
       const yearHolidays = HOLIDAYS[year as keyof typeof HOLIDAYS] || [];
       yearHolidays.forEach(holiday => {
         const datesInRange = holiday.dates.filter(date => {
-          const d = new Date(date);
-          return d >= startDate && d <= endDate;
+          const d = parseLocalDate(date);
+          return d && d >= startDate && d <= endDate;
         });
         if (datesInRange.length > 0) {
           holidays.push({ name: holiday.name, dates: datesInRange });

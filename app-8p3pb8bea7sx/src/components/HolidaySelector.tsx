@@ -13,6 +13,7 @@ import { Calendar as CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { HOLIDAYS, type Holiday } from '@/data/holidays';
+import { parseLocalDate } from '@/lib/utils';
 
 interface HolidaySelectorProps {
   onSelectHoliday?: (startDate: Date, endDate: Date, holidayName: string) => void;
@@ -21,12 +22,14 @@ interface HolidaySelectorProps {
 
 export default function HolidaySelector({ onSelectHoliday, className }: HolidaySelectorProps) {
   const [selectedYear, setSelectedYear] = useState<string>('');
-  
+
   const handleSelectHoliday = (holiday: Holiday) => {
     if (onSelectHoliday && holiday.dates.length > 0) {
-      const startDate = new Date(holiday.dates[0]);
-      const endDate = new Date(holiday.dates[holiday.dates.length - 1]);
-      onSelectHoliday(startDate, endDate, holiday.name);
+      const startDate = parseLocalDate(holiday.dates[0]);
+      const endDate = parseLocalDate(holiday.dates[holiday.dates.length - 1]);
+      if (startDate && endDate) {
+        onSelectHoliday(startDate, endDate, holiday.name);
+      }
     }
   };
 
@@ -77,8 +80,8 @@ export default function HolidaySelector({ onSelectHoliday, className }: HolidayS
                   </span>
                 </div>
                 <span className="text-xs text-muted-foreground">
-                  {format(new Date(holiday.dates[0]), 'MM-dd', { locale: zhCN })} 
-                  {holiday.dates.length > 1 && ` ~ ${format(new Date(holiday.dates[holiday.dates.length - 1]), 'MM-dd', { locale: zhCN })}`}
+                  {format(parseLocalDate(holiday.dates[0]) || new Date(holiday.dates[0]), 'MM-dd', { locale: zhCN })}
+                  {holiday.dates.length > 1 && ` ~ ${format(parseLocalDate(holiday.dates[holiday.dates.length - 1]) || new Date(holiday.dates[holiday.dates.length - 1]), 'MM-dd', { locale: zhCN })}`}
                 </span>
               </Button>
             ))}

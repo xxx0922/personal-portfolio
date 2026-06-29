@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useAuth } from '@/contexts/AuthContext';
-import { cn } from '@/lib/utils';
+import { cn, getLocalDateString } from '@/lib/utils';
 import {
   Cloud,
   Users,
@@ -167,7 +167,7 @@ export default function Dashboard() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const today = new Date().toISOString().split('T')[0];
+      const today = getLocalDateString();
       const [
         parkingData,
         roadData,

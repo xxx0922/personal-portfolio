@@ -14,8 +14,9 @@ import {
   CheckCircle,
   FileText
 } from 'lucide-react';
-import { batchInsertHistoricalTraffic, getHistoricalTraffic, deleteHistoricalTraffic } from '@/db/api';
+import { batchInsertHistoricalTraffic, getHistoricalTraffic, deleteHistoricalTraffic, updateHistoricalTraffic } from '@/db/api';
 import type { HistoricalTraffic } from '@/types/traffic';
+import { parseLocalDate } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
   Table,
@@ -27,6 +28,14 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import * as XLSX from 'xlsx';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
 export default function DataUpload() {
   const [csvData, setCsvData] = useState('');
@@ -34,6 +43,9 @@ export default function DataUpload() {
   const [historicalData, setHistoricalData] = useState<HistoricalTraffic[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [editingRecord, setEditingRecord] = useState<HistoricalTraffic | null>(null);
+  const [editForm, setEditForm] = useState<Partial<HistoricalTraffic>>({});
+  const [saving, setSaving] = useState(false);
   const [singleForm, setSingleForm] = useState({
     date: '',
     day_of_week: '',
@@ -288,6 +300,40 @@ export default function DataUpload() {
     }
   };
 
+  const handleEdit = (record: HistoricalTraffic) => {
+    setEditingRecord(record);
+    setEditForm({ ...record });
+  };
+
+  const handleCloseEdit = () => {
+    setEditingRecord(null);
+    setEditForm({});
+  };
+
+  const handleEditChange = (field: keyof HistoricalTraffic, value: string | number | null) => {
+    setEditForm((prev) => ({ ...prev, [field]: value === '' ? null : value }));
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingRecord) return;
+    try {
+      setSaving(true);
+      const updates: Partial<Omit<HistoricalTraffic, 'id' | 'created_at'>> = { ...editForm };
+      // 移除 id 和 created_at 避免误更新
+      delete (updates as any).id;
+      delete (updates as any).created_at;
+      await updateHistoricalTraffic(editingRecord.id, updates);
+      toast.success('记录已更新');
+      handleCloseEdit();
+      await loadHistoricalData(false);
+    } catch (error) {
+      console.error('更新失败:', error);
+      toast.error('更新失败，请检查数据格式');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   // 批量删除
   const handleBatchDelete = async () => {
     if (selectedIds.length === 0) {
@@ -326,13 +372,13 @@ export default function DataUpload() {
     }
   };
 
-  // 格式化日期
+  // 格式化日期（按本地时区解析，避免 new Date('YYYY-MM-DD') 被当作 UTC 而错位）
   const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('zh-CN', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    const date = parseLocalDate(dateStr) || new Date(dateStr);
+    return date.toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   };
 
@@ -407,8 +453,8 @@ export default function DataUpload() {
 
   const downloadTemplate = () => {
     const template = `date,day_of_week,festival,year_2022,year_2023,total_visitors,weather,forecast_visitors,weather_forecast,yuelvwan_open_time,yuelvwan_open_visitor_count,guoyuan_remaining_spaces,guoyuan_full_time,linghu_bridge_diversion_start,linghu_bridge_diversion_end,highway_stop_diversion_time,qianbo_bridge_stop_diversion_time,linghu_road_open_time,linghu_road_full_time,guzhu_open_time,guoyuan_parking_count,yuelvwan_parking_count
-2023-10-01,周日,16131,15000,15982,小雨转晴,16000,晴,08:40,3100,1300,10:30,08:40,12:30,12:20,12:30,10:20,11:20,13:10,4200,1290
-2023-10-02,周一,13524,28002,23253,多云,25000,多云,08:30,4500,800,10:00,08:30,12:00,12:00,12:10,10:05,11:00,12:30,4501,1489`;
+2023-10-01,周日,中秋国庆,16131,15000,15982,小雨转晴,16000,晴,08:40,3100,1300,10:30,08:40,12:30,12:20,12:30,10:20,11:20,13:10,4200,1290
+2023-10-02,周一,中秋国庆,13524,28002,23253,多云,25000,多云,08:30,4500,800,10:00,08:30,12:00,12:00,12:10,10:05,11:00,12:30,4501,1489`;
 
     const blob = new Blob([template], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -961,13 +1007,22 @@ export default function DataUpload() {
                         <TableCell className="text-right">{formatNumber(record.guoyuan_parking_count)}</TableCell>
                         <TableCell className="text-right">{formatNumber(record.yuelvwan_parking_count)}</TableCell>
                         <TableCell>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete(record.id)}
-                          >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleEdit(record)}
+                            >
+                              编辑
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDelete(record.id)}
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -976,6 +1031,106 @@ export default function DataUpload() {
               </div>
             </CardContent>
         </Card>
+
+        {/* 编辑弹窗 */}
+        {editingRecord && (
+          <Dialog open onOpenChange={handleCloseEdit}>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>编辑历史数据</DialogTitle>
+                <DialogDescription>
+                  修改 {editingRecord.date} 的数据
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 md:grid-cols-2 py-4">
+                <div>
+                  <Label>日期</Label>
+                  <Input
+                    type="date"
+                    value={(editForm.date as string) || ''}
+                    onChange={(e) => handleEditChange('date', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>农历/星期</Label>
+                  <Input
+                    value={(editForm.day_of_week as string) || ''}
+                    onChange={(e) => handleEditChange('day_of_week', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>节日</Label>
+                  <Input
+                    value={(editForm.festival as string) || ''}
+                    onChange={(e) => handleEditChange('festival', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>入园人数</Label>
+                  <Input
+                    type="number"
+                    value={editForm.actual_visitor_count ?? ''}
+                    onChange={(e) => handleEditChange('actual_visitor_count', e.target.value === '' ? null : Number(e.target.value))}
+                  />
+                </div>
+                <div>
+                  <Label>预报人数</Label>
+                  <Input
+                    type="number"
+                    value={editForm.forecast_visitors ?? ''}
+                    onChange={(e) => handleEditChange('forecast_visitors', e.target.value === '' ? null : Number(e.target.value))}
+                  />
+                </div>
+                <div>
+                  <Label>天气</Label>
+                  <Input
+                    value={(editForm.weather as string) || ''}
+                    onChange={(e) => handleEditChange('weather', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>月亮湾启用时间</Label>
+                  <Input
+                    value={(editForm.yuelvwan_open_time as string) || ''}
+                    onChange={(e) => handleEditChange('yuelvwan_open_time', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>果园剩余车位</Label>
+                  <Input
+                    type="number"
+                    value={editForm.guoyuan_remaining_spaces ?? ''}
+                    onChange={(e) => handleEditChange('guoyuan_remaining_spaces', e.target.value === '' ? null : Number(e.target.value))}
+                  />
+                </div>
+                <div>
+                  <Label>果园停车数</Label>
+                  <Input
+                    type="number"
+                    value={editForm.guoyuan_parking_count ?? ''}
+                    onChange={(e) => handleEditChange('guoyuan_parking_count', e.target.value === '' ? null : Number(e.target.value))}
+                  />
+                </div>
+                <div>
+                  <Label>月亮湾停车数</Label>
+                  <Input
+                    type="number"
+                    value={editForm.yuelvwan_parking_count ?? ''}
+                    onChange={(e) => handleEditChange('yuelvwan_parking_count', e.target.value === '' ? null : Number(e.target.value))}
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={handleCloseEdit} disabled={saving}>
+                  取消
+                </Button>
+                <Button onClick={handleSaveEdit} disabled={saving}>
+                  {saving ? '保存中...' : '保存'}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
     </div>
   );

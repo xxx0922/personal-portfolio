@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import type { HistoricalTraffic } from '@/types/traffic';
+import { parseLocalDate } from '@/lib/utils';
 import { Calendar, Check, Square, PieChart as PieIcon } from 'lucide-react';
 
 declare global {
@@ -76,20 +77,55 @@ export function FestivalComparisonChart({ historicalData }: FestivalComparisonCh
       .sort((a, b) => a.date.localeCompare(b.date));
   }, [historicalData, selectedFestival]);
 
-  // 节日天数标签：春节显示 除夕/初一/初二...，其它节日显示 第1天/第2天...
-  const getFestivalDayLabel = (index: number) => {
-    if (selectedFestival === '春节') {
-      const labels = ['除夕', '初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八'];
-      return labels[index] || `第${index + 1}天`;
+  // 历年农历正月初一（数据来源：公历农历对照），用于准确生成春节标签
+const CNY_FIRST_DAY: Record<string, string> = {
+  '2019': '2019-02-05',
+  '2020': '2020-01-25',
+  '2021': '2021-02-12',
+  '2022': '2022-02-01',
+  '2023': '2023-01-22',
+  '2024': '2024-02-10',
+  '2025': '2025-01-29',
+  '2026': '2026-02-17',
+};
+
+function daysOffset(from: string, to: string): number | null {
+  const dFrom = parseLocalDate(from);
+  const dTo = parseLocalDate(to);
+  if (!dFrom || !dTo) return null;
+  const msPerDay = 24 * 60 * 60 * 1000;
+  return Math.round((dFrom.getTime() - dTo.getTime()) / msPerDay);
+}
+
+/**
+ * 根据实际日期生成节日标签。
+ * 春节：以农历正月初一为基准，返回除夕/初一/初二…
+ * 五一/国庆：以该年该节日数据中的第一天为第1天
+ */
+const getFestivalDayLabel = (date: string, festival: string, firstDateInGroup: string) => {
+  const year = date.split('-')[0];
+  const offset = daysOffset(date, firstDateInGroup);
+  const dayNumber = offset !== null ? offset + 1 : 1;
+
+  if (festival === '春节') {
+    const cnyFirstDay = CNY_FIRST_DAY[year];
+    const cnyOffset = cnyFirstDay ? daysOffset(date, cnyFirstDay) : offset;
+    if (cnyOffset !== null) {
+      if (cnyOffset === -1) return '除夕';
+      if (cnyOffset >= 0 && cnyOffset <= 7) {
+        const labels = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八'];
+        return labels[cnyOffset];
+      }
+      return `第${cnyOffset + 2}天`;
     }
-    if (selectedFestival === '五一') {
-      return `五一第${index + 1}天`;
-    }
-    if (selectedFestival === '国庆') {
-      return `国庆第${index + 1}天`;
-    }
-    return `第${index + 1}天`;
-  };
+    const labels = ['除夕', '初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八'];
+    return labels[offset ?? 0] || `第${dayNumber}天`;
+  }
+
+  if (festival === '五一') return `五一第${dayNumber}天`;
+  if (festival === '国庆') return `国庆第${dayNumber}天`;
+  return `第${dayNumber}天`;
+};
 
   // 按年份分组，并给每个年份内的节日日期编号
   const yearDataMap = useMemo(() => {
@@ -122,12 +158,13 @@ export function FestivalComparisonChart({ historicalData }: FestivalComparisonCh
     return activeYearConfigs.flatMap((config) => {
       const group = yearDataMap[config.key];
       if (!group) return [];
+      const firstDateInGroup = group.items[0]?.date ?? '';
       return group.items.map((item, index) => ({
         key: `${config.key}-${index}`,
         year: config.key,
         yearName: config.name,
         date: item.date,
-        dayLabel: getFestivalDayLabel(index),
+        dayLabel: getFestivalDayLabel(item.date, selectedFestival, firstDateInGroup),
         value: item.actual_visitor_count,
         color: config.color,
         item,
