@@ -88,7 +88,7 @@ const ProductsPage = () => {
         <img
           src={url}
           alt={product.name}
-          className="w-20 h-20 object-contain"
+          className="w-full h-full object-cover"
         />
       );
     }
@@ -273,7 +273,7 @@ const ProductsPage = () => {
                     </div>
 
                     {/* 图标区域 */}
-                    <div className="h-40 flex items-center justify-center rounded-xl overflow-hidden mb-6">
+                    <div className="h-52 flex items-center justify-center rounded-xl overflow-hidden mb-6">
                       {getProductIcon(product)}
                     </div>
 
