@@ -96,10 +96,10 @@ const ProductsPage = () => {
         />
       );
     }
-    // 没有图片，显示大 emoji
+    // 没有图片，显示渐变占位（不用 emoji）
     return (
-      <div className="text-8xl">
-        {product.icon || '📦'}
+      <div className="w-full h-full bg-gradient-to-br from-sky-500/30 to-purple-500/30 flex items-center justify-center">
+        <span className="text-5xl font-bold text-white/40">{(product.name || '?')[0]}</span>
       </div>
     );
   };
