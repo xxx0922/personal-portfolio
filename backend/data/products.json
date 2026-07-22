@@ -112,5 +112,29 @@
         "subFolders": []
       }
     ]
+  },
+  {
+    "id": "1784723509410",
+    "name": "弱电速查通",
+    "description": "弱电/智能化工程师随身工具微信小程序",
+    "icon": "🔧",
+    "folders": [],
+    "coverImage": "/uploads/products/product-ruodian-suchatong.png",
+    "shortDescription": "弱电/智能化工程师随身工具：8个计算器+国标规范库+故障速查+验收要点+120篇科普",
+    "detailedDescription": "弱电速查通 —— 弱电/智能化工程师的随身工具微信小程序。\n\n✦ 8 大专业计算器：硬盘存储、POE供电、UPS配置、线缆压降、机柜选型、子网划分、造价估算、功率电缆线径测算（UPS三相/LED单相双模式）。\n✦ 国标规范库：32 条监控类国标，含真实官方链接，一键复制跳转。\n✦ 故障速查：18 条常见故障，可能原因+分步排查+解决方案。\n✦ 验收要点：6 大系统分组清单（视频监控28项/布线36项/机房52项等）。\n✦ 科普文章：120 篇原创弱电科普，6 大专业分类，AI 生成分类封面。\n\n米白莫兰迪主题，无需登录、无广告、无付费，即开即用。工地现场随时查、随时算。",
+    "mediaResources": [
+      {
+        "id": "media-1784723509410",
+        "type": "image",
+        "url": "/uploads/products/product-ruodian-suchatong.png",
+        "thumbnailUrl": "",
+        "title": "弱电速查通",
+        "description": "产品封面",
+        "sortOrder": 0,
+        "uploadedAt": "2026-07-20T00:00:00.000Z"
+      }
+    ],
+    "sortOrder": 1,
+    "isPublished": true
   }
 ]
