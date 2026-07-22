@@ -80,10 +80,14 @@ const ProductsPage = () => {
 
   // 获取产品卡片图标
   const getProductIcon = (product: ProductCategory) => {
-    if (product.coverImage) {
-      const url = product.coverImage.startsWith('http')
-        ? product.coverImage
-        : `${BACKEND_URL}${product.coverImage}`;
+    // 优先用 coverImage，没有则用第一张媒体图片
+    let imgUrl = product.coverImage;
+    if (!imgUrl && product.mediaResources) {
+      const firstImage = product.mediaResources.find(m => m.type === 'image');
+      if (firstImage) imgUrl = firstImage.url;
+    }
+    if (imgUrl) {
+      const url = imgUrl.startsWith('http') ? imgUrl : `${BACKEND_URL}${imgUrl}`;
       return (
         <img
           src={url}
@@ -92,9 +96,9 @@ const ProductsPage = () => {
         />
       );
     }
-    // 默认使用 emoji 图标
+    // 没有图片，显示大 emoji
     return (
-      <div className="text-6xl">
+      <div className="text-8xl">
         {product.icon || '📦'}
       </div>
     );
