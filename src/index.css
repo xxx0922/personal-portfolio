@@ -225,3 +225,129 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* 产品详情页 Markdown 内容样式：高对比度、清晰可读 */
+.product-detail-prose {
+  color: #f3f4f6;
+  line-height: 1.75;
+}
+
+.product-detail-prose h1,
+.product-detail-prose h2,
+.product-detail-prose h3,
+.product-detail-prose h4,
+.product-detail-prose h5,
+.product-detail-prose h6 {
+  color: #ffffff;
+  font-weight: 800;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.product-detail-prose h1 {
+  font-size: 2rem;
+}
+
+.product-detail-prose h2 {
+  font-size: 1.5rem;
+}
+
+.product-detail-prose h3 {
+  font-size: 1.25rem;
+}
+
+.product-detail-prose p {
+  margin-bottom: 0.875rem;
+}
+
+.product-detail-prose ul,
+.product-detail-prose ol {
+  margin-left: 1.5rem;
+  margin-bottom: 0.875rem;
+}
+
+.product-detail-prose li {
+  margin-bottom: 0.4rem;
+}
+
+.product-detail-prose li::marker {
+  color: #38bdf8;
+}
+
+.product-detail-prose strong,
+.product-detail-prose b {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.product-detail-prose a {
+  color: #7dd3fc;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.product-detail-prose a:hover {
+  color: #bae6fd;
+}
+
+.product-detail-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.product-detail-prose th,
+.product-detail-prose td {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.product-detail-prose th {
+  background: rgba(56, 189, 248, 0.15);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.product-detail-prose td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.product-detail-prose hr {
+  border-color: rgba(255, 255, 255, 0.2);
+  margin: 1.5rem 0;
+}
+
+.product-detail-prose blockquote {
+  border-left: 4px solid #38bdf8;
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-bottom: 1rem;
+  color: #e2e8f0;
+  font-style: italic;
+}
+
+.product-detail-prose code {
+  background: rgba(255, 255, 255, 0.1);
+  color: #7dd3fc;
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+}
+
+.product-detail-prose pre {
+  background: rgba(15, 23, 42, 0.8);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.product-detail-prose pre code {
+  background: transparent;
+  padding: 0;
+  color: #f3f4f6;
+}
