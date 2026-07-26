@@ -24,6 +24,7 @@ interface ProductCategory {
   mediaResources?: ProductMedia[];
   sortOrder?: number;
   isPublished?: boolean;
+  category?: 'demo' | 'competition';
   folders?: any[];
 }
 
@@ -72,30 +73,33 @@ const ProductsPage = () => {
   const filteredProducts = filterType === 'all'
     ? products
     : products.filter(product => {
-        const nameLower = product.name.toLowerCase();
-        if (filterType === 'web') return nameLower.includes('web');
-        if (filterType === 'app') return nameLower.includes('app') || nameLower.includes('移动');
+        if (filterType === 'demo') return product.category === 'demo';
+        if (filterType === 'competition') return product.category === 'competition';
         return true;
       });
 
-  // 获取产品卡片图标
+  // 获取产品卡片图标/封面图
   const getProductIcon = (product: ProductCategory) => {
-    if (product.coverImage) {
-      const url = product.coverImage.startsWith('http')
-        ? product.coverImage
-        : `${BACKEND_URL}${product.coverImage}`;
+    // 优先用 coverImage，没有则用第一张媒体图片
+    let imgUrl = product.coverImage;
+    if (!imgUrl && product.mediaResources) {
+      const firstImage = product.mediaResources.find(m => m.type === 'image');
+      if (firstImage) imgUrl = firstImage.url;
+    }
+    if (imgUrl) {
+      const url = imgUrl.startsWith('http') ? imgUrl : `${BACKEND_URL}${imgUrl}`;
       return (
         <img
           src={url}
           alt={product.name}
-          className="w-20 h-20 object-contain"
+          className="w-full h-full object-cover"
         />
       );
     }
-    // 默认使用 emoji 图标
+    // 没有图片，显示渐变占位（不用 emoji）
     return (
-      <div className="text-6xl">
-        {product.icon || '📦'}
+      <div className="w-full h-full bg-gradient-to-br from-sky-500/30 to-purple-500/30 flex items-center justify-center">
+        <span className="text-5xl font-bold text-white/40">{(product.name || '?')[0]}</span>
       </div>
     );
   };
@@ -190,9 +194,9 @@ const ProductsPage = () => {
           <div className="mb-12">
             <div className="flex justify-center gap-4">
               {[
-                { id: 'all', label: '全部产品' },
-                { id: 'web', label: 'Web 系统' },
-                { id: 'app', label: '移动 App' }
+                { id: 'all', label: '全部' },
+                { id: 'demo', label: 'Demo' },
+                { id: 'competition', label: '参赛作品' }
               ].map((type) => (
                 <button
                   key={type.id}
@@ -273,7 +277,7 @@ const ProductsPage = () => {
                     </div>
 
                     {/* 图标区域 */}
-                    <div className="h-40 flex items-center justify-center rounded-xl overflow-hidden mb-6">
+                    <div className="h-52 flex items-center justify-center rounded-xl overflow-hidden mb-6">
                       {getProductIcon(product)}
                     </div>
 
@@ -313,3 +317,7 @@ const ProductsPage = () => {
 };
 
 export default ProductsPage;
+
+
+
+

@@ -1,0 +1,27 @@
+{
+  "about": {
+    "title": "关于本站",
+    "description": "这是一个展示个人项目、技能和经验的个人网站。通过这个平台，您可以了解我的专业背景、工作经验以及兴趣爱好。",
+    "copyright": "沣生水起",
+    "icpNumber": "苏ICP备2025221859号"
+  },
+  "contact": {
+    "email": "bohenan@163.com",
+    "phone": "153****8230",
+    "location": "中国·无锡"
+  },
+  "social": {
+    "wechat": "bohenan11",
+    "github": "https://github.com/yourusername",
+    "linkedin": "https://linkedin.com/in/yourusername",
+    "email": "mailto:contact@example.com"
+  },
+  "links": {
+    "privacyPolicy": "#",
+    "termsOfService": "#"
+  },
+  "branding": {
+    "designedBy": "沣生水起"
+  },
+  "updatedAt": "2025-12-11T05:09:46.394Z"
+}

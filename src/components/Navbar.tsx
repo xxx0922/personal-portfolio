@@ -30,7 +30,7 @@ const Navbar = ({ personalInfo }: NavbarProps) => {
   const [navItems, setNavItems] = useState<NavigationItem[]>([
     { id: '1', label: '首页', path: '/', order: 0, visible: true, isExternal: false, icon: '🏠' },
     { id: '2', label: '产品', path: '/products', order: 1, visible: true, isExternal: false, icon: '📁' },
-    { id: '5', label: '大交通', path: 'http://localhost:5180/', order: 2, visible: true, isExternal: true, icon: '🚗' },
+    { id: '5', label: '大交通', path: 'https://www.bohenan.com/traffic/', order: 2, visible: true, isExternal: true, icon: '🚗' },
     { id: '3', label: '工具', path: '/tools', order: 3, visible: true, isExternal: false, icon: '🔧' },
     { id: '4', label: '后台', path: '/admin', order: 4, visible: true, isExternal: false, icon: '⚙️' }
   ]);

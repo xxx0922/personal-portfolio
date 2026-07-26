@@ -2,7 +2,7 @@
   {
     "id": "1",
     "username": "xue",
-    "password": "$2a$10$wfuPTa9VuG0Y081TKZWob.Gd6pPCUwN.crDtzSDCezDihfrasj/6q",
+    "password": "$2a$10$deI0lZ3/j571dBBHY5p7kOKB/ZhaCaT.gngobiSQEEBpoWfEDALya",
     "email": "",
     "role": "admin",
     "createdAt": "2026-01-01T00:00:00.000Z"
@@ -10,7 +10,7 @@
   {
     "id": "1774492368239",
     "username": "testuser5",
-    "password": "$2b$10$W544MUQZZiiig0R7Ri4fpOtrOOyP5IwXdaAstpruenazi/KC/zDcS",
+    "password": "$2a$10$deI0lZ3/j571dBBHY5p7kOKB/ZhaCaT.gngobiSQEEBpoWfEDALya",
     "email": "",
     "role": "admin",
     "createdAt": "2026-03-26T02:32:48.239Z"
@@ -18,7 +18,7 @@
   {
     "id": "1774861739980",
     "username": "test",
-    "password": "$2b$10$W544MUQZZiiig0R7Ri4fpOtrOOyP5IwXdaAstpruenazi/KC/zDcS",
+    "password": "$2a$10$deI0lZ3/j571dBBHY5p7kOKB/ZhaCaT.gngobiSQEEBpoWfEDALya",
     "email": "",
     "role": "admin",
     "createdAt": "2026-03-30T09:08:59.980Z"
@@ -26,7 +26,7 @@
   {
     "id": "1776262069846",
     "username": "vip_294",
-    "password": "$2a$10$xXJV3vyFXM0sc0bOQqlpPunfi91ukECKPMMUHSD6Q3XPlMufbJ3gW",
+    "password": "$2a$10$deI0lZ3/j571dBBHY5p7kOKB/ZhaCaT.gngobiSQEEBpoWfEDALya",
     "email": "15961701760@163.com",
     "role": "admin",
     "createdAt": "2026-04-15T14:07:49.846Z"

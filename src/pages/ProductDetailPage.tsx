@@ -38,6 +38,23 @@ export default function ProductDetailPage() {
     setIsLightboxOpen(true);
   };
 
+  const handleSetCover = async (media: MediaResource, e: any) => {
+    e.stopPropagation();
+    const token = localStorage.getItem('adminToken');
+    if (!token) { alert('请先登录管理员'); return; }
+    try {
+      const res = await fetch(`${API_BASE_URL}/products/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ coverImage: media.url })
+      });
+      if (res.ok) {
+        setProduct(prev => prev ? { ...prev, coverImage: media.url } : prev);
+        alert('✅ 封面已更新');
+      } else { alert('更新失败'); }
+    } catch (err) { console.error('Set cover failed:', err); alert('更新失败'); }
+  };
+
   const closeLightbox = () => {
     setIsLightboxOpen(false);
     setTimeout(() => setSelectedMedia(null), 300);
@@ -238,7 +255,7 @@ export default function ProductDetailPage() {
                 详细介绍
               </h2>
               <div
-                className="prose prose-invert prose-lg max-w-none"
+                className="prose prose-invert prose-lg max-w-none text-gray-100 leading-relaxed [&_h2]:text-white [&_h2]:font-bold [&_h3]:text-sky-300 [&_p]:text-gray-100 [&_p]:leading-7 [&_strong]:text-white [&_li]:text-gray-200 [&_li]:marker:text-sky-400 [&_a]:text-sky-400 [&_a]:underline [&_a]:decoration-sky-400/50 [&_a:hover]:text-sky-300 [&_code]:bg-slate-800 [&_code]:text-sky-300 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded"
                 dangerouslySetInnerHTML={{ __html: product.detailedDescription }}
               />
             </div>
@@ -301,6 +318,14 @@ export default function ProductDetailPage() {
                     <div className="absolute top-2 right-2 px-2 py-1 bg-black/60 rounded text-xs text-white">
                       {media.type === 'image' ? '🖼️ 图片' : '🎬 视频'}
                     </div>
+                    {media.type === 'image' && localStorage.getItem('adminToken') && (
+                      <button
+                        onClick={(e) => handleSetCover(media, e)}
+                        className="absolute top-2 left-2 px-3 py-1 bg-sky-500/80 hover:bg-sky-500 rounded text-xs text-white transition-colors z-10"
+                      >
+                        设为封面
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>

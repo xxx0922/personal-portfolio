@@ -6,25 +6,17 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api'
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('xue');
-  const [password, setPassword] = useState('Xue0922@');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
 
-  // 页面加载时自动登录
+  // 页面加载时：如有有效 token 直接跳转，否则停留在登录页
   React.useEffect(() => {
-    const manuallyLoggedOut = sessionStorage.getItem('manuallyLoggedOut');
-    // 如果是手动退出的，不要自动登录
-    if (manuallyLoggedOut === 'true') {
-      sessionStorage.removeItem('manuallyLoggedOut');
-      return;
-    }
-
     const existingToken = localStorage.getItem('adminToken');
     if (existingToken) {
-      // 先验证 token 是否有效
-      fetch(`${API_BASE_URL}/auth/me`, {
+      fetch(`${API_BASE_URL}/auth/verify`, {
         headers: { 'Authorization': `Bearer ${existingToken}` }
       })
         .then(res => res.ok ? res.json() : Promise.reject())
@@ -35,29 +27,8 @@ export default function AdminLoginPage() {
           localStorage.removeItem('adminToken');
           localStorage.removeItem('adminUser');
         });
-      return;
     }
-    // 自动尝试登录（仅当没有 token 时）
-    handleAutoLogin();
   }, []);
-
-  const handleAutoLogin = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: 'xue', password: 'Xue0922@' })
-      });
-      const data = await response.json();
-      if (data.token) {
-        localStorage.setItem('adminToken', data.token);
-        localStorage.setItem('adminUser', JSON.stringify(data.user));
-        navigate('/admin');
-      }
-    } catch (e) {
-      // 自动登录失败，用户可手动登录
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,8 +54,6 @@ export default function AdminLoginPage() {
       // 保存 token
       localStorage.setItem('adminToken', data.token);
       localStorage.setItem('adminUser', JSON.stringify(data.user));
-      // 清除手动退出标记
-      sessionStorage.removeItem('manuallyLoggedOut');
 
       // 跳转到管理后台
       navigate('/admin');

@@ -7,7 +7,11 @@
     "duration": "6 个月",
     "year": "2025",
     "contractAmount": 1500000,
-    "technologies": ["海康威视监控设备", "华为网络设备", "综合布线系统"],
+    "technologies": [
+      "海康威视监控设备",
+      "华为网络设备",
+      "综合布线系统"
+    ],
     "images": [
       "/uploads/1764161349180-mmexport1741561817712_compressed.jpeg",
       "/uploads/1764161353705-IMG_20250309_100614.jpg"
@@ -28,7 +32,11 @@
     "duration": "4 个月",
     "year": "2024",
     "contractAmount": 800000,
-    "technologies": ["人脸识别门禁", "TCP/IP 网络", "数据库管理"],
+    "technologies": [
+      "人脸识别门禁",
+      "TCP/IP 网络",
+      "数据库管理"
+    ],
     "images": [],
     "achievements": [
       "实现 50+ 门禁点位的智能化管控",
@@ -46,7 +54,11 @@
     "duration": "8 个月",
     "year": "2023",
     "contractAmount": 2000000,
-    "technologies": ["光纤网络", "Cisco 设备", "综合布线标准"],
+    "technologies": [
+      "光纤网络",
+      "Cisco 设备",
+      "综合布线标准"
+    ],
     "images": [],
     "achievements": [
       "完成 10 万平米园区网络覆盖",

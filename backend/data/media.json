@@ -7,7 +7,11 @@
     "review": "一部震撼人心的科幻电影，探索了爱、时间和宇宙奥秘",
     "coverImage": "https://images.unsplash.com/photo-1536440136628-849c177e7657?w=800&h=600&fit=crop",
     "videoUrl": "",
-    "tags": ["科幻", "冒险", "经典"],
+    "tags": [
+      "科幻",
+      "冒险",
+      "经典"
+    ],
     "date": "2024-01-15",
     "attachments": []
   },
@@ -19,7 +23,11 @@
     "review": "关于希望与自由的经典之作，每次观看都有新的感悟",
     "coverImage": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&h=600&fit=crop",
     "videoUrl": "",
-    "tags": ["剧情", "经典", "励志"],
+    "tags": [
+      "剧情",
+      "经典",
+      "励志"
+    ],
     "date": "2024-02-20",
     "attachments": []
   },
@@ -30,7 +38,11 @@
     "rating": 4,
     "review": "从全新视角审视人类历史，启发思考",
     "coverImage": "https://images.unsplash.com/photo-1544947950-fa07a98d237a?w=800&h=600&fit=crop",
-    "tags": ["历史", "科普", "哲学"],
+    "tags": [
+      "历史",
+      "科普",
+      "哲学"
+    ],
     "date": "2024-03-10",
     "attachments": []
   }

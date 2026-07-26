@@ -3,12 +3,12 @@
     "enabled": true,
     "musicList": [
       {
-        "url": "/uploads/1780754240422-126.éè£³æ².mp3",
-        "name": "11"
-      },
-      {
         "url": "/uploads/1780754257101-146.ç¸æï¼ãè¥¿æ¸¸è®°åä¼-ãçå°¾æ²ï¼ââç®«ï¼Cover-æ¯é¿æï¼.mp3",
         "name": "相思"
+      },
+      {
+        "url": "/uploads/1783172713158-å®æ¬¡é&ç½é³¥è±ç¾å­-èå·å¤æ².mp3",
+        "name": "宗次郎&白鳥英美子-蘇州夜曲"
       }
     ],
     "volume": 0.3
@@ -34,5 +34,5 @@
     "showContactForm": true,
     "contactEmail": ""
   },
-  "dashboardUrl": "https://www.bohenan.com/traffic/"
+  "dashboardUrl": "https://my.feishu.cn/base/FUMzbSIumaY5WgsNXb6c2lq3nyc?table=blkjfxwNRQ33HLmB"
 }
