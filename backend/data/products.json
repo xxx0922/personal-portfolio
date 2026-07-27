@@ -207,5 +207,61 @@
     "isPublished": true,
     "folders": [],
     "category": "demo"
+  },
+  {
+    "id": "photo-renamer",
+    "name": "照片智能重命名工具",
+    "description": "基于本地视觉大模型的照片批量重命名工具",
+    "icon": "🖼️",
+    "coverImage": "/uploads/products/product-photo-renamer.png",
+    "shortDescription": "本地视觉大模型识别图片内容，按工作/生活/旅游自动分类并重命名为 类别-子类-地点-日期.jpg",
+    "detailedDescription": "<h2 class=\"text-2xl font-bold text-white mb-4\">产品简介</h2>\n<p class=\"text-gray-100 mb-4 leading-relaxed\">照片智能重命名工具是一款基于本地视觉大模型（qwen2.5vl:3b）的 Windows 桌面应用，帮助用户批量整理照片。</p>\n\n<h2 class=\"text-2xl font-bold text-white mb-4 mt-6\">核心功能</h2>\n<ul class=\"list-disc pl-6 space-y-2 text-gray-100 mb-4\">\n  <li><strong class=\"text-white\">本地推理</strong>：数据不出本机，图片内容不外传</li>\n  <li><strong class=\"text-white\">智能分类</strong>：自动识别工作 / 生活 / 旅游三大类</li>\n  <li><strong class=\"text-white\">GPS 定位</strong>：读取 EXIF 坐标并调用高德逆地理编码生成地点</li>\n  <li><strong class=\"text-white\">日期提取</strong>：优先 EXIF 拍摄时间，其次文件名日期 / Unix 时间戳</li>\n  <li><strong class=\"text-white\">自动输出</strong>：按类别分子文件夹整理，命名格式 类别-子类-地点-日期.jpg</li>\n  <li><strong class=\"text-white\">断点续跑</strong>：支持预览模式、失败重试、断点续处理</li>\n</ul>\n\n<h2 class=\"text-2xl font-bold text-white mb-4 mt-6\">技术栈</h2>\n<ul class=\"list-disc pl-6 space-y-2 text-gray-100 mb-4\">\n  <li>PySide6 GUI 桌面应用</li>\n  <li>Ollama + qwen2.5vl 本地视觉模型</li>\n  <li>高德地图逆地理编码 API</li>\n  <li>EXIF / GPS 元数据解析</li>\n</ul>",
+    "mediaResources": [
+      {
+        "id": "media-photo-renamer-main",
+        "type": "image",
+        "url": "/uploads/products/screenshot-main.png",
+        "thumbnailUrl": "",
+        "title": "主界面",
+        "description": "",
+        "sortOrder": 0,
+        "uploadedAt": "2026-07-27T14:39:37.715145"
+      },
+      {
+        "id": "media-photo-renamer-preview",
+        "type": "image",
+        "url": "/uploads/products/screenshot-preview.png",
+        "thumbnailUrl": "",
+        "title": "预览模式",
+        "description": "",
+        "sortOrder": 1,
+        "uploadedAt": "2026-07-27T14:39:37.715145"
+      },
+      {
+        "id": "media-photo-renamer-settings",
+        "type": "image",
+        "url": "/uploads/products/screenshot-settings.png",
+        "thumbnailUrl": "",
+        "title": "设置面板",
+        "description": "",
+        "sortOrder": 2,
+        "uploadedAt": "2026-07-27T14:39:37.715145"
+      },
+      {
+        "id": "media-photo-renamer-output",
+        "type": "image",
+        "url": "/uploads/products/screenshot-output.png",
+        "thumbnailUrl": "",
+        "title": "输出结果",
+        "description": "",
+        "sortOrder": 3,
+        "uploadedAt": "2026-07-27T14:39:37.715145"
+      }
+    ],
+    "externalUrl": "",
+    "sortOrder": 2,
+    "isPublished": true,
+    "folders": [],
+    "category": "demo"
   }
 ]
