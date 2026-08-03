@@ -32,8 +32,17 @@ backend/.env.local
 !backend/data/*.json
 !backend/data/.gitkeep
 
-# Uploads - 不上传用户上传的照片等文件
-backend/uploads/
+# Uploads (提交上传的文件到 Git，用于部署)
+!backend/uploads/*.jpeg
+!backend/uploads/*.jpg
+!backend/uploads/*.png
+!backend/uploads/*.gif
+!backend/uploads/*.webp
+!backend/uploads/*.json
+!backend/uploads/contact/
+!backend/uploads/products/
+!backend/uploads/thumbnails/
+!backend/uploads/.gitkeep
 
 # Testing
 coverage
