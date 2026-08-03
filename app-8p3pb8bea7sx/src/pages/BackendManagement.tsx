@@ -144,7 +144,7 @@ export default function BackendManagement() {
   };
 
   // 通过本地后端代理发送 Webhook（绕过浏览器 CORS 限制）
-  const PROXY_BASE_URL = 'http://localhost:3002';
+  const PROXY_BASE_URL = import.meta.env.VITE_PROXY_BASE_URL || (import.meta.env.DEV ? 'http://localhost:3002' : '/api');
   const renderWebhookTemplate = (template: string, templateData: Record<string, string>) => {
     let message = template;
     Object.entries(templateData).forEach(([key, value]) => {

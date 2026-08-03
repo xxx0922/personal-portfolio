@@ -125,6 +125,140 @@ export const getPhotos = async () => {
   return mockPhotos;
 };
 
+// ============ 照片地图相关 ============
+export interface PhotoMapCity {
+  city: string;
+  province: string;
+  country: string;
+  lat: number;
+  lng: number;
+  count: number;
+  firstDate: string | null;
+  years: number[];
+  photos: {
+    id: string;
+    filename: string;
+    url: string;
+    thumbnailUrl: string;
+    date: string;
+  }[];
+}
+
+export interface PhotoMapCityPhotosResponse {
+  success: boolean;
+  city: string;
+  count: number;
+  photos: {
+    id: string;
+    filename: string;
+    url: string;
+    thumbnailUrl: string;
+    date: string;
+    folder: string;
+    hasGps: boolean;
+    lat: number | null;
+    lng: number | null;
+  }[];
+}
+
+export interface PhotoMapStats {
+  success: boolean;
+  totalPhotos: number;
+  totalCities: number;
+  totalCountries: number;
+  countries: string[];
+  dateRange: { earliest: string; latest: string } | null;
+  trajectory: {
+    order: number;
+    city: string;
+    province: string;
+    country: string;
+    lat: number;
+    lng: number;
+    firstDate: string;
+    count: number;
+  }[];
+}
+
+export const checkPhotoMapAuth = async (): Promise<{ success: boolean; authenticated: boolean }> => {
+  try {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/photo-map/check`, {
+      credentials: 'include'
+    });
+    if (!response.ok) return { success: false, authenticated: false };
+    return await response.json();
+  } catch (error) {
+    console.error('Error checking photo map auth:', error);
+    return { success: false, authenticated: false };
+  }
+};
+
+export const loginPhotoMap = async (password: string): Promise<{ success: boolean }> => {
+  try {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/photo-map/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ password })
+    });
+    if (!response.ok) return { success: false };
+    return await response.json();
+  } catch (error) {
+    console.error('Error logging in to photo map:', error);
+    return { success: false };
+  }
+};
+
+export const getPhotoMapCities = async () => {
+  if (USE_BACKEND_API) {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/photo-map/cities`, {
+        credentials: 'include'
+      });
+      if (!response.ok) throw new Error('Failed to fetch photo map cities');
+      const data = await response.json();
+      return data.success ? data.cities : ([] as PhotoMapCity[]);
+    } catch (error) {
+      console.error('Error fetching photo map cities:', error);
+      return [] as PhotoMapCity[];
+    }
+  }
+  return [] as PhotoMapCity[];
+};
+
+export const getPhotoMapStats = async (): Promise<PhotoMapStats> => {
+  if (USE_BACKEND_API) {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/photo-map/stats`, {
+        credentials: 'include'
+      });
+      if (!response.ok) throw new Error('Failed to fetch photo map stats');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching photo map stats:', error);
+      return { success: false, totalPhotos: 0, totalCities: 0, totalCountries: 0, countries: [], dateRange: null, trajectory: [] };
+    }
+  }
+  return { success: false, totalPhotos: 0, totalCities: 0, totalCountries: 0, countries: [], dateRange: null, trajectory: [] };
+};
+
+export const getPhotoMapCityPhotos = async (city: string): Promise<PhotoMapCityPhotosResponse> => {
+  if (USE_BACKEND_API) {
+    try {
+      const encoded = encodeURIComponent(city);
+      const response = await fetchWithTimeout(`${API_BASE_URL}/photo-map/city/${encoded}`, {
+        credentials: 'include'
+      });
+      if (!response.ok) throw new Error('Failed to fetch city photos');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching city photos:', error);
+      return { success: false, city, count: 0, photos: [] };
+    }
+  }
+  return { success: false, city, count: 0, photos: [] };
+};
+
 // ============ 知识库相关 ============
 export const getDocuments = async () => {
   if (USE_BACKEND_API) {

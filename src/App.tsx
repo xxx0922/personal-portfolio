@@ -25,6 +25,7 @@ import ProductFolderPage from './pages/ProductFolderPage';
 import ProfessionsPage from './pages/ProfessionsPage';
 import DashboardPage from './pages/DashboardPage';
 import PhotosPage from './pages/PhotosPage';
+import PhotoMapPage from './pages/PhotoMapPage';
 import PreviewPage from './pages/PreviewPage';
 
 // 内部组件用于路由感知
@@ -91,6 +92,7 @@ function AppRoutes() {
           <Route path="/photos" element={<PhotosPage />} />
           <Route path="/photos/category/:category" element={<PhotosPage />} />
           <Route path="/photos/category/:category/folder/:folder" element={<PhotosPage />} />
+          <Route path="/photo-map" element={<PhotoMapPage />} />
 
           {/* 预览页面 */}
           <Route path="/preview" element={<PreviewPage />} />
